@@ -1,0 +1,30 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "用户管理",
+      "css": "&#xe6b8;",
+      "child": [
+        {
+          "name": "用户列表",
+          "href": "/getPage?name=user/user-list"
+        },
+        {
+          "name": "删除",
+          "href": "/"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "分数管理",
+      "css": "&#xe6ae;",
+      "child": [
+        {
+          "name": "查询",
+          "href": "/"
+        }
+      ]
+    }
+  ]
+}

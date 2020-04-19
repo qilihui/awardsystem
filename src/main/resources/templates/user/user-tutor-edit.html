@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>修改用户信息</title>
+    <link rel="stylesheet" th:href="@{/xadmin/css/font.css}"/>
+    <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}"/>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
+</head>
+
+<body>
+<div class="x-body">
+    <form class="layui-form">
+        <input type="hidden" id="userAdminId" name="userInfoId" th:value="${userTutor.id}">
+        <input type="hidden" id="userId" name="id" th:value="${sysUser.id}">
+        <input type="hidden" id="role" name="role" th:value="${sysUser.role}">
+
+        <div class="layui-form-item">
+            <label for="L_username" class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_username" th:value="${sysUser.username}" name="username" required=""
+                       lay-verify="username" autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>您唯一的登入名, 不允许修改
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_nickname" class="layui-form-label">
+                <span class="x-red">*</span>姓名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_nickname" th:value="${sysUser.realName}" name="realName" required=""
+                       lay-verify="realName" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red">*</span>邮箱
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_email" th:value="${sysUser.email}" name="email" required=""
+                       lay-verify="email"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_role" th:value="${sysUser.role.getName()}" name="roleName" required=""
+                       lay-verify=""
+                       autocomplete="off" class="layui-input" readonly="readonly">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>不允许修改
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>系部</label>
+            <div class="layui-input-inline">
+                <select name="deptId" class="show-dept-container" lay-verify="">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>年级</label>
+            <div class="layui-input-inline">
+                <select name="gradeId" class="show-grade-container" lay-verify="">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+            </label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">
+                更新
+            </button>
+        </div>
+    </form>
+</div>
+<script th:inline="javascript">
+    var deptId = [[${userTutor.dept.id}]];
+    var gradeId = [[${userTutor.grade.id}]];
+</script>
+<script>
+    layui.use(['form', 'layer', 'laydate'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer
+            , laydate = layui.laydate;
+        getAllDept(function () {
+            layui.form.render('select')
+        });
+
+        //自定义验证规则
+        form.verify({
+            realName: function (value) {
+                if (value == null || value === '') {
+                    return '姓名不能为空'
+                }
+            },
+            // telephone: [/(.+){6,12}$/, '电话号码必须6到12位'],
+            email: function (value) {
+                // if ($('#email').val() == '') {
+                if (value == null || value === '') {
+                    return '邮箱不正确';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(add)', function (data) {
+            $.ajax({
+                url: "/user/admin/edit",
+                type: "POST",
+                data: data.field,
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                        layer.alert(result.msg, {icon: 2});
+                    } else {
+                        layer.alert("修改成功", {icon: 6}, function () {
+                            //关闭当前frame
+                            xadmin.close();
+                            // 可以对父窗口进行刷新
+                            xadmin.father_reload();
+                        });
+                    }
+
+                }
+            });
+            return false;
+        });
+    });
+
+    function getAllDept(callback) {
+        $.ajax({
+            url: "/dept",
+            type: "GET",
+            dataType: 'json',
+            success: function (result) {
+                var html = '';
+                if (result.data && result.data.length > 0) {
+                    for (var i in result.data) {
+                        if (result.data[i].id === deptId) {
+                            html += '<option value="' + result.data[i].id + '" selected="selected">' + result.data[i].name + '</option>';
+                            console.log("true dept = " + deptId)
+                        } else
+                            html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
+                    }
+                    $(".show-dept-container").html(html);
+                    getAllGrade(callback);
+                }
+            }
+        });
+    }
+
+    function getAllGrade(callback) {
+        $.ajax({
+            url: "/grade",
+            type: "GET",
+            dataType: 'json',
+            success: function (result) {
+                var html = '';
+                if (result.data && result.data.length > 0) {
+                    for (var i in result.data) {
+                        if (result.data[i].id === gradeId) {
+                            html += '<option value="' + result.data[i].id + '" selected="selected">' + result.data[i].name + '</option>';
+                            console.log("true grade = " + gradeId)
+                        } else
+                            html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
+                    }
+                    $(".show-grade-container").html(html);
+                }
+                if (callback) {
+                    callback();
+                }
+                // console.log(html)
+            }
+        });
+    }
+</script>
+</body>
+</html>
