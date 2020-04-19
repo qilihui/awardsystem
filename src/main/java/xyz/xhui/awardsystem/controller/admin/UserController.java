@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
+import xyz.xhui.awardsystem.config.exception.PasswordErrorException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
@@ -93,17 +94,18 @@ public class UserController {
 //        return ResultFactory.buildSuccessResult(retUser.orElse(null), "查询成功");
 //    }
 //
-//    @PostMapping(value = "/changePassword")
-//    @ApiOperation("修改密码")
-//    public Result changePassword(@RequestParam("old") String oldPassword, @RequestParam("new") String newPassword) {
-//        try {
-//            userService.changePassword(oldPassword, newPassword);
-//        } catch (Exception e) {
-//            return ResultFactory.buildFailResult(null, e.getMessage());
-//        }
-//        return ResultFactory.buildSuccessResult(null, "修改成功");
-//    }
-//
+    @PostMapping(value = "/changePassword")
+    @ApiOperation("修改密码")
+    @ResponseBody
+    public Result changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) {
+        try {
+            userService.changePassword(oldPassword, newPassword);
+        } catch (PasswordErrorException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
+    }
+
     @PostMapping(value = "/resetPassword")
     @ApiOperation("恢复默认密码")
     @RolesAllowed({"ADMIN"})

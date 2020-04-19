@@ -13,7 +13,12 @@
             <if test="realName != null and realName != '' ">
                 ,real_name = #{realName}
             </if>
+            ,id = #{id}
         </trim>
         where id= #{id}
+    </update>
+
+    <update id="updatePassword">
+        update sys_user set password = #{newPassword} where id = #{id}
     </update>
 </mapper>

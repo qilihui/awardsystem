@@ -1,6 +1,8 @@
 package xyz.xhui.awardsystem.service;
 
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
+import xyz.xhui.awardsystem.model.dto.SysUserDto;
+import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysUserHouseparent;
 
 import java.util.List;
@@ -13,7 +15,9 @@ public interface UserHouseparentService {
 
     Optional<SysUserHouseparent> findById(Integer id);
 
-    Boolean deleteById(Integer id);
+    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
 
     Optional<SysUserHouseparent> findBySysUserId(Integer id);
+
+    Integer updateEmailAndRealName(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
 }

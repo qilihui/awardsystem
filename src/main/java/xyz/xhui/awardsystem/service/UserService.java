@@ -44,7 +44,7 @@ public interface UserService extends UserDetailsService {
 
     void changePassword(Integer userId) throws EntityFieldException;
 
-    void changePassword(String oldPassword, String newPassword) throws PasswordErrorException, UnknownException;
+    void changePassword(String oldPassword, String newPassword) throws PasswordErrorException;
 
-    Integer updateEmailAndRealName(SysUserDto userDto);
+    Integer updateEmailAndRealName(SysUserDto userDto) throws EntityFieldException;
 }

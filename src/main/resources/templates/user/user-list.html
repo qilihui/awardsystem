@@ -122,27 +122,30 @@
             var table = layui.table;
             table.on('tool(test)', function (obj) {
                 var data = obj.data;
+                var roleStr = data.role.replace("ROLE_", "").toLocaleLowerCase();
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
-
                         $.ajax({
-                            url: "/user",
+                            url: '/user/' + roleStr,
                             type: "DELETE",
                             data: {id: data.id},
                             dataType: 'json',
                             success: function (result) {
-                                layer.alert("删除成功", {icon: 1}, function (index1) {
-                                    layer.close(index1);
-                                    //xadmin.father_reload();
-                                    table.reload('test');
-                                });
+                                if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                                    layer.alert(result.msg, {icon: 2});
+                                } else {
+                                    layer.alert("删除成功", {icon: 1}, function (index1) {
+                                        layer.close(index1);
+                                        //xadmin.father_reload();
+                                        table.reload('test');
+                                    });
+                                }
                             },
                         });
 
                     });
                 } else if (obj.event === 'edit') {
-                    var roleStr = data.role.replace("ROLE_", "").toLocaleLowerCase();
-                    // console.log(roleStr)
+                    // console.log($(window).width())
                     xadmin.open('用户详情', '/user/' + roleStr + '/edit/?id=' + data.id);
                 } else if (obj.event === 'resetPassword') {
                     layer.confirm('确定恢复密码？', function (index) {

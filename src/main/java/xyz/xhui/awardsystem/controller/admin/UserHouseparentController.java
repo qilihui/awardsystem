@@ -12,13 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
-import xyz.xhui.awardsystem.config.utils.PasswordUtils;
+import xyz.xhui.awardsystem.model.dto.SysUserDto;
+import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysUserHouseparent;
-import xyz.xhui.awardsystem.model.entity.SysUserTutor;
 import xyz.xhui.awardsystem.service.UserHouseparentService;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -41,6 +40,25 @@ public class UserHouseparentController {
         model.addAttribute("userHouseparent", userHouseparentOptional.get());
         log.info(userHouseparentOptional.get().toString());
         return "user/user-houseparent-edit";
+    }
+
+    @PostMapping("edit")
+    @ApiOperation("修改用户信息")
+    @ResponseBody
+    public Result<String> editUserInfo(UserInfoDto userInfoDto, SysUserDto userDto) {
+//        log.info(id);
+        log.info(userInfoDto.toString());
+        log.info(userDto.toString());
+        Integer count = null;
+        try {
+            count = userHouseparentService.updateEmailAndRealName(userInfoDto, userDto);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        if (count > 1) {
+            return ResultFactory.buildSuccessResult();
+        }
+        return ResultFactory.buildFailResult();
     }
 
 //    @PostMapping(value = "")
@@ -75,14 +93,16 @@ public class UserHouseparentController {
 //        retUserHouseparent.ifPresent(PasswordUtils::hiddenPassword);
 //        return ResultFactory.buildSuccessResult(retUserHouseparent.orElse(null), "查询成功");
 //    }
-//
-//    @DeleteMapping(value = "/{id}")
-//    @ApiOperation("根据id删除")
-//    public Result deleteById(@PathVariable Integer id) {
-//        if (userHouseparentService.deleteById(id)) {
-//            return ResultFactory.buildSuccessResult(null, "删除成功");
-//        } else {
-//            return ResultFactory.buildFailResult(null, "删除失败");
-//        }
-//    }
+
+    @DeleteMapping(value = "")
+    @ApiOperation("根据sysUserId删除")
+    @ResponseBody
+    public Result<String> deleteById(@RequestParam Integer id) {
+        try {
+            userHouseparentService.deleteBySysUserId(id);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
+    }
 }

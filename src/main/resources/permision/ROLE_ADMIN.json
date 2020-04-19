@@ -10,8 +10,8 @@
           "href": "/getPage?name=user/user-list"
         },
         {
-          "name": "删除",
-          "href": "/"
+          "name": "修改密码",
+          "href": "/getPage?name=user/user-change-password"
         }
       ]
     },

@@ -9,6 +9,9 @@ import xyz.xhui.awardsystem.dao.DeptDao;
 import xyz.xhui.awardsystem.dao.GradeDao;
 import xyz.xhui.awardsystem.dao.UserDao;
 import xyz.xhui.awardsystem.dao.UserTutorDao;
+import xyz.xhui.awardsystem.dao.mybatis.UserTutorMybatisDao;
+import xyz.xhui.awardsystem.model.dto.SysUserDto;
+import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysDept;
 import xyz.xhui.awardsystem.model.entity.SysGrade;
 import xyz.xhui.awardsystem.model.entity.SysUserTutor;
@@ -35,13 +38,16 @@ public class UserTutorServiceImpl implements UserTutorService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private UserTutorMybatisDao userTutorMybatisDao;
+
     @Override
     public List<SysUserTutor> findAll() {
         return userTutorDao.findAll();
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public SysUserTutor save(SysUserTutor userTutor) throws EntityFieldException {
         userTutor.getUser().setRole(RoleEnum.ROLE_TUTOR);
         userService.save(userTutor.getUser());
@@ -63,18 +69,34 @@ public class UserTutorServiceImpl implements UserTutorService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Boolean deleteById(Integer id) {
-        Optional<SysUserTutor> retUserTutor = this.findById(id);
-        retUserTutor.ifPresent(userTutor -> {
-            userTutorDao.delete(userTutor);
-            userDao.delete(userTutor.getUser());
-        });
-        return retUserTutor.isPresent();
+    @Transactional
+    public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
+        Optional<SysUserTutor> retUserTutor = this.findBySysUserId(id);
+        if (retUserTutor.isEmpty()) {
+            throw new EntityFieldException("用户不存在");
+        }
+        SysUserTutor userTutor = retUserTutor.get();
+        userTutorDao.delete(userTutor);
+        userDao.delete(userTutor.getUser());
+        return true;
     }
 
     @Override
     public Optional<SysUserTutor> findBySysUserId(Integer id) {
         return userTutorDao.findSysUserTutorByUser_Id(id);
+    }
+
+    @Override
+    @Transactional
+    public Integer updateEmailAndRealName(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException {
+        if (!userDto.getRole().equals(RoleEnum.ROLE_TUTOR.toString())) {
+            throw new EntityFieldException("角色错误");
+        }
+        if (userInfoDto.getUserInfoId() == null || "".equals(userInfoDto.getUserInfoId())) {
+            throw new EntityFieldException("userInfoId字段缺失");
+        }
+        Integer integer = userService.updateEmailAndRealName(userDto);
+        Integer integer1 = userTutorMybatisDao.updateInfo(userInfoDto);
+        return integer + integer1;
     }
 }

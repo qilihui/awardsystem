@@ -16,7 +16,7 @@ public interface UserAdminService {
 
     SysUserAdmin save(SysUserAdmin userAdmin) throws EntityFieldException;
 
-    Boolean deleteById(Integer id);
+    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
 
     Integer updateEmailAndRealName(SysUserDto userDto) throws EntityFieldException;
 }

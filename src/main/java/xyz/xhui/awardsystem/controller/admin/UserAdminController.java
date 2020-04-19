@@ -13,6 +13,7 @@ import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
@@ -94,14 +95,20 @@ public class UserAdminController {
 //        retUserAdmin.ifPresent(PasswordUtils::hiddenPassword);
 //        return ResultFactory.buildSuccessResult(retUserAdmin.orElse(null), "查询成功");
 //    }
-//
-//    @DeleteMapping(value = "/{id}")
-//    @ApiOperation("根据id删除管理员")
-//    public Result deleteById(@PathVariable Integer id) {
-//        if(userAdminService.deleteById(id)) {
-//            return ResultFactory.buildSuccessResult(null, "删除成功");
-//        } else {
-//            return ResultFactory.buildFailResult(null, "删除失败");
-//        }
-//    }
+
+    @DeleteMapping(value = "")
+    @ApiOperation("根据sysUserId删除管理员")
+    @ResponseBody
+    public Result<String> deleteById(@RequestParam Integer id) {
+        log.info(id.toString());
+        if (MyUserUtils.getId().equals(id)) {
+            return ResultFactory.buildFailResult("不能删除当前登陆账号!");
+        }
+        try {
+            userAdminService.deleteBySysUserId(id);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
+    }
 }

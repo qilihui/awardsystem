@@ -2,11 +2,15 @@ package xyz.xhui.awardsystem.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
 import xyz.xhui.awardsystem.dao.DeptDao;
 import xyz.xhui.awardsystem.dao.UserDao;
 import xyz.xhui.awardsystem.dao.UserUnionDao;
+import xyz.xhui.awardsystem.dao.mybatis.UserUnionMybatisDao;
+import xyz.xhui.awardsystem.model.dto.SysUserDto;
+import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysDept;
 import xyz.xhui.awardsystem.model.entity.SysUserUnion;
 import xyz.xhui.awardsystem.service.UserService;
@@ -28,6 +32,9 @@ public class UserUnionServiceImpl implements UserUnionService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserUnionMybatisDao userUnionMybatisDao;
 
     @Override
     public List<SysUserUnion> findAll() {
@@ -52,17 +59,34 @@ public class UserUnionServiceImpl implements UserUnionService {
     }
 
     @Override
-    public Boolean deleteById(Integer id) {
-        Optional<SysUserUnion> retUserUnion = this.findById(id);
-        retUserUnion.ifPresent(sysUserUnion -> {
-            userUnionDao.delete(sysUserUnion);
-            userDao.delete(sysUserUnion.getUser());
-        });
-        return retUserUnion.isPresent();
+    @Transactional
+    public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
+        Optional<SysUserUnion> retUserUnion = this.findBySysUserId(id);
+        if (retUserUnion.isEmpty()) {
+            throw new EntityFieldException("用户不存在");
+        }
+        SysUserUnion sysUserUnion = retUserUnion.get();
+        userUnionDao.delete(sysUserUnion);
+        userDao.delete(sysUserUnion.getUser());
+        return true;
     }
 
     @Override
     public Optional<SysUserUnion> findBySysUserId(Integer id) {
         return userUnionDao.findSysUserUnionByUser_Id(id);
+    }
+
+    @Override
+    @Transactional
+    public Integer updateEmailAndRealName(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException {
+        if (!userDto.getRole().equals(RoleEnum.ROLE_UNION.toString())) {
+            throw new EntityFieldException("角色错误");
+        }
+        if (userInfoDto.getUserInfoId() == null || "".equals(userInfoDto.getUserInfoId())) {
+            throw new EntityFieldException("userInfoId字段缺失");
+        }
+        Integer integer = userService.updateEmailAndRealName(userDto);
+        Integer integer1 = userUnionMybatisDao.updateInfo(userInfoDto);
+        return integer + integer1;
     }
 }

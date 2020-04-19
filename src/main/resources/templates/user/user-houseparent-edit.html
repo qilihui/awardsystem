@@ -11,7 +11,7 @@
     <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
 </head>
 
-<body>
+<body style="margin-top: 20px;">
 <div class="x-body">
     <form class="layui-form">
         <input type="hidden" id="userAdminId" name="userInfoId" th:value="${userHouseparent.id}">
@@ -108,7 +108,7 @@
         //监听提交
         form.on('submit(add)', function (data) {
             $.ajax({
-                url: "/user/admin/edit",
+                url: "/user/houseparent/edit",
                 type: "POST",
                 data: data.field,
                 dataType: 'json',

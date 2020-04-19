@@ -1,6 +1,8 @@
 package xyz.xhui.awardsystem.service;
 
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
+import xyz.xhui.awardsystem.model.dto.SysUserDto;
+import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysUserTutor;
 
 import java.util.List;
@@ -32,7 +34,9 @@ public interface UserTutorService {
      * @param id
      * @return
      */
-    Boolean deleteById(Integer id);
+    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
 
     Optional<SysUserTutor> findBySysUserId(Integer id);
+
+    Integer updateEmailAndRealName(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
 }

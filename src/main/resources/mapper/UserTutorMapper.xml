@@ -2,25 +2,16 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="xyz.xhui.awardsystem.dao.mybatis.UserStuMybatisDao">
+<mapper namespace="xyz.xhui.awardsystem.dao.mybatis.UserTutorMybatisDao">
 
     <update id="updateInfo">
-        update sys_user_stu
+        update sys_user_tutor
         <trim prefix="set" prefixOverrides=",">
-            <if test="apartmentId != null and apartmentId != '' ">
-                ,apartment_id = #{apartmentId}
-            </if>
             <if test="deptId != null and deptId != '' ">
                 ,dept_id = #{deptId}
             </if>
             <if test="gradeId != null and gradeId != '' ">
                 ,grade_id = #{gradeId}
-            </if>
-            <if test="room != null and room != '' ">
-                ,room = #{room}
-            </if>
-            <if test="bed != null and bed != '' ">
-                ,bed = #{bed}
             </if>
             ,id = #{userInfoId}
         </trim>

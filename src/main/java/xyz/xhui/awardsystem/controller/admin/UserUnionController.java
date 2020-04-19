@@ -2,6 +2,7 @@ package xyz.xhui.awardsystem.controller.admin;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
-import xyz.xhui.awardsystem.config.utils.PasswordUtils;
-import xyz.xhui.awardsystem.model.entity.SysUserTutor;
+import xyz.xhui.awardsystem.model.dto.SysUserDto;
+import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysUserUnion;
 import xyz.xhui.awardsystem.service.UserUnionService;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/user/union")
 @Api(tags = "学生会管理接口")
 @RolesAllowed({"ADMIN"})
+@Slf4j
 public class UserUnionController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -38,6 +39,25 @@ public class UserUnionController {
         model.addAttribute("sysUser", userTutorOptional.get().getUser());
         model.addAttribute("userUnion", userTutorOptional.get());
         return "user/user-union-edit";
+    }
+
+    @PostMapping("edit")
+    @ApiOperation("修改用户信息")
+    @ResponseBody
+    public Result<String> editUserInfo(UserInfoDto userInfoDto, SysUserDto userDto) {
+//        log.info(id);
+        log.info(userInfoDto.toString());
+        log.info(userDto.toString());
+        Integer count = null;
+        try {
+            count = userUnionService.updateEmailAndRealName(userInfoDto, userDto);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        if (count > 1) {
+            return ResultFactory.buildSuccessResult();
+        }
+        return ResultFactory.buildFailResult();
     }
 
 //    @PostMapping(value = "")
@@ -71,14 +91,16 @@ public class UserUnionController {
 //        retUserUnion.ifPresent(PasswordUtils::hiddenPassword);
 //        return ResultFactory.buildSuccessResult(retUserUnion.orElse(null), "查询成功");
 //    }
-//
-//    @DeleteMapping(value = "/{id}")
-//    @ApiOperation("根据id删除")
-//    public Result deleteById(@PathVariable Integer id) {
-//        if (userUnionService.deleteById(id)) {
-//            return ResultFactory.buildSuccessResult(null, "删除成功");
-//        } else {
-//            return ResultFactory.buildFailResult(null, "删除失败");
-//        }
-//    }
+
+    @DeleteMapping(value = "")
+    @ApiOperation("根据sysUserId删除")
+    @ResponseBody
+    public Result<String> deleteById(@RequestParam Integer id) {
+        try {
+            userUnionService.deleteBySysUserId(id);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
+    }
 }

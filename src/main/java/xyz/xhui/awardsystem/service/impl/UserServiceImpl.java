@@ -97,24 +97,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(String oldPassword, String newPassword) throws PasswordErrorException, UnknownException {
+    public void changePassword(String oldPassword, String newPassword) throws PasswordErrorException {
         Integer userId = MyUserUtils.getId();
-        Optional<SysUser> optionalSysUser = this.findById(userId);
-        SysUser sysUser;
-        if (optionalSysUser.isPresent()) {
-            sysUser = optionalSysUser.get();
-        } else {
-            throw new UnknownException("未知异常");
-        }
-        if (!PasswordUtils.matches(oldPassword, sysUser.getPassword())) {
+        String password = userMybatisDao.selectPassword(userId);
+        log.info(password);
+        if (!PasswordUtils.matches(oldPassword, password)) {
             throw new PasswordErrorException("旧密码错误");
         }
-        sysUser.setPassword(PasswordUtils.encode(newPassword));
-        userDao.save(sysUser);
+        userMybatisDao.updatePassword(userId, PasswordUtils.encode(newPassword));
     }
 
     @Override
-    public Integer updateEmailAndRealName(SysUserDto userDto) {
+    public Integer updateEmailAndRealName(SysUserDto userDto) throws EntityFieldException {
+        if (userDto.getId() == null || "".equals(userDto.getId())) {
+            throw new EntityFieldException("缺少id字段");
+        }
         return userMybatisDao.updateEmailAndRealName(userDto);
     }
 

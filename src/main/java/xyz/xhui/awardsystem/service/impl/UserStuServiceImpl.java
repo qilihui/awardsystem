@@ -79,26 +79,29 @@ public class UserStuServiceImpl implements UserStuService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public Integer updateEmailAndRealName(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException {
         if (!userDto.getRole().equals(RoleEnum.ROLE_STU.toString())) {
             throw new EntityFieldException("角色错误");
         }
         if (userInfoDto.getUserInfoId() == null || "".equals(userInfoDto.getUserInfoId())) {
-            throw new EntityFieldException("userInfoId字段缺失");
+            throw new EntityFieldException("缺少userInfoId字段");
         }
-        userService.updateEmailAndRealName(userDto);
-        return userStuMybatisDao.updateInfo(userInfoDto);
+        Integer integer = userService.updateEmailAndRealName(userDto);
+        Integer integer1 = userStuMybatisDao.updateInfo(userInfoDto);
+        return integer + integer1;
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Boolean deleteById(Integer id) {
-        Optional<SysUserStu> retUserStu = this.findById(id);
-        retUserStu.ifPresent(userStu -> {
-            userStuDao.delete(userStu);
-            userDao.delete(userStu.getUser());
-        });
-        return retUserStu.isPresent();
+    @Transactional
+    public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
+        Optional<SysUserStu> retUserStu = this.findBySysUserId(id);
+        if (retUserStu.isEmpty()) {
+            throw new EntityFieldException("用户不存在");
+        }
+        SysUserStu userStu = retUserStu.get();
+        userStuDao.delete(userStu);
+        userDao.delete(userStu.getUser());
+        return true;
     }
 }

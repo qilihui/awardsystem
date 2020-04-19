@@ -42,7 +42,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public SysUserAdmin save(SysUserAdmin userAdmin) throws EntityFieldException {
         userAdmin.getUser().setRole(RoleEnum.ROLE_ADMIN);
         userService.save(userAdmin.getUser());
@@ -51,13 +51,20 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
-    public Boolean deleteById(Integer id) {
-        Optional<SysUserAdmin> retUserAdmin = this.findById(id);
-        retUserAdmin.ifPresent(userAdmin -> {
-            userAdminDao.delete(userAdmin);
-            userDao.delete(userAdmin.getUser());
-        });
-        return retUserAdmin.isPresent();
+    @Transactional
+    public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
+//        Optional<SysUserAdmin> retUserAdmin = this.findById(id);
+        Optional<SysUserAdmin> retUserAdmin = this.findBySysUserId(id);
+        if (retUserAdmin.isEmpty()) {
+            throw new EntityFieldException("用户不存在");
+        }
+        SysUserAdmin userAdmin = retUserAdmin.get();
+        if ("admin".equals(userAdmin.getUser().getUsername())) {
+            throw new EntityFieldException("不能删除admin用户");
+        }
+        userAdminDao.delete(userAdmin);
+        userDao.delete(userAdmin.getUser());
+        return true;
     }
 
     @Override

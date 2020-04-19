@@ -12,17 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
-import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
-import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysUserStu;
-import xyz.xhui.awardsystem.model.entity.SysUserTutor;
-import xyz.xhui.awardsystem.service.UserService;
 import xyz.xhui.awardsystem.service.UserStuService;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -59,7 +54,7 @@ public class UserStuController {
         } catch (EntityFieldException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
-        if (count > 0) {
+        if (count > 1) {
             return ResultFactory.buildSuccessResult();
         }
         return ResultFactory.buildFailResult();
@@ -96,14 +91,16 @@ public class UserStuController {
 //        retUserStu.ifPresent(PasswordUtils::hiddenPassword);
 //        return ResultFactory.buildSuccessResult(retUserStu.orElse(null), "查询成功");
 //    }
-//
-//    @DeleteMapping(value = "/{id}")
-//    @ApiOperation("根据id删除学生")
-//    public Result deleteById(@PathVariable Integer id) {
-//        if(userStuService.deleteById(id)) {
-//            return ResultFactory.buildSuccessResult(null, "删除成功");
-//        } else {
-//            return ResultFactory.buildFailResult(null, "删除失败");
-//        }
-//    }
+
+    @DeleteMapping(value = "")
+    @ApiOperation("根据sysUserId删除学生")
+    @ResponseBody
+    public Result<String> deleteById(@RequestParam Integer id) {
+        try {
+            userStuService.deleteBySysUserId(id);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
+    }
 }

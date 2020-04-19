@@ -20,7 +20,7 @@ public interface UserStuService {
      * @param id
      * @return
      */
-    Boolean deleteById(Integer id);
+    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
 
     Optional<SysUserStu> findById(Integer id);
 
