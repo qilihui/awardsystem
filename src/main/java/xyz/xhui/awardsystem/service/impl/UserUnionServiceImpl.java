@@ -62,12 +62,13 @@ public class UserUnionServiceImpl implements UserUnionService {
     @Transactional
     public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
         Optional<SysUserUnion> retUserUnion = this.findBySysUserId(id);
-        if (retUserUnion.isEmpty()) {
-            throw new EntityFieldException("用户不存在");
-        }
+        retUserUnion.orElseThrow(() -> {
+            return new EntityFieldException("用户不存在");
+        });
         SysUserUnion sysUserUnion = retUserUnion.get();
-        userUnionDao.delete(sysUserUnion);
-        userDao.delete(sysUserUnion.getUser());
+        userUnionDao.deleteById(sysUserUnion.getId());
+        //        userUnionDao.delete(sysUserUnion);
+//        userDao.delete(sysUserUnion.getUser());
         return true;
     }
 

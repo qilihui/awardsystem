@@ -11,7 +11,7 @@ public class SysUserUnion implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private SysUser user;
 

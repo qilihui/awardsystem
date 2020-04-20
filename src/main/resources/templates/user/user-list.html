@@ -14,6 +14,11 @@
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <!--    <style>-->
+    <!--        .layui-table-body {-->
+    <!--            overflow-x: hidden;-->
+    <!--        }-->
+    <!--    </style>-->
 </head>
 
 <body>
@@ -61,7 +66,7 @@
                             <th lay-data="{field:'realName', edit: 'text', minWidth: 60}">姓名</th>
                             <th lay-data="{field:'email', edit: 'text', minWidth: 120}">邮箱</th>
                             <th lay-data="{field:'roleName', minWidth:80}">角色</th>
-                            <th lay-data="{toolbar: '#barDemo', minWidth:100}">操作</th>
+                            <th lay-data="{toolbar: '#barOptional', minWidth:100}">操作</th>
                         </tr>
                         </thead>
                     </table>
@@ -73,9 +78,10 @@
 </body>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"> 获取选中行数据</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-        <button class="layui-btn layui-btn-sm" lay-event="isAll"> 验证是否全选</button>
+        <div class="layui-inline" lay-event="delete"><i class="layui-icon layui-icon-delete"></i></div>
+        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"> 获取选中行数据</button>-->
+        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>-->
+        <!--        <button class="layui-btn layui-btn-sm" lay-event="isAll"> 验证是否全选</button>-->
     </div>
 </script>
 <script>
@@ -99,17 +105,28 @@
                 function (obj) {
                     var checkStatus = table.checkStatus(obj.config.id);
                     switch (obj.event) {
-                        case 'getCheckData':
+                        case 'delete':
                             var data = checkStatus.data;
+                            var idArray = new Array();
+                            for (var i in data) {
+                                idArray[i] = data[i].id;
+                            }
+                            console.log(idArray.toString());
+
+
                             layer.alert(JSON.stringify(data));
                             break;
-                        case 'getCheckLength':
-                            var data = checkStatus.data;
-                            layer.msg('选中了：' + data.length + ' 个');
-                            break;
-                        case 'isAll':
-                            layer.msg(checkStatus.isAll ? '全选' : '未全选');
-                            break;
+                        // case 'getCheckData':
+                        //     var data = checkStatus.data;
+                        //     layer.alert(JSON.stringify(data));
+                        //     break;
+                        // case 'getCheckLength':
+                        //     var data = checkStatus.data;
+                        //     layer.msg('选中了：' + data.length + ' 个');
+                        //     break;
+                        // case 'isAll':
+                        //     layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                        //     break;
                     }
                     ;
                 });
@@ -179,7 +196,7 @@
 
 </script>
 
-<script type="text/html" id="barDemo">
+<script type="text/html" id="barOptional">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>&nbsp;
     <a class="" lay-event="resetPassword" title="恢复默认密码">

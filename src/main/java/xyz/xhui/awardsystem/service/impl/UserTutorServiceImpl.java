@@ -72,12 +72,13 @@ public class UserTutorServiceImpl implements UserTutorService {
     @Transactional
     public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
         Optional<SysUserTutor> retUserTutor = this.findBySysUserId(id);
-        if (retUserTutor.isEmpty()) {
-            throw new EntityFieldException("用户不存在");
-        }
+        retUserTutor.orElseThrow(() -> {
+            return new EntityFieldException("用户不存在");
+        });
         SysUserTutor userTutor = retUserTutor.get();
-        userTutorDao.delete(userTutor);
-        userDao.delete(userTutor.getUser());
+        userTutorDao.deleteById(userTutor.getId());
+//        userTutorDao.delete(userTutor);
+//        userDao.delete(userTutor.getUser());
         return true;
     }
 

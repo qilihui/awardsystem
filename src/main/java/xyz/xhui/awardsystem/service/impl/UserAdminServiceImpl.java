@@ -55,15 +55,16 @@ public class UserAdminServiceImpl implements UserAdminService {
     public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
 //        Optional<SysUserAdmin> retUserAdmin = this.findById(id);
         Optional<SysUserAdmin> retUserAdmin = this.findBySysUserId(id);
-        if (retUserAdmin.isEmpty()) {
-            throw new EntityFieldException("用户不存在");
-        }
+        retUserAdmin.orElseThrow(() -> {
+            return new EntityFieldException("用户不存在");
+        });
         SysUserAdmin userAdmin = retUserAdmin.get();
         if ("admin".equals(userAdmin.getUser().getUsername())) {
             throw new EntityFieldException("不能删除admin用户");
         }
-        userAdminDao.delete(userAdmin);
-        userDao.delete(userAdmin.getUser());
+        userAdminDao.deleteById(userAdmin.getId());
+//        userAdminDao.delete(userAdmin);
+//        userDao.delete(userAdmin.getUser());
         return true;
     }
 

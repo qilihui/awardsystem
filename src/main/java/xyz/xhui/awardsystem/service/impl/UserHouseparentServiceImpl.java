@@ -62,12 +62,13 @@ public class UserHouseparentServiceImpl implements UserHouseparentService {
     @Transactional
     public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
         Optional<SysUserHouseparent> retUserHouseparent = this.findBySysUserId(id);
-        if (retUserHouseparent.isEmpty()) {
-            throw new EntityFieldException("用户不存在");
-        }
+        retUserHouseparent.orElseThrow(() -> {
+            return new EntityFieldException("用户不存在");
+        });
         SysUserHouseparent sysUserHouseparent = retUserHouseparent.get();
-        houseparentDao.delete(sysUserHouseparent);
-        userDao.delete(sysUserHouseparent.getUser());
+        houseparentDao.deleteById(sysUserHouseparent.getId());
+//        houseparentDao.delete(sysUserHouseparent);
+//        userDao.delete(sysUserHouseparent.getUser());
         return true;
     }
 

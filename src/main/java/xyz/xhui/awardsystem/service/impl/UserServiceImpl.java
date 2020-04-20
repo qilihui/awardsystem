@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public SysUser save(SysUser sysUser) throws EntityFieldException {
         sysUser.setId(null);
         if (this.findByUsernameEquals(sysUser.getUsername()) != null) {

@@ -96,12 +96,13 @@ public class UserStuServiceImpl implements UserStuService {
     @Transactional
     public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
         Optional<SysUserStu> retUserStu = this.findBySysUserId(id);
-        if (retUserStu.isEmpty()) {
-            throw new EntityFieldException("用户不存在");
-        }
+        retUserStu.orElseThrow(() -> {
+            return new EntityFieldException("用户不存在");
+        });
         SysUserStu userStu = retUserStu.get();
-        userStuDao.delete(userStu);
-        userDao.delete(userStu.getUser());
+        userStuDao.deleteById(userStu.getId());
+//        userStuDao.delete(userStu);
+//        userDao.delete(userStu.getUser());
         return true;
     }
 }
