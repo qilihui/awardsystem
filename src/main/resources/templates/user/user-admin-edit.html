@@ -132,12 +132,14 @@
             //     layer.alert("请给该用户设置角色");
             //     return false;
             // }
+            var load = layer.load(2)
             $.ajax({
                 url: "/user/admin/edit",
                 type: "POST",
                 data: data.field,
                 dataType: 'json',
                 success: function (result) {
+                    layer.close(load)
                     if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
                         layer.alert(result.msg);
                     } else {

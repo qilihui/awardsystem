@@ -19,6 +19,17 @@
     </update>
 
     <update id="updatePassword">
-        update sys_user set password = #{newPassword} where id = #{id}
+        update sys_user
+        set password = #{newPassword}
+        where id = #{id}
     </update>
+
+    <select id="findAllCountByRole" resultType="java.lang.Integer">
+        select count(*) from sys_user
+        <where>
+            <if test="roleEnum != null">
+                role = #{roleEnum}
+            </if>
+        </where>
+    </select>
 </mapper>

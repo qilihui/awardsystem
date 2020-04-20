@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface UserAdminDao  extends JpaRepository<SysUserAdmin, Integer> {
     Optional<SysUserAdmin> findSysUserAdminByUser_Id(Integer sysUserId);
+    Integer deleteSysUserAdminByUser_Id(Integer id);
 }

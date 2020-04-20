@@ -40,12 +40,14 @@
             // 监听提交
             form.on('submit(login)', function (data) {
                 // alert(1);
+                var load = layer.load(2)
                 $.ajax({
                     type: 'post',
                     url: '/login',
                     data: $(".layui-form").serialize(),
                     success: function (datas) {
-                        if (datas.authenticated == true) {
+                        layer.close(load)
+                        if (datas.authenticated === true) {
                             localStorage.setItem("userId", datas.principal.sysUser.id);
                             localStorage.setItem("username", datas.principal.sysUser.username);
                             localStorage.setItem("nickName", datas.principal.sysUser.realName);
@@ -65,6 +67,7 @@
                         }
                     },
                     error: function (xhr, textStatus, errorThrown) {
+                        layer.close(load)
                         var msg = xhr.responseText;
                         var response = JSON.parse(msg);
                         layer.msg(response.message);

@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.PasswordErrorException;
-import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
 
@@ -31,7 +30,7 @@ public interface UserService extends UserDetailsService {
      * @param username
      * @return
      */
-    SysUser findByUsernameEquals(String username);
+    Optional<SysUser> findByUsernameEquals(String username);
 
     /**
      * 添加用户
@@ -47,4 +46,6 @@ public interface UserService extends UserDetailsService {
     void changePassword(String oldPassword, String newPassword) throws PasswordErrorException;
 
     Integer updateEmailAndRealName(SysUserDto userDto) throws EntityFieldException;
+
+    Integer deleteUsers(Integer[] ids) throws EntityFieldException;
 }

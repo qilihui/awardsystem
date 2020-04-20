@@ -84,7 +84,7 @@ public class UserStuServiceImpl implements UserStuService {
         if (!userDto.getRole().equals(RoleEnum.ROLE_STU.toString())) {
             throw new EntityFieldException("角色错误");
         }
-        if (userInfoDto.getUserInfoId() == null || "".equals(userInfoDto.getUserInfoId())) {
+        if (userInfoDto.getUserInfoId() == null) {
             throw new EntityFieldException("缺少userInfoId字段");
         }
         Integer integer = userService.updateEmailAndRealName(userDto);

@@ -85,7 +85,9 @@
         var form = layui.form
             , layer = layui.layer
             , laydate = layui.laydate;
+        var load = layer.load(1)
         getAllDept(function () {
+            layer.close(load)
             layui.form.render('select')
         });
 
@@ -107,12 +109,14 @@
 
         //监听提交
         form.on('submit(add)', function (data) {
+            var load = layer.load(2)
             $.ajax({
                 url: "/user/union/edit",
                 type: "POST",
                 data: data.field,
                 dataType: 'json',
                 success: function (result) {
+                    layer.close(load)
                     if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
                         layer.alert(result.msg, {icon: 2});
                     } else {

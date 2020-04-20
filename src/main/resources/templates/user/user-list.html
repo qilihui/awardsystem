@@ -79,6 +79,7 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <div class="layui-inline" lay-event="delete"><i class="layui-icon layui-icon-delete"></i></div>
+        <div class="layui-inline" lay-event="add"><i class="layui-icon layui-icon-add-1"></i></div>
         <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"> 获取选中行数据</button>-->
         <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>-->
         <!--        <button class="layui-btn layui-btn-sm" lay-event="isAll"> 验证是否全选</button>-->
@@ -107,14 +108,37 @@
                     switch (obj.event) {
                         case 'delete':
                             var data = checkStatus.data;
-                            var idArray = new Array();
+                            var idArray = [];
                             for (var i in data) {
                                 idArray[i] = data[i].id;
                             }
+                            if (idArray.length === 0) {
+                                layer.alert("未选中", {icon: 5});
+                                break;
+                            }
                             console.log(idArray.toString());
-
-
-                            layer.alert(JSON.stringify(data));
+                            layer.confirm('真的要删除用户? 请谨慎操作!', function (index) {
+                                var load = layer.load(2)
+                                $.ajax({
+                                    url: '/user/users',
+                                    type: "DELETE",
+                                    data: {ids: idArray},
+                                    dataType: 'json',
+                                    success: function (result) {
+                                        layer.close(load)
+                                        if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                                            layer.alert(result.msg, {icon: 2});
+                                        } else {
+                                            layer.alert("删除成功", {icon: 1}, function (index1) {
+                                                layer.close(index1);
+                                                //xadmin.father_reload();
+                                                table.reload('test');
+                                            });
+                                        }
+                                    },
+                                });
+                            });
+                            // layer.alert(JSON.stringify(data));
                             break;
                         // case 'getCheckData':
                         //     var data = checkStatus.data;
@@ -128,7 +152,6 @@
                         //     layer.msg(checkStatus.isAll ? '全选' : '未全选');
                         //     break;
                     }
-                    ;
                 });
         });
 
@@ -142,12 +165,14 @@
                 var roleStr = data.role.replace("ROLE_", "").toLocaleLowerCase();
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
+                        var load = layer.load(2)
                         $.ajax({
                             url: '/user/' + roleStr,
                             type: "DELETE",
                             data: {id: data.id},
                             dataType: 'json',
                             success: function (result) {
+                                layer.close(load)
                                 if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
                                     layer.alert(result.msg, {icon: 2});
                                 } else {
@@ -166,12 +191,14 @@
                     xadmin.open('用户详情', '/user/' + roleStr + '/edit/?id=' + data.id);
                 } else if (obj.event === 'resetPassword') {
                     layer.confirm('确定恢复密码？', function (index) {
+                        var load = layer.load(2)
                         $.ajax({
                             url: "/user/resetPassword",
                             type: "POST",
                             data: {userId: data.id},
                             dataType: 'json',
                             success: function (result) {
+                                layer.close(load)
                                 console.log("success")
                                 layer.alert("恢复成功", {icon: 1}, function (index1) {
                                     layer.close(index1);
@@ -197,8 +224,12 @@
 </script>
 
 <script type="text/html" id="barOptional">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>&nbsp;
+    <!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+    <a class="" lay-event="edit" title="编辑">
+        <i class="layui-icon">&#xe642;</i>
+    </a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>&nbsp;-->
     <a class="" lay-event="resetPassword" title="恢复默认密码">
         <i class="layui-icon">&#xe716;</i>
     </a>

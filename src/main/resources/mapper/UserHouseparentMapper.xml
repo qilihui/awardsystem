@@ -4,6 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.xhui.awardsystem.dao.mybatis.UserHouseparentMybatisDao">
 
+    <resultMap id="userHouseparentMap" type="xyz.xhui.awardsystem.model.entity.SysUserHouseparent">
+        <association property="user" column="user_id" select="xyz.xhui.awardsystem.dao.mybatis.UserMybatisDao.findById"/>
+    </resultMap>
+
     <update id="updateInfo">
         update sys_user_houseparent
         <trim prefix="set" prefixOverrides=",">

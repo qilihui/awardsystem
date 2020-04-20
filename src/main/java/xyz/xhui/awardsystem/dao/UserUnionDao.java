@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface UserUnionDao extends JpaRepository<SysUserUnion, Integer> {
     Optional<SysUserUnion> findSysUserUnionByUser_Id(Integer sysUserId);
+    Integer deleteSysUserUnionByUser_Id(Integer id);
 }

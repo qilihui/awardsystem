@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface UserHouseparentDao extends JpaRepository<SysUserHouseparent, Integer> {
 //    SysUserHouseparent findSysUserHouseparentByUser_Id(Integer id);
     Optional<SysUserHouseparent> findSysUserHouseparentByUser_Id(Integer sysUserId);
+    Integer deleteSysUserHouseparentByUser_Id(Integer id);
 }

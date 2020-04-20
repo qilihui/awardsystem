@@ -1,7 +1,5 @@
 package xyz.xhui.awardsystem.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,24 +10,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.PasswordErrorException;
-import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
-import xyz.xhui.awardsystem.dao.UserDao;
+import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.dao.mybatis.UserMybatisDao;
 import xyz.xhui.awardsystem.model.dto.LoginUser;
-import xyz.xhui.awardsystem.model.dto.SysPermision;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.service.UserService;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service("userService")
@@ -40,6 +33,17 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMybatisDao userMybatisDao;
+
+    @Autowired
+    private UserAdminDao userAdminDao;
+    @Autowired
+    private UserStuDao userStuDao;
+    @Autowired
+    private UserTutorDao userTutorDao;
+    @Autowired
+    private UserUnionDao userUnionDao;
+    @Autowired
+    private UserHouseparentDao userHouseparentDao;
 
     @Override
     public Page<SysUser> findAll(Integer pagenum, Integer pagesize) {
@@ -58,42 +62,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SysUser findByUsernameEquals(String username) {
+    public Optional<SysUser> findByUsernameEquals(String username) {
         return userDao.findSysUserByUsernameEquals(username);
     }
 
     @Override
     @Transactional
     public SysUser save(SysUser sysUser) throws EntityFieldException {
-        sysUser.setId(null);
-        if (this.findByUsernameEquals(sysUser.getUsername()) != null) {
-            throw new EntityFieldException("用户名已经存在");
-        }
-        sysUser.setPassword(PasswordUtils.encode(sysUser.getPassword()));
-        return userDao.save(sysUser);
+//        sysUser.setId(null);
+//        if (this.findByUsernameEquals(sysUser.getUsername()) != null) {
+//            throw new EntityFieldException("用户名已经存在");
+//        }
+//        sysUser.setPassword(PasswordUtils.encode(sysUser.getPassword()));
+//        return userDao.save(sysUser);
+        return null;
     }
 
     @Override
     public Boolean deleteById(Integer id) {
-        try {
-            userDao.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            return false;
+        if (userMybatisDao.deleteById(id) > 0) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override
     public void changePassword(Integer userId) throws EntityFieldException {
         Optional<SysUser> optionalSysUser = this.findById(userId);
-        SysUser sysUser;
-        if (optionalSysUser.isPresent()) {
-            sysUser = optionalSysUser.get();
-        } else {
-            throw new EntityFieldException("用户不存在");
-        }
-        sysUser.setPassword(PasswordUtils.encode(sysUser.getUsername()));
-        userDao.save(sysUser);
+        optionalSysUser.orElseThrow(() -> {
+            return new EntityFieldException("用户不存在");
+        });
+        userMybatisDao.updatePassword(userId, PasswordUtils.encode(optionalSysUser.get().getUsername()));
     }
 
     @Override
@@ -109,19 +108,59 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer updateEmailAndRealName(SysUserDto userDto) throws EntityFieldException {
-        if (userDto.getId() == null || "".equals(userDto.getId())) {
+        if (userDto.getId() == null) {
             throw new EntityFieldException("缺少id字段");
         }
         return userMybatisDao.updateEmailAndRealName(userDto);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUser sysUser = this.findByUsernameEquals(username);
-        if (sysUser == null)
-            throw new UsernameNotFoundException(username);
-        LoginUser loginUser = new LoginUser(sysUser);
-        return loginUser;
+    @Transactional
+    public Integer deleteUsers(Integer[] ids) throws EntityFieldException {
+        Integer retCount = 0;
+        for (Integer id : ids) {
+            log.info(id.toString());
+            Optional<SysUser> sysUserOptional = this.findById(id);
+            sysUserOptional.orElseThrow(() -> {
+                return new EntityFieldException("id: " + id + " 不存在");
+            });
+            SysUser sysUser = sysUserOptional.get();
+            if ("admin".equals(sysUser.getUsername())) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new EntityFieldException("id: " + id + " 不能删除admin用户");
+            }
+            if (MyUserUtils.getId() == sysUser.getId()) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new EntityFieldException("id: " + id + " 不能删除当前登录用户");
+            }
+            switch (sysUser.getRole()) {
+                case ROLE_ADMIN:
+                    retCount += userAdminDao.deleteSysUserAdminByUser_Id(sysUser.getId());
+                    break;
+                case ROLE_STU:
+                    retCount += userStuDao.deleteSysUserStuByUser_Id(sysUser.getId());
+                    break;
+                case ROLE_UNION:
+                    retCount += userUnionDao.deleteSysUserUnionByUser_Id(sysUser.getId());
+                    break;
+                case ROLE_TUTOR:
+                    retCount += userTutorDao.deleteSysUserTutorByUser_Id(sysUser.getId());
+                    break;
+                case ROLE_HOUSEPARENT:
+                    retCount += userHouseparentDao.deleteSysUserHouseparentByUser_Id(sysUser.getId());
+                    break;
+            }
+        }
+        log.info(retCount.toString());
+        return retCount;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<SysUser> sysUserOptional = this.findByUsernameEquals(username);
+        sysUserOptional.orElseThrow(() -> {
+            return new UsernameNotFoundException(username);
+        });
+        return new LoginUser(sysUserOptional.get());
+    }
 }

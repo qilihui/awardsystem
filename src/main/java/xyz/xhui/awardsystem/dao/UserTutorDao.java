@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface UserTutorDao extends JpaRepository<SysUserTutor, Integer> {
     Optional<SysUserTutor> findSysUserTutorByUser_Id(Integer sysUserId);
+    Integer deleteSysUserTutorByUser_Id(Integer id);
 }

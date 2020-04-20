@@ -83,7 +83,7 @@ public class UserHouseparentServiceImpl implements UserHouseparentService {
         if (!userDto.getRole().equals(RoleEnum.ROLE_HOUSEPARENT.toString())) {
             throw new EntityFieldException("角色错误");
         }
-        if (userInfoDto.getUserInfoId() == null || "".equals(userInfoDto.getUserInfoId())) {
+        if (userInfoDto.getUserInfoId() == null) {
             throw new EntityFieldException("userInfoId字段缺失");
         }
         Integer integer = userService.updateEmailAndRealName(userDto);

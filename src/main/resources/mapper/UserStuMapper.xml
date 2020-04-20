@@ -4,6 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.xhui.awardsystem.dao.mybatis.UserStuMybatisDao">
 
+    <resultMap id="userStuMap" type="xyz.xhui.awardsystem.model.entity.SysUserStu">
+        <association property="user" column="user_id" select="xyz.xhui.awardsystem.dao.mybatis.UserMybatisDao.findById"/>
+    </resultMap>
+
     <update id="updateInfo">
         update sys_user_stu
         <trim prefix="set" prefixOverrides=",">

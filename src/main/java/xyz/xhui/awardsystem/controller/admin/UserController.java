@@ -114,8 +114,21 @@ public class UserController {
         try {
             userService.changePassword(userId);
         } catch (EntityFieldException e) {
-            return ResultFactory.buildFailResult("用户不存在", 0, null);
+            return ResultFactory.buildFailResult("用户不存在");
         }
-        return ResultFactory.buildSuccessResult(null, null);
+        return ResultFactory.buildSuccessResult();
+    }
+
+    @DeleteMapping("/users")
+    @ApiOperation("批量删除")
+    @ResponseBody
+    public Result<String> deleteUsers(@RequestParam("ids[]") Integer[] ids) {
+//        log.info(Arrays.toString(ids));
+        try {
+            userService.deleteUsers(ids);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
     }
 }

@@ -5,16 +5,36 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
+import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.dao.UserAdminDao;
 import xyz.xhui.awardsystem.dao.UserDao;
+import xyz.xhui.awardsystem.dao.mybatis.UserAdminMybatisDao;
+import xyz.xhui.awardsystem.dao.mybatis.UserHouseparentMybatisDao;
+import xyz.xhui.awardsystem.dao.mybatis.UserMybatisDao;
+import xyz.xhui.awardsystem.model.entity.SysUser;
+import xyz.xhui.awardsystem.model.entity.SysUserAdmin;
+import xyz.xhui.awardsystem.model.entity.SysUserHouseparent;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @SpringBootTest
 class AwardsystemApplicationTests {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserMybatisDao userMybatisDao;
+    @Autowired
+    private UserAdminMybatisDao userAdminMybatisDao;
+    @Autowired
+    private UserHouseparentMybatisDao userHouseparentMybatisDao;
+    @Autowired
+    private UserAdminDao userAdminDao;
 
     @Test
     void contextLoads() {
@@ -35,6 +55,90 @@ class AwardsystemApplicationTests {
 
     @Test
     public void test2() {
-        userDao.deleteById(10);
+        List<SysUser> all = userMybatisDao.findAllByPagenumAndPagesize(1, 3);
+        for (SysUser user : all) {
+            System.out.println(user.toString());
+        }
     }
+
+    @Test
+    public void test3() {
+        List<SysUser> all = userMybatisDao.findAll();
+        for (SysUser user : all) {
+            System.out.println(user.toString());
+        }
+    }
+
+    @Test
+    public void test5() {
+        Optional<SysUser> byId = userMybatisDao.findById(6);
+        System.out.println(byId.get());
+    }
+
+    @Test
+    public void test6() {
+        Optional<SysUser> byId = userMybatisDao.findSysUserByUsernameEquals("admin");
+        System.out.println(byId.get());
+    }
+
+    @Test
+    public void test7() {
+        System.out.println(userMybatisDao.deleteById(18));
+    }
+
+
+    @Test
+    public void test8() {
+        System.out.println(userMybatisDao.findAllCount());
+        System.out.println(userMybatisDao.findAllCountByRole(null));
+        System.out.println(userMybatisDao.findAllCountByRole(RoleEnum.ROLE_STU));
+    }
+
+    @Test
+    public void test4() {
+        List<SysUserAdmin> all = userAdminMybatisDao.findAll();
+        for (SysUserAdmin userAdmin : all) {
+            System.out.println(userAdmin.toString());
+        }
+    }
+
+    @Test
+    public void test9() {
+        Optional<SysUserAdmin> all = userAdminMybatisDao.findById(3);
+        System.out.println(all.get());
+    }
+
+    @Test
+    public void test10() {
+        Optional<SysUserAdmin> all = userAdminMybatisDao.findSysUserAdminByUser_Id(7);
+        System.out.println(all.get());
+    }
+
+    @Test
+    public void test13() {
+        List<SysUserHouseparent> all = userHouseparentMybatisDao.findAll();
+        for (SysUserHouseparent userAdmin : all) {
+            System.out.println(userAdmin.toString());
+        }
+    }
+
+    @Test
+    public void test11() {
+        Optional<SysUserHouseparent> all = userHouseparentMybatisDao.findById(3);
+        System.out.println(all.get());
+    }
+
+    @Test
+    public void test12() {
+        Optional<SysUserHouseparent> all = userHouseparentMybatisDao.findSysUserHouseparentByUser_Id(14);
+        System.out.println(all.get());
+    }
+
+    @Test
+    @Transactional
+    public void test14() {
+        userAdminDao.deleteSysUserAdminByUser_Id(8);
+    }
+
+
 }
