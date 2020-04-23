@@ -1,7 +1,7 @@
 package xyz.xhui.awardsystem.config.sysenum;
 
 public enum RoleEnum {
-    ROLE_ADMIN(0, "超级管理员"),
+    ROLE_ADMIN(0, "系统管理员"),
     ROLE_TUTOR(1, "辅导员"),
     ROLE_HOUSEPARENT(2, "宿舍管理员"),
     ROLE_UNION(3, "学生会"),

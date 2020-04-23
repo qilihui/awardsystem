@@ -17,10 +17,10 @@ public interface UserTutorService {
 
     /**
      * 添加辅导员
-     * @param userTutor
+     * @param
      * @return
      */
-    SysUserTutor save(SysUserTutor userTutor) throws EntityFieldException;
+    SysUserTutor save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
 
     /**
      * 根据id查询

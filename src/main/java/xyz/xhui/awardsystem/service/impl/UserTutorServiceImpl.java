@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.DeptDao;
 import xyz.xhui.awardsystem.dao.GradeDao;
 import xyz.xhui.awardsystem.dao.UserDao;
@@ -14,6 +15,7 @@ import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysDept;
 import xyz.xhui.awardsystem.model.entity.SysGrade;
+import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserTutor;
 import xyz.xhui.awardsystem.service.UserService;
 import xyz.xhui.awardsystem.service.UserTutorService;
@@ -48,19 +50,25 @@ public class UserTutorServiceImpl implements UserTutorService {
 
     @Override
     @Transactional
-    public SysUserTutor save(SysUserTutor userTutor) throws EntityFieldException {
-        userTutor.getUser().setRole(RoleEnum.ROLE_TUTOR);
-        userService.save(userTutor.getUser());
-        userTutor.setId(null);
-        SysDept sysDept = deptDao.findById(userTutor.getDept().getId()).orElseThrow(
-                () -> new EntityFieldException("系部id:" + userTutor.getDept().getId() + "不存在")
+    public SysUserTutor save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException {
+        SysUserTutor sysUserTutor = new SysUserTutor();
+        SysUser sysUser = new SysUser();
+        sysUser.setUsername(userDto.getUsername());
+        sysUser.setPassword(PasswordUtils.encode(userDto.getUsername()));
+        sysUser.setEmail(userDto.getEmail());
+        sysUser.setRealName(userDto.getRealName());
+        sysUser.setRole(RoleEnum.ROLE_TUTOR);
+        sysUserTutor.setUser(sysUser);
+
+        SysDept sysDept = deptDao.findById(userInfoDto.getDeptId()).orElseThrow(
+                () -> new EntityFieldException("系部id:" + userInfoDto.getDeptId() + "不存在")
         );
-        userTutor.setDept(sysDept);
-        SysGrade sysGrade = gradeDao.findById(userTutor.getGrade().getId()).orElseThrow(
-                () -> new EntityFieldException("年级id:" + userTutor.getDept().getId() + "不存在")
+        sysUserTutor.setDept(sysDept);
+        SysGrade sysGrade = gradeDao.findById(userInfoDto.getGradeId()).orElseThrow(
+                () -> new EntityFieldException("年级id:" + userInfoDto.getGradeId() + "不存在")
         );
-        userTutor.setGrade(sysGrade);
-        return userTutorDao.save(userTutor);
+        sysUserTutor.setGrade(sysGrade);
+        return userTutorDao.save(sysUserTutor);
     }
 
     @Override

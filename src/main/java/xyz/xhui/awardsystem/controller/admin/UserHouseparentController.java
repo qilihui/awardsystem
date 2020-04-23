@@ -61,20 +61,20 @@ public class UserHouseparentController {
         return ResultFactory.buildFailResult();
     }
 
-//    @PostMapping(value = "")
-//    @ApiOperation("添加")
-//    public Result save(@RequestBody SysUserHouseparent userHouseparent) {
-//        logger.info(userHouseparent.toString());
-//        SysUserHouseparent retUserHouseparent = null;
-//        try {
-//            retUserHouseparent = userHouseparentService.save(userHouseparent);
-//        } catch (EntityFieldException e) {
-//            return ResultFactory.buildFailResult(null, e.getMessage());
-//        }
-//        PasswordUtils.hiddenPassword(retUserHouseparent);
-//        return ResultFactory.buildSuccessResult(retUserHouseparent, "添加成功");
-//    }
-//
+    @PostMapping(value = "/add")
+    @ApiOperation("添加")
+    @ResponseBody
+    public Result<String> save(UserInfoDto userInfoDto, SysUserDto userDto) {
+        logger.info(userInfoDto.toString());
+        logger.info(userDto.toString());
+        try {
+            userHouseparentService.save(userInfoDto,userDto);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
+    }
+
 //    @GetMapping(value = "")
 //    @ApiOperation("查询所有详细信息")
 //    @ResponseBody

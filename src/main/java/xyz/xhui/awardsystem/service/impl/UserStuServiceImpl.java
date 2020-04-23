@@ -5,14 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.dao.mybatis.UserStuMybatisDao;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
-import xyz.xhui.awardsystem.model.entity.SysApartment;
-import xyz.xhui.awardsystem.model.entity.SysDept;
-import xyz.xhui.awardsystem.model.entity.SysGrade;
-import xyz.xhui.awardsystem.model.entity.SysUserStu;
+import xyz.xhui.awardsystem.model.entity.*;
 import xyz.xhui.awardsystem.service.UserService;
 import xyz.xhui.awardsystem.service.UserStuService;
 
@@ -53,21 +51,30 @@ public class UserStuServiceImpl implements UserStuService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public SysUserStu save(SysUserStu userStu) throws EntityFieldException {
-        userStu.getUser().setRole(RoleEnum.ROLE_STU);
-        userService.save(userStu.getUser());
-        userStu.setId(null);
-        SysDept sysDept = deptDao.findById(userStu.getDept().getId()).orElseThrow(
-                () -> new EntityFieldException("系部id:" + userStu.getDept().getId() + "不存在")
+    @Transactional
+    public SysUserStu save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException {
+        SysUserStu userStu = new SysUserStu();
+        SysUser sysUser = new SysUser();
+        sysUser.setUsername(userDto.getUsername());
+        sysUser.setPassword(PasswordUtils.encode(userDto.getUsername()));
+        sysUser.setEmail(userDto.getEmail());
+        sysUser.setRealName(userDto.getRealName());
+        sysUser.setRole(RoleEnum.ROLE_STU);
+
+        userStu.setUser(sysUser);
+        userStu.setRoom(userInfoDto.getRoom());
+        userStu.setBed(userInfoDto.getBed());
+
+        SysDept sysDept = deptDao.findById(userInfoDto.getDeptId()).orElseThrow(
+                () -> new EntityFieldException("系部id:" + userInfoDto.getDeptId() + "不存在")
         );
         userStu.setDept(sysDept);
-        SysGrade sysGrade = gradeDao.findById(userStu.getGrade().getId()).orElseThrow(
-                () -> new EntityFieldException("年级id:" + userStu.getDept().getId() + "不存在")
+        SysGrade sysGrade = gradeDao.findById(userInfoDto.getGradeId()).orElseThrow(
+                () -> new EntityFieldException("年级id:" + userInfoDto.getGradeId() + "不存在")
         );
         userStu.setGrade(sysGrade);
-        SysApartment sysApartment = apartmentDao.findById(userStu.getApartment().getId()).orElseThrow(
-                () -> new EntityFieldException("公寓id:" + userStu.getDept().getId() + "不存在")
+        SysApartment sysApartment = apartmentDao.findById(userInfoDto.getApartmentId()).orElseThrow(
+                () -> new EntityFieldException("公寓id:" + userInfoDto.getApartmentId() + "不存在")
         );
         userStu.setApartment(sysApartment);
         return userStuDao.save(userStu);

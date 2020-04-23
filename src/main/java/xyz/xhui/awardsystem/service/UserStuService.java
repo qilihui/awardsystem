@@ -24,7 +24,7 @@ public interface UserStuService {
 
     Optional<SysUserStu> findById(Integer id);
 
-    SysUserStu save(SysUserStu userStu) throws EntityFieldException;
+    SysUserStu save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
 
     Optional<SysUserStu> findBySysUserId(Integer id);
 

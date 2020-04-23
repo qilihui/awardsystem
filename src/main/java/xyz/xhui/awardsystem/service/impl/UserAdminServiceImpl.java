@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.UserAdminDao;
 import xyz.xhui.awardsystem.dao.UserDao;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
+import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserAdmin;
 import xyz.xhui.awardsystem.service.UserAdminService;
 import xyz.xhui.awardsystem.service.UserService;
@@ -43,10 +45,22 @@ public class UserAdminServiceImpl implements UserAdminService {
 
     @Override
     @Transactional
-    public SysUserAdmin save(SysUserAdmin userAdmin) throws EntityFieldException {
-        userAdmin.getUser().setRole(RoleEnum.ROLE_ADMIN);
-        userService.save(userAdmin.getUser());
+    public SysUserAdmin save(SysUserDto sysUserDto) throws EntityFieldException {
+        SysUserAdmin userAdmin = new SysUserAdmin();
+        SysUser sysUser = new SysUser();
+        sysUser.setUsername(sysUserDto.getUsername());
+        sysUser.setPassword(PasswordUtils.encode(sysUserDto.getUsername()));
+        sysUser.setEmail(sysUserDto.getEmail());
+        sysUser.setRealName(sysUserDto.getRealName());
+        sysUser.setRole(RoleEnum.ROLE_ADMIN);
+        userAdmin.setUser(sysUser);
+
+        Optional<SysUser> sysUserOptional = userService.findByUsernameEquals(userAdmin.getUser().getUsername());
+        if (sysUserOptional.isPresent()){
+            throw new EntityFieldException("用户名已存在");
+        }
         userAdmin.setId(null);
+        userAdmin.getUser().setId(null);
         return userAdminDao.save(userAdmin);
     }
 

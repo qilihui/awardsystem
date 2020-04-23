@@ -64,20 +64,18 @@ public class UserAdminController {
         return ResultFactory.buildFailResult();
     }
 
-//    @PostMapping(value = "")
-//    @ApiOperation("添加管理员")
-//    public Result save(@RequestBody SysUserAdmin userAdmin) {
-//        logger.info(userAdmin.toString());
-//        SysUserAdmin retUserAdmin = null;
-//        try {
-//            retUserAdmin = userAdminService.save(userAdmin);
-//        } catch (EntityFieldException e) {
-//            return ResultFactory.buildFailResult(null, e.getMessage());
-//        }
-//        PasswordUtils.hiddenPassword(retUserAdmin);
-//        return ResultFactory.buildSuccessResult(retUserAdmin, "添加成功");
-//    }
-//
+    @PostMapping(value = "/add")
+    @ApiOperation("添加管理员")
+    @ResponseBody
+    public Result<String> save(SysUserDto sysUserDto) {
+        try {
+            userAdminService.save(sysUserDto);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
+    }
+
 //    @GetMapping(value = "")
 //    @ApiOperation("查询所有详细信息")
 //    public Result findTutorAll() {

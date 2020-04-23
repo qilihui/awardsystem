@@ -17,10 +17,10 @@ public interface UserUnionService {
 
     /**
      * 添加辅导员
-     * @param userUnion
+     * @param
      * @return
      */
-    SysUserUnion save(SysUserUnion userUnion) throws EntityFieldException;
+    SysUserUnion save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
 
     /**
      * 根据id查询

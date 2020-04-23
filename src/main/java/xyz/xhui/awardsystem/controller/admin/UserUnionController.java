@@ -60,20 +60,20 @@ public class UserUnionController {
         return ResultFactory.buildFailResult();
     }
 
-//    @PostMapping(value = "")
-//    @ApiOperation("添加用户")
-//    public Result save(@RequestBody SysUserUnion userUnion) {
-//        logger.info(userUnion.toString());
-//        SysUserUnion retUserUnion = null;
-//        try {
-//            retUserUnion = userUnionService.save(userUnion);
-//        } catch (EntityFieldException e) {
-//            return ResultFactory.buildFailResult(null, e.getMessage());
-//        }
-//        PasswordUtils.hiddenPassword(retUserUnion);
-//        return ResultFactory.buildSuccessResult(retUserUnion, "添加成功");
-//    }
-//
+    @PostMapping(value = "/add")
+    @ApiOperation("添加用户")
+    @ResponseBody
+    public Result<String> save(UserInfoDto userInfoDto, SysUserDto userDto) {
+        logger.info(userInfoDto.toString());
+        logger.info(userDto.toString());
+        try {
+            userUnionService.save(userInfoDto, userDto);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult( e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult("添加成功");
+    }
+
 //    @GetMapping(value = "")
 //    @ApiOperation("查询所有详细信息")
 //    public Result findAll() {

@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
+import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
+import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserTutor;
 import xyz.xhui.awardsystem.service.UserTutorService;
 
@@ -60,20 +62,20 @@ public class UserTutorController {
         return ResultFactory.buildFailResult();
     }
 
-//    @PostMapping(value = "")
-//    @ApiOperation("添加用户")
-//    public Result save(@RequestBody SysUserTutor userTutor) {
-//        logger.info(userTutor.toString());
-//        SysUserTutor retUserTutor = null;
-//        try {
-//            retUserTutor = userTutorService.save(userTutor);
-//        } catch (EntityFieldException e) {
-//            return ResultFactory.buildFailResult(null, e.getMessage());
-//        }
-//        PasswordUtils.hiddenPassword(retUserTutor);
-//        return ResultFactory.buildSuccessResult(retUserTutor, "添加成功");
-//    }
-//
+    @PostMapping(value = "/add")
+    @ApiOperation("添加用户")
+    @ResponseBody
+    public Result save(UserInfoDto userInfoDto, SysUserDto userDto) {
+        logger.info(userInfoDto.toString());
+        logger.info(userDto.toString());
+        try {
+            userTutorService.save(userInfoDto, userDto);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
+    }
+
 //    @GetMapping(value = "")
 //    @ApiOperation("查询所有详细信息")
 //    public Result findTutorAll() {

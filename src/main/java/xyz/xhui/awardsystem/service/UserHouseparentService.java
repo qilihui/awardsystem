@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface UserHouseparentService {
     List<SysUserHouseparent> findAll();
 
-    SysUserHouseparent save(SysUserHouseparent userHouseparent) throws EntityFieldException;
+    SysUserHouseparent save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
 
     Optional<SysUserHouseparent> findById(Integer id);
 

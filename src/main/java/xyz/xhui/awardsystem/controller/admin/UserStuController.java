@@ -60,20 +60,20 @@ public class UserStuController {
         return ResultFactory.buildFailResult();
     }
 
-//    @PostMapping(value = "")
-//    @ApiOperation("添加")
-//    public Result save(@RequestBody SysUserStu userStu) {
-//        logger.info(userStu.toString());
-//        SysUserStu retUserStu = null;
-//        try {
-//            retUserStu = userStuService.save(userStu);
-//        } catch (EntityFieldException e) {
-//            return ResultFactory.buildFailResult(null, e.getMessage());
-//        }
-//        PasswordUtils.hiddenPassword(retUserStu);
-//        return ResultFactory.buildSuccessResult(retUserStu, "添加成功");
-//    }
-//
+    @PostMapping(value = "/add")
+    @ApiOperation("添加")
+    @ResponseBody
+    public Result<String> save(UserInfoDto userInfoDto, SysUserDto userDto) {
+        logger.info(userInfoDto.toString());
+        logger.info(userDto.toString());
+        try {
+            userStuService.save(userInfoDto, userDto);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult("添加成功");
+    }
+
 //    @GetMapping(value = "")
 //    @ApiOperation("查询所有学生详细信息")
 //    public Result findStuAll() {

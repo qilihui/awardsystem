@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.ApartmentDao;
 import xyz.xhui.awardsystem.dao.UserDao;
 import xyz.xhui.awardsystem.dao.UserHouseparentDao;
@@ -12,6 +13,7 @@ import xyz.xhui.awardsystem.dao.mybatis.UserHouseparentMybatisDao;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysApartment;
+import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserHouseparent;
 import xyz.xhui.awardsystem.service.UserHouseparentService;
 import xyz.xhui.awardsystem.service.UserService;
@@ -42,12 +44,18 @@ public class UserHouseparentServiceImpl implements UserHouseparentService {
     }
 
     @Override
-    public SysUserHouseparent save(SysUserHouseparent userHouseparent) throws EntityFieldException {
-        userHouseparent.getUser().setRole(RoleEnum.ROLE_UNION);
-        userService.save(userHouseparent.getUser());
-        userHouseparent.setId(null);
-        SysApartment sysApartment = apartmentDao.findById(userHouseparent.getApartment().getId()).orElseThrow(
-                () -> new EntityFieldException("公寓id:" + userHouseparent.getApartment().getId() + "不存在")
+    public SysUserHouseparent save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException {
+        SysUserHouseparent userHouseparent = new SysUserHouseparent();
+        SysUser sysUser = new SysUser();
+        sysUser.setUsername(userDto.getUsername());
+        sysUser.setPassword(PasswordUtils.encode(userDto.getUsername()));
+        sysUser.setEmail(userDto.getEmail());
+        sysUser.setRealName(userDto.getRealName());
+        sysUser.setRole(RoleEnum.ROLE_HOUSEPARENT);
+        userHouseparent.setUser(sysUser);
+
+        SysApartment sysApartment = apartmentDao.findById(userInfoDto.getApartmentId()).orElseThrow(
+                () -> new EntityFieldException("公寓id:" + userInfoDto.getApartmentId() + "不存在")
         );
         userHouseparent.setApartment(sysApartment);
         return houseparentDao.save(userHouseparent);

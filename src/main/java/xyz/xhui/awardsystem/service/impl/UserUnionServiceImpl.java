@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.DeptDao;
 import xyz.xhui.awardsystem.dao.UserDao;
 import xyz.xhui.awardsystem.dao.UserUnionDao;
@@ -12,6 +13,7 @@ import xyz.xhui.awardsystem.dao.mybatis.UserUnionMybatisDao;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysDept;
+import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserUnion;
 import xyz.xhui.awardsystem.service.UserService;
 import xyz.xhui.awardsystem.service.UserUnionService;
@@ -42,12 +44,18 @@ public class UserUnionServiceImpl implements UserUnionService {
     }
 
     @Override
-    public SysUserUnion save(SysUserUnion userUnion) throws EntityFieldException {
-        userUnion.getUser().setRole(RoleEnum.ROLE_UNION);
-        userService.save(userUnion.getUser());
-        userUnion.setId(null);
-        SysDept sysDept = deptDao.findById(userUnion.getDept().getId()).orElseThrow(
-                () -> new EntityFieldException("系部id:" + userUnion.getDept().getId() + "不存在")
+    public SysUserUnion save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException {
+        SysUserUnion userUnion = new SysUserUnion();
+        SysUser sysUser = new SysUser();
+        sysUser.setUsername(userDto.getUsername());
+        sysUser.setPassword(PasswordUtils.encode(userDto.getUsername()));
+        sysUser.setEmail(userDto.getEmail());
+        sysUser.setRealName(userDto.getRealName());
+        sysUser.setRole(RoleEnum.ROLE_UNION);
+        userUnion.setUser(sysUser);
+
+        SysDept sysDept = deptDao.findById(userInfoDto.getDeptId()).orElseThrow(
+                () -> new EntityFieldException("系部id:" + userInfoDto.getDeptId() + "不存在")
         );
         userUnion.setDept(sysDept);
         return userUnionDao.save(userUnion);

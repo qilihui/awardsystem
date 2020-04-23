@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>修改用户信息</title>
+    <link rel="stylesheet" th:href="@{/xadmin/css/font.css}"/>
+    <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}"/>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
+</head>
+
+<body style="margin-top: 20px;">
+<div class="x-body">
+    <form class="layui-form">
+        <!--        <input type="hidden" id="userAdminId" name="userInfoId">-->
+        <!--        <input type="hidden" id="userId" name="id">-->
+        <!--        <input type="hidden" id="role" name="role">-->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>角色</label>
+            <div class="layui-input-inline">
+                <select name="role" lay-verify="role" lay-filter="role_filter" id="role_val">
+                    <option value="">请选择</option>
+                    <option value="ROLE_ADMIN">系统管理员</option>
+                    <option value="ROLE_TUTOR">辅导员</option>
+                    <option value="ROLE_HOUSEPARENT">宿舍管理员</option>
+                    <option value="ROLE_UNION">学生会</option>
+                    <option value="ROLE_STU">学生</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="L_username" class="layui-form-label"><span class="x-red">*</span>用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_username" name="username" required=""
+                       lay-verify="username" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>唯一的登入名
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_nickname" class="layui-form-label">
+                <span class="x-red">*</span>姓名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_nickname" name="realName" required=""
+                       lay-verify="realName" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red">*</span>邮箱
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_email" name="email" required=""
+                       lay-verify="email"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="hide_dept">
+            <label class="layui-form-label"><span class="x-red">*</span>系部</label>
+            <div class="layui-input-inline">
+                <select name="deptId" class="show-dept-container" lay-verify="deptId" id="dept_val">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="hide_grade">
+            <label class="layui-form-label"><span class="x-red">*</span>年级</label>
+            <div class="layui-input-inline">
+                <select name="gradeId" class="show-grade-container" lay-verify="gradeId" id="grade_val">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="hide_apartment">
+            <label class="layui-form-label"><span class="x-red">*</span>公寓</label>
+            <div class="layui-input-inline">
+                <select name="apartmentId" class="show-apartment-container" lay-verify="apartmentId" id="apartment_val">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="hide_room">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red">*</span>房间
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_room" name="room" required=""
+                       lay-verify="room" oninput="value=value.replace(/[^\d]/g,'')"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" id="hide_bed">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red">*</span>床号
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_bed" name="bed" required=""
+                       lay-verify="bed" oninput="value=value.replace(/[^\d]/g,'')"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+            </label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">
+                添加
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'layer', 'jquery'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            form = layui.form;
+        // console.log("test role")
+        let hide_dept = $("#hide_dept").hide();
+        let hide_grade = $("#hide_grade").hide();
+        let hide_apartment = $("#hide_apartment").hide();
+        let hide_room = $("#hide_room").hide();
+        let hide_bed = $("#hide_bed").hide();
+        form.on('select(role_filter)', function (data) {
+            var value = data.value;
+            switch (value) {
+                case 'ROLE_ADMIN':
+                    hide_dept.hide();
+                    hide_grade.hide();
+                    hide_apartment.hide();
+                    hide_room.hide();
+                    hide_bed.hide();
+                    break;
+                case 'ROLE_TUTOR':
+                    hide_dept.show();
+                    hide_grade.show();
+                    hide_apartment.hide();
+                    hide_room.hide();
+                    hide_bed.hide();
+                    break;
+                case 'ROLE_HOUSEPARENT':
+                    hide_dept.hide();
+                    hide_grade.hide();
+                    hide_apartment.show();
+                    hide_room.hide();
+                    hide_bed.hide();
+                    break;
+                case 'ROLE_UNION':
+                    hide_dept.show();
+                    hide_grade.hide();
+                    hide_apartment.hide();
+                    hide_room.hide();
+                    hide_bed.hide();
+                    break;
+                case 'ROLE_STU':
+                    hide_dept.show();
+                    hide_grade.show();
+                    hide_apartment.show();
+                    hide_room.show();
+                    hide_bed.show();
+                    break;
+            }
+        })
+    })
+</script>
+<script>
+    layui.use(['form', 'layer', 'laydate'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer
+            , laydate = layui.laydate;
+        var load = layer.load(1)
+        getAllDept(function () {
+            layui.form.render('select')
+            layer.close(load)
+        });
+
+        //自定义验证规则
+        form.verify({
+            role: function (value) {
+                if (value == null || value === '') {
+                    return '角色不能为空'
+                }
+                let dept_val = $("#dept_val").val();
+                let grade_val = $("#grade_val").val();
+                let apartment_val = $("#apartment_val").val();
+                let room_val = $("#L_room").val();
+                let bed_val = $("#L_bed").val();
+                if (value === 'ROLE_ADMIN') {
+                }
+                if (value === 'ROLE_TUTOR') {
+                    if (dept_val == null || dept_val === '') {
+                        return '系部不能为空';
+                    }
+                    if (grade_val == null || grade_val === '') {
+                        return '年级不能为空';
+                    }
+                }
+                if (value === 'ROLE_HOUSEPARENT') {
+                    if (apartment_val == null || apartment_val === '') {
+                        return '公寓号不能为空';
+                    }
+                }
+                if (value === 'ROLE_UNION') {
+                    if (dept_val == null || dept_val === '') {
+                        return '系部不能为空';
+                    }
+                }
+                if (value === 'ROLE_STU') {
+                    if (dept_val == null || dept_val === '') {
+                        return '系部不能为空';
+                    }
+                    if (grade_val == null || grade_val === '') {
+                        return '年级不能为空';
+                    }
+                    if (apartment_val == null || apartment_val === '') {
+                        return '公寓号不能为空';
+                    }
+                    if (room_val == null || room_val === '') {
+                        return '房间号不能为空'
+                    }
+                    if (room_val < 100 || room_val > 999) {
+                        return '房间号超出范围'
+                    }
+                    if (bed_val == null || bed_val === '') {
+                        return '床号不能为空'
+                    }
+                    if (bed_val < 1 || bed_val > 10) {
+                        return '床号超出范围'
+                    }
+                }
+            },
+            username: function (value) {
+                if (value == null || value === '') {
+                    return '用户名不能为空'
+                }
+            },
+            realName: function (value) {
+                if (value == null || value === '') {
+                    return '姓名不能为空'
+                }
+            },
+            email: function (value) {
+                if (value == null || value === '') {
+                    return '邮箱不正确';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(add)', function (data) {
+            var load = layer.load(2)
+            let val = $("#role_val").val();
+            var roleStr = val.replace("ROLE_", "").toLocaleLowerCase();
+            // console.log(roleStr)
+            $.ajax({
+                url: "/user/"+roleStr+"/add",
+                type: "POST",
+                data: data.field,
+                dataType: 'json',
+                success: function (result) {
+                    layer.close(load)
+                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                        layer.alert(result.msg, {icon: 2});
+                    } else {
+                        layer.alert("添加成功", {icon: 6}, function () {
+                            //关闭当前frame
+                            xadmin.close();
+                            // 可以对父窗口进行刷新
+                            xadmin.father_reload();
+                        });
+                    }
+
+                }
+            });
+            return false;
+        });
+    });
+
+    function getAllDept(callback) {
+        $.ajax({
+            url: "/dept",
+            type: "GET",
+            dataType: 'json',
+            success: function (result) {
+                var html = '<option value="">请选择</option>';
+                if (result.data && result.data.length > 0) {
+                    for (var i in result.data) {
+                        html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
+                    }
+                    $(".show-dept-container").html(html);
+                    getAllGrade(callback);
+                }
+            }
+        });
+    }
+
+    function getAllGrade(callback) {
+        $.ajax({
+            url: "/grade",
+            type: "GET",
+            dataType: 'json',
+            success: function (result) {
+                var html = '<option value="">请选择</option>';
+                if (result.data && result.data.length > 0) {
+                    for (var i in result.data) {
+                        html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
+                    }
+                    $(".show-grade-container").html(html);
+                    getAllApartment(callback);
+                }
+                // if (callback) {
+                //     callback();
+                // }
+                // console.log(html)
+            }
+        });
+    }
+
+    function getAllApartment(callback) {
+        $.ajax({
+            url: "/apartment",
+            type: "GET",
+            dataType: 'json',
+            success: function (result) {
+                var html = '<option value="">请选择</option>';
+                if (result.data && result.data.length > 0) {
+                    for (var i in result.data) {
+                        html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
+                    }
+                    $(".show-apartment-container").html(html);
+                }
+                if (callback) {
+                    callback();
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

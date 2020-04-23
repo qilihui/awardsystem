@@ -14,7 +14,7 @@ public interface UserAdminService {
 
     Optional<SysUserAdmin> findBySysUserId(Integer id);
 
-    SysUserAdmin save(SysUserAdmin userAdmin) throws EntityFieldException;
+    SysUserAdmin save(SysUserDto sysUserDto) throws EntityFieldException;
 
     Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
 
