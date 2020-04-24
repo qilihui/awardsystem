@@ -1,8 +1,9 @@
 package xyz.xhui.awardsystem.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.dao.ApartmentDao;
 import xyz.xhui.awardsystem.model.entity.SysApartment;
 import xyz.xhui.awardsystem.service.ApartmentService;
@@ -16,8 +17,14 @@ public class ApartmentServiceImpl implements ApartmentService {
     ApartmentDao apartmentDao;
 
     @Override
-    public SysApartment save(SysApartment dept) {
-        return apartmentDao.save(dept);
+    public SysApartment save(String name) throws EntityFieldException {
+        SysApartment apartment = new SysApartment();
+        apartment.setName(name);
+        Optional<SysApartment> deptOptional = apartmentDao.findSysApartmentByName(apartment.getName());
+        if (deptOptional.isPresent()) {
+            throw new EntityFieldException("name已存在");
+        }
+        return apartmentDao.save(apartment);
     }
 
     @Override
@@ -31,12 +38,41 @@ public class ApartmentServiceImpl implements ApartmentService {
     }
 
     @Override
-    public Boolean deleteById(Integer id) {
-        try{
-            apartmentDao.deleteById(id);
-        }catch (EmptyResultDataAccessException e) {
-            return false;
+    public Integer deleteById(Integer id) throws EntityFieldException {
+        Integer count = 0;
+        Optional<SysApartment> apartmentOptional = this.findById(id);
+        apartmentOptional.orElseThrow(() -> {
+            return new EntityFieldException("id:" + id + " 不存在");
+        });
+        return apartmentDao.deleteSysApartmentById(id);
+    }
+
+    @Override
+    public SysApartment updatAapartment(SysApartment apartment) throws EntityFieldException {
+        if (apartment.getId() == null) {
+            throw new EntityFieldException("缺少id字段");
         }
-        return true;
+        if (apartment.getName() == null || "".equals(apartment.getName())) {
+            throw new EntityFieldException("name不能为空");
+        }
+        Optional<SysApartment> sysDeptByName = apartmentDao.findSysApartmentByName(apartment.getName());
+        if (sysDeptByName.isPresent()) {
+            throw new EntityFieldException("name已存在");
+        }
+        return apartmentDao.save(apartment);
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteApartments(Integer[] ids) throws EntityFieldException {
+        Integer count = 0;
+        for (Integer id : ids) {
+            Optional<SysApartment> apartmentOptional = this.findById(id);
+            apartmentOptional.orElseThrow(() -> {
+                return new EntityFieldException("id:" + id + " 不存在");
+            });
+            count += apartmentDao.deleteSysApartmentById(id);
+        }
+        return count;
     }
 }

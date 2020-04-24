@@ -1,5 +1,6 @@
 package xyz.xhui.awardsystem.service;
 
+import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.model.entity.SysGrade;
 
 import java.util.List;
@@ -8,10 +9,10 @@ import java.util.Optional;
 public interface GradeService {
     /**
      * 添加系部
-     * @param grade
+     * @param
      * @return
      */
-    SysGrade save(SysGrade grade);
+    SysGrade save(Integer name) throws EntityFieldException;
 
     /**
      * 查询所有系部
@@ -28,7 +29,12 @@ public interface GradeService {
 
     /**
      * 删除
-     * @param id
+     * @param
+     * @return
      */
-    Boolean deleteById(Integer id);
+    Integer deleteById(Integer id) throws EntityFieldException;
+
+    Integer deleteGrades(Integer[] ids) throws EntityFieldException;
+
+    SysGrade updateGrade(SysGrade grade) throws EntityFieldException;
 }

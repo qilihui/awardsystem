@@ -17,12 +17,20 @@
     },
     {
       "id": 2,
-      "name": "分数管理",
+      "name": "系统管理",
       "css": "&#xe6ae;",
       "child": [
         {
-          "name": "查询",
-          "href": "/"
+          "name": "系部列表",
+          "href": "/getPage?name=sys/dept-list"
+        },
+        {
+          "name": "年级列表",
+          "href": "/getPage?name=sys/grade-list"
+        },
+        {
+          "name": "公寓列表",
+          "href": "/getPage?name=sys/apartment-list"
         }
       ]
     }

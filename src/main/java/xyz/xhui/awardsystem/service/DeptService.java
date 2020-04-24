@@ -1,5 +1,6 @@
 package xyz.xhui.awardsystem.service;
 
+import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.model.entity.SysDept;
 
 import java.util.List;
@@ -8,10 +9,10 @@ import java.util.Optional;
 public interface DeptService {
     /**
      * 添加系部
-     * @param dept
+     * @param
      * @return
      */
-    SysDept save(SysDept dept);
+    SysDept save(String name) throws EntityFieldException;
 
     /**
      * 查询所有系部
@@ -31,5 +32,9 @@ public interface DeptService {
      * @param id
      * @return
      */
-    Boolean deleteById(Integer id);
+    Boolean deleteById(Integer id) throws EntityFieldException;
+
+    Integer deleteDepts(Integer[] ids) throws EntityFieldException;
+
+    SysDept updateDept(SysDept dept) throws EntityFieldException;
 }
