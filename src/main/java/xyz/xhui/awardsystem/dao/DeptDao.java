@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface DeptDao extends JpaRepository<SysDept, Integer> {
     Optional<SysDept> findSysDeptByName(String name);
     Integer deleteSysDeptById(Integer id);
+    Boolean existsByName(String name);
 }

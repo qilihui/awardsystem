@@ -26,6 +26,7 @@ public class ApartmentController {
     private ApartmentService apartmentService;
 
     @PostMapping("/edit")
+    @ApiOperation("更新")
     @ResponseBody
     public Result<String> updateDept(SysApartment apartment) {
         log.info(apartment.toString());

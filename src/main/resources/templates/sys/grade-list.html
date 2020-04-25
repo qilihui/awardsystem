@@ -14,6 +14,11 @@
     <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
     <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <style>
+        .layui-table-body {
+            overflow-x: hidden;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,7 +42,8 @@
                     <form class="layui-form layui-col-space5">
                         <!--                        <label class="layui-form-label">添加系部:</label>-->
                         <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input" required autocomplete="off" placeholder="年级名" name="name" lay-verify="gradename">
+                            <input class="layui-input" required autocomplete="off" placeholder="年级名" name="name"
+                                   lay-verify="gradename">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
                             <button class="layui-btn" lay-submit="" lay-filter="add">
@@ -47,7 +53,7 @@
                 </div>
                 <div class="layui-card-body">
                     <table class="layui-table"
-                           lay-data="{url:'/grade',page:true,toolbar: '#toolbarDemo',id:'test',initSort:{field:'id', type:'asc'}}"
+                           lay-data="{url:'/grade',page:false,toolbar: '#toolbarDemo',id:'test',initSort:{field:'id', type:'asc'}}"
                            lay-filter="test">
                         <thead>
                         <tr>
@@ -79,7 +85,7 @@
                 , data = obj.data //得到所在行所有键值
                 , field = obj.field; //得到字段
             // layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
-            if (! /^\d+$/.test(value)) {
+            if (!/^\d+$/.test(value)) {
                 return layer.alert("内容必须为数字", {icon: 2}, function (index1) {
                     layer.close(index1);
                     table.reload('test');
@@ -188,7 +194,7 @@
                 if (value == null || value === '') {
                     return '年级不能为空'
                 }
-                if (! /^\d+$/.test(value)) {
+                if (!/^\d+$/.test(value)) {
                     return "内容必须为数字";
                 }
             },

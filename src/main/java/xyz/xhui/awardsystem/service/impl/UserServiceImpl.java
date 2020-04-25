@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.PasswordErrorException;
+import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.*;
@@ -153,6 +154,16 @@ public class UserServiceImpl implements UserService {
         }
         log.info(retCount.toString());
         return retCount;
+    }
+
+    @Override
+    public Integer getCount(RoleEnum roleEnum) {
+        return userDao.countAllByRole(roleEnum);
+    }
+
+    @Override
+    public Integer getCount() {
+        return Math.toIntExact(userDao.count());
     }
 
     @Override

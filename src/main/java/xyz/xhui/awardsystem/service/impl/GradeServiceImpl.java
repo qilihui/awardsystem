@@ -21,8 +21,7 @@ public class GradeServiceImpl implements GradeService {
     public SysGrade save(Integer name) throws EntityFieldException {
         SysGrade grade = new SysGrade();
         grade.setName(name);
-        Optional<SysGrade> deptOptional = gradeDao.findSysGradeByName(grade.getName());
-        if (deptOptional.isPresent()) {
+        if (gradeDao.existsByName(grade.getName())) {
             throw new EntityFieldException("name已存在");
         }
         return gradeDao.save(grade);
@@ -69,8 +68,7 @@ public class GradeServiceImpl implements GradeService {
         if (grade.getName() == null || "".equals(grade.getName())) {
             throw new EntityFieldException("name不能为空");
         }
-        Optional<SysGrade> sysDeptByName = gradeDao.findSysGradeByName(grade.getName());
-        if (sysDeptByName.isPresent()) {
+        if (gradeDao.existsByName(grade.getName())) {
             throw new EntityFieldException("name已存在");
         }
         return gradeDao.save(grade);

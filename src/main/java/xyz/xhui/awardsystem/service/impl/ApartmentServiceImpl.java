@@ -20,8 +20,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     public SysApartment save(String name) throws EntityFieldException {
         SysApartment apartment = new SysApartment();
         apartment.setName(name);
-        Optional<SysApartment> deptOptional = apartmentDao.findSysApartmentByName(apartment.getName());
-        if (deptOptional.isPresent()) {
+        if (apartmentDao.existsByName(apartment.getName())) {
             throw new EntityFieldException("name已存在");
         }
         return apartmentDao.save(apartment);
@@ -55,8 +54,7 @@ public class ApartmentServiceImpl implements ApartmentService {
         if (apartment.getName() == null || "".equals(apartment.getName())) {
             throw new EntityFieldException("name不能为空");
         }
-        Optional<SysApartment> sysDeptByName = apartmentDao.findSysApartmentByName(apartment.getName());
-        if (sysDeptByName.isPresent()) {
+        if (apartmentDao.existsByName(apartment.getName())) {
             throw new EntityFieldException("name已存在");
         }
         return apartmentDao.save(apartment);

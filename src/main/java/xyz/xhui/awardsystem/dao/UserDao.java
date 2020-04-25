@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface UserDao extends JpaRepository<SysUser, Integer>, JpaSpecificationExecutor<SysUser> {
     Optional<SysUser> findSysUserByUsernameEquals(String username);
     SysUser findSysUserByUsernameEqualsAndRoleEquals(String username, RoleEnum role);
+    Integer countAllByRole(RoleEnum role);
 }

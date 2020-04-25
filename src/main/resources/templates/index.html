@@ -6,7 +6,7 @@
     <link rel="stylesheet" th:href="@{/xadmin/css/font.css}">
     <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}">
     <!-- <link rel="stylesheet" href="./css/theme5.css"> -->
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <!--    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>-->
     <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
     <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
@@ -23,33 +23,10 @@
 <!-- 顶部开始 -->
 <div class="container">
     <div class="logo">
-        <a href="./index.html">综合成绩管理系统</a></div>
+        <a href="./index.bak.html">综合成绩管理系统</a></div>
     <div class="left_open">
         <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
     </div>
-<!--    <ul class="layui-nav left fast-add" lay-filter="">-->
-<!--        <li class="layui-nav-item">-->
-<!--            <a href="javascript:;">+新增</a>-->
-<!--            <dl class="layui-nav-child">-->
-<!--                &lt;!&ndash; 二级菜单 &ndash;&gt;-->
-<!--                <dd>-->
-<!--                    <a onclick="xadmin.open('最大化','http://www.baidu.com','','',true)">-->
-<!--                        <i class="iconfont">&#xe6a2;</i>弹出最大化</a></dd>-->
-<!--                <dd>-->
-<!--                    <a onclick="xadmin.open('弹出自动宽高','http://www.baidu.com')">-->
-<!--                        <i class="iconfont">&#xe6a8;</i>弹出自动宽高</a></dd>-->
-<!--                <dd>-->
-<!--                    <a onclick="xadmin.open('弹出指定宽高','http://www.baidu.com',500,300)">-->
-<!--                        <i class="iconfont">&#xe6a8;</i>弹出指定宽高</a></dd>-->
-<!--                <dd>-->
-<!--                    <a onclick="xadmin.add_tab('在tab打开','member-list.html')">-->
-<!--                        <i class="iconfont">&#xe6b8;</i>在tab打开</a></dd>-->
-<!--                <dd>-->
-<!--                    <a onclick="xadmin.add_tab('在tab打开刷新','member-del.html',true)">-->
-<!--                        <i class="iconfont">&#xe6b8;</i>在tab打开刷新</a></dd>-->
-<!--            </dl>-->
-<!--        </li>-->
-<!--    </ul>-->
     <ul class="layui-nav right" lay-filter="">
         <li class="layui-nav-item">
             <a href="javascript:;" id="show-nickName">admin</a>
@@ -73,6 +50,21 @@
 <div class="left-nav">
     <div id="side-nav">
         <ul id="nav">
+            <li th:each="p : ${permission}">
+                <a href="javascript:;">
+                    <i class="iconfont left-nav-li" th:lay-tips="${p.name}" th:utext="${p.css}"></i>
+                    <cite th:text="${p.name}"></cite>
+                    <i class="iconfont nav_right">&#xe697;</i>
+                </a>
+                <ul class="sub-menu">
+                    <li th:each="child : ${p.child}">
+                        <a th:onclick="xadmin.add_tab([[${child.name}]],[[${child.href}]])">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite th:text="${child.name}"></cite>
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </div>
 </div>
@@ -95,7 +87,7 @@
         </div>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <iframe src='/getPage?name=welcome' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                <iframe th:src="${homePage}" frameborder="0" scrolling="yes" class="x-iframe"></iframe>
             </div>
         </div>
         <div id="tab_show"></div>
@@ -103,112 +95,5 @@
 </div>
 <div class="page-content-bg"></div>
 <style id="theme_style"></style>
-<!-- 右侧主体结束 -->
-<!-- 中部结束 -->
 </body>
-<script>
-    $(document).ready(function () {
-        //显示用户名
-        var nickName = localStorage.nickName;
-        $("#show-nickName").text((nickName != null && nickName != undefined) ? nickName : "---");
-
-        function Menu(eleId) {
-            this.eleId = eleId || "nav";
-            this.permission = [];
-            // this.menuItemRight = '<i class="iconfont nav_right">&#xe697;</i>';
-            this.menuParentTemplate = ""
-                + '<li>'
-                + '<a >'
-                + '		<i class="iconfont">{{menu_css}}</i>'
-                + '		<cite>{{menu_name}}</cite>'
-                + '		<i class="iconfont nav_right">&#xe697;</i>'
-                + '	</a>'
-                + '	{{sub_menu}}'
-                + '</li>';
-            this.menuItemTemplate = ""
-                + '<ul class="sub-menu">'
-                + '<li>'
-                + '<a onclick="xadmin.add_tab(\'{{menu_title}} \',\' {{menu_href}} \')">'
-                + '		<i class="iconfont">&#xe6a7;</i>'
-                + '		<cite>{{menu_name}}</cite>'
-                // + '		{{menu_right}}'
-                + '	</a>'
-                // + '	{{sub_menu}}'
-                + '</li>'
-                + '</ul>';
-            // this.subMenu = '<ul class="sub-menu">'
-            //     + '	{{sub_menu_list}}'
-            //     + '</ul>';
-        }
-
-        Menu.prototype = {
-            init: function (eleId) {
-                eleId = eleId || this.eleId;
-                var _this = this;
-                _this.getMenuData().then(function (res) {
-                    var htmlStr = _this.generateMenu('', _this.permission);
-                    $("#" + eleId).html(htmlStr);
-                });
-            },
-            getMenuData: function () {
-                var _this = this;
-                return new Promise(function (resolve, reject) {
-                        $.ajax({
-                            url: '/permission',
-                            type: 'GET',
-                            // dataType: 'jsonp',
-                            data: {}
-                        }).always(function (res) {//complete()
-                        }).done(function (res) {//Success()
-                            if (res.data.length == 0) {
-                                $('.left-nav').animate({left: '-221px'}, 100);
-                                $('.page-content').animate({left: '0px'}, 100);
-                                $('.page-content-bg').hide();
-                                $('.container .left_open i').hide()
-                                return;
-                            }
-                            _this.permission = res.data;
-
-                            if (resolve && typeof resolve == "function") {
-                                resolve(res);
-                            }
-                        }).fail(function (res) {
-                            if (reject && typeof reject == "function") {
-                                reject(res);
-                            }
-                        });
-                    }
-                );
-            },
-            generateMenu: function (eleId, data) {
-                var htmlStr = "";
-                var _this = this;
-                if (data.length == 0) {
-                    return;
-                }
-                for (var p in data) {
-                    var menuParentStr = _this.menuParentTemplate
-                    menuParentStr = menuParentStr.replace(/{{menu_name}}/, data[p].name);
-                    menuParentStr = menuParentStr.replace(/{{menu_css}}/, data[p].css);
-                    var htmlSubStr = "";
-                    for (var m in data[p].child) {
-                        var menuItemStr = _this.menuItemTemplate
-                        menuItemStr = menuItemStr.replace(/{{menu_name}}/, data[p].child[m].name);
-                        menuItemStr = menuItemStr.replace(/{{menu_title}}/, data[p].child[m].name);
-                        menuItemStr = menuItemStr.replace(/{{menu_href}}/, data[p].child[m].href);
-                        htmlSubStr += menuItemStr;
-                    }
-                    menuParentStr = menuParentStr.replace(/{{sub_menu}}/, htmlSubStr);
-                    htmlStr += menuParentStr;
-                }
-                return htmlStr;
-            }
-
-        }
-        // var userId = localStorage.userId;
-        var menu = new Menu("");
-        menu.init();
-    })
-    ;
-</script>
 </html>

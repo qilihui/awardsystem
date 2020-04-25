@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface GradeDao extends JpaRepository<SysGrade, Integer> {
     Optional<SysGrade> findSysGradeByName(Integer name);
-
     Integer deleteSysGradeById(Integer id);
+    Boolean existsByName(Integer name);
 }

@@ -25,6 +25,7 @@ public class DeptController {
     private DeptService deptService;
 
     @GetMapping("")
+    @ApiOperation("查询所有")
     @ResponseBody
     public Result<List<SysDept>> findAllRetJson() {
         List<SysDept> sysDeptList = deptService.findAll();
@@ -32,6 +33,7 @@ public class DeptController {
     }
 
     @PostMapping("/edit")
+    @ApiOperation("更新")
     @ResponseBody
     public Result<String> updateDept(SysDept dept) {
         log.info(dept.toString());
