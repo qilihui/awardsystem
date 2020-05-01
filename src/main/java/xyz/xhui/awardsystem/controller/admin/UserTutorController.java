@@ -40,7 +40,7 @@ public class UserTutorController {
         Optional<SysUserTutor> userTutorOptional = userTutorService.findBySysUserId(id);
         model.addAttribute("sysUser", userTutorOptional.get().getUser());
         model.addAttribute("userTutor", userTutorOptional.get());
-        return "user/user-tutor-edit";
+        return "admin/user/user-tutor-edit";
     }
 
     @PostMapping("edit")
@@ -94,15 +94,15 @@ public class UserTutorController {
 //        return ResultFactory.buildSuccessResult(retUserTutor.orElse(null), "查询成功");
 //    }
 
-    @DeleteMapping(value = "")
-    @ApiOperation("根据sysUserId删除辅导员")
-    @ResponseBody
-    public Result<String> deleteById(@RequestParam Integer id) {
-        try {
-            userTutorService.deleteBySysUserId(id);
-        } catch (EntityFieldException e) {
-            return ResultFactory.buildFailResult(e.getMessage());
-        }
-        return ResultFactory.buildSuccessResult();
-    }
+//    @DeleteMapping(value = "")
+//    @ApiOperation("根据sysUserId删除辅导员")
+//    @ResponseBody
+//    public Result<String> deleteById(@RequestParam Integer id) {
+//        try {
+//            userTutorService.deleteBySysUserId(id);
+//        } catch (EntityFieldException e) {
+//            return ResultFactory.buildFailResult(e.getMessage());
+//        }
+//        return ResultFactory.buildSuccessResult();
+//    }
 }

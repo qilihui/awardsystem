@@ -2,19 +2,21 @@ package xyz.xhui.awardsystem.service;
 
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
+import xyz.xhui.awardsystem.model.dto.ScoreDto;
 import xyz.xhui.awardsystem.model.dto.UnionScoreDto;
 import xyz.xhui.awardsystem.model.entity.UnionScore;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UnionScoreService {
 
     List<UnionScore> findAll();
 
-    Optional<UnionScore> findById(Integer id);
+    List<ScoreDto> findAll(Integer pageNum, Integer pageSize) throws UnknownException;
 
-    Boolean deleteById(Integer id);
+//    Optional<UnionScore> findById(Integer id);
 
-    UnionScore save(UnionScoreDto unionScoreDto) throws EntityFieldException, UnknownException;
+//    Boolean deleteById(Integer id);
+
+    Integer save(UnionScoreDto unionScoreDto) throws EntityFieldException, UnknownException;
 }

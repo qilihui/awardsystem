@@ -38,7 +38,7 @@ public class UserStuController {
         Optional<SysUserStu> userStuOptional = userStuService.findBySysUserId(id);
         model.addAttribute("sysUser", userStuOptional.get().getUser());
         model.addAttribute("userStu", userStuOptional.get());
-        return "user/user-stu-edit";
+        return "admin/user/user-stu-edit";
     }
 
     @PostMapping("edit")
@@ -92,15 +92,15 @@ public class UserStuController {
 //        return ResultFactory.buildSuccessResult(retUserStu.orElse(null), "查询成功");
 //    }
 
-    @DeleteMapping(value = "")
-    @ApiOperation("根据sysUserId删除学生")
-    @ResponseBody
-    public Result<String> deleteById(@RequestParam Integer id) {
-        try {
-            userStuService.deleteBySysUserId(id);
-        } catch (EntityFieldException e) {
-            return ResultFactory.buildFailResult(e.getMessage());
-        }
-        return ResultFactory.buildSuccessResult();
-    }
+//    @DeleteMapping(value = "")
+//    @ApiOperation("根据sysUserId删除学生")
+//    @ResponseBody
+//    public Result<String> deleteById(@RequestParam Integer id) {
+//        try {
+//            userStuService.deleteBySysUserId(id);
+//        } catch (EntityFieldException e) {
+//            return ResultFactory.buildFailResult(e.getMessage());
+//        }
+//        return ResultFactory.buildSuccessResult();
+//    }
 }

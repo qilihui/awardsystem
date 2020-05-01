@@ -7,14 +7,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
-import xyz.xhui.awardsystem.dao.UserAdminDao;
-import xyz.xhui.awardsystem.dao.UserDao;
-import xyz.xhui.awardsystem.dao.mybatis.UserAdminMybatisDao;
-import xyz.xhui.awardsystem.dao.mybatis.UserHouseparentMybatisDao;
-import xyz.xhui.awardsystem.dao.mybatis.UserMybatisDao;
+import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserAdmin;
 import xyz.xhui.awardsystem.model.entity.SysUserHouseparent;
+import xyz.xhui.awardsystem.model.entity.UnionScore;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,16 +22,13 @@ import java.util.Optional;
 class AwardsystemApplicationTests {
 
     @Autowired
-    private UserDao userDao;
-
+    private UserDao userMybatisDao;
     @Autowired
-    private UserMybatisDao userMybatisDao;
+    private UserAdminDao userAdminMybatisDao;
     @Autowired
-    private UserAdminMybatisDao userAdminMybatisDao;
+    private UserHouseparentDao userHouseparentMybatisDao;
     @Autowired
-    private UserHouseparentMybatisDao userHouseparentMybatisDao;
-    @Autowired
-    private UserAdminDao userAdminDao;
+    private UnionScoreDao unionScoreMybatisDao;
 
     @Test
     void contextLoads() {
@@ -135,10 +129,32 @@ class AwardsystemApplicationTests {
     }
 
     @Test
-    @Transactional
-    public void test14() {
-        userAdminDao.deleteSysUserAdminByUser_Id(8);
+    public void test15() {
+        List<UnionScore> allByPagenumAndPagesize = unionScoreMybatisDao.findAllByPagenumAndPagesize(0, 3);
+        System.out.println(allByPagenumAndPagesize.toString());
     }
 
+    @Test
+    @Transactional
+    public void test16() {
+        SysUser user = new SysUser();
+        user.setUsername("zzzz");
+        user.setPassword("aaaaa");
+        user.setRole(RoleEnum.ROLE_ADMIN);
+        user.setRealName("aaaa");
+        user.setEmail("aaaa");
+        Integer save = userMybatisDao.save(user);
+        System.out.println(user.getId());
+        System.out.println(save);
+        throw new RuntimeException();
+    }
 
+    @Autowired
+    private UserStuDao userStuDao;
+
+    @Test
+    public void test17() {
+        Optional<SysUser> sysUserByStuId = userStuDao.findSysUserByStuId(1);
+        System.out.println(sysUserByStuId.get());
+    }
 }

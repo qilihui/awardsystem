@@ -17,10 +17,10 @@ public class ApartmentServiceImpl implements ApartmentService {
     ApartmentDao apartmentDao;
 
     @Override
-    public SysApartment save(String name) throws EntityFieldException {
+    public Integer save(String name) throws EntityFieldException {
         SysApartment apartment = new SysApartment();
         apartment.setName(name);
-        if (apartmentDao.existsByName(apartment.getName())) {
+        if (apartmentDao.findSysApartmentByName(apartment.getName()).isPresent()) {
             throw new EntityFieldException("name已存在");
         }
         return apartmentDao.save(apartment);
@@ -36,28 +36,28 @@ public class ApartmentServiceImpl implements ApartmentService {
         return apartmentDao.findById(id);
     }
 
-    @Override
-    public Integer deleteById(Integer id) throws EntityFieldException {
-        Integer count = 0;
-        Optional<SysApartment> apartmentOptional = this.findById(id);
-        apartmentOptional.orElseThrow(() -> {
-            return new EntityFieldException("id:" + id + " 不存在");
-        });
-        return apartmentDao.deleteSysApartmentById(id);
-    }
+//    @Override
+//    public Integer deleteById(Integer id) throws EntityFieldException {
+//        Integer count = 0;
+//        Optional<SysApartment> apartmentOptional = this.findById(id);
+//        apartmentOptional.orElseThrow(() -> {
+//            return new EntityFieldException("id:" + id + " 不存在");
+//        });
+//        return apartmentDao.deleteSysApartmentById(id);
+//    }
 
     @Override
-    public SysApartment updatAapartment(SysApartment apartment) throws EntityFieldException {
+    public Integer updatAapartment(SysApartment apartment) throws EntityFieldException {
         if (apartment.getId() == null) {
             throw new EntityFieldException("缺少id字段");
         }
         if (apartment.getName() == null || "".equals(apartment.getName())) {
             throw new EntityFieldException("name不能为空");
         }
-        if (apartmentDao.existsByName(apartment.getName())) {
+        if (apartmentDao.findSysApartmentByName(apartment.getName()).isPresent()) {
             throw new EntityFieldException("name已存在");
         }
-        return apartmentDao.save(apartment);
+        return apartmentDao.update(apartment);
     }
 
     @Override

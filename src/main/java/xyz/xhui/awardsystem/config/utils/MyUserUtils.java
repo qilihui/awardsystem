@@ -23,4 +23,8 @@ public class MyUserUtils {
     public static RoleEnum getRoleEnum() {
         return getSysUser().getRole();
     }
+
+    public static String getRealName() {
+        return getSysUser().getRealName();
+    }
 }

@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserHouseparentService {
-    List<SysUserHouseparent> findAll();
+//    List<SysUserHouseparent> findAll();
 
-    SysUserHouseparent save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
+    Integer save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
 
-    Optional<SysUserHouseparent> findById(Integer id);
+//    Optional<SysUserHouseparent> findById(Integer id);
 
-    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
+//    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
 
     Optional<SysUserHouseparent> findBySysUserId(Integer id);
 

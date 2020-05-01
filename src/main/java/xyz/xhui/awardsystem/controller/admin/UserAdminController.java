@@ -43,7 +43,7 @@ public class UserAdminController {
         Optional<SysUserAdmin> userAdminOptional = userAdminService.findBySysUserId(id);
         model.addAttribute("sysUser", userAdminOptional.get().getUser());
         model.addAttribute("userAdminId", userAdminOptional.get().getId());
-        return "user/user-admin-edit";
+        return "admin/user/user-admin-edit";
     }
 
     @PostMapping("edit")
@@ -94,19 +94,19 @@ public class UserAdminController {
 //        return ResultFactory.buildSuccessResult(retUserAdmin.orElse(null), "查询成功");
 //    }
 
-    @DeleteMapping(value = "")
-    @ApiOperation("根据sysUserId删除管理员")
-    @ResponseBody
-    public Result<String> deleteById(@RequestParam Integer id) {
-        log.info(id.toString());
-        if (MyUserUtils.getId().equals(id)) {
-            return ResultFactory.buildFailResult("不能删除当前登陆账号!");
-        }
-        try {
-            userAdminService.deleteBySysUserId(id);
-        } catch (EntityFieldException e) {
-            return ResultFactory.buildFailResult(e.getMessage());
-        }
-        return ResultFactory.buildSuccessResult();
-    }
+//    @DeleteMapping(value = "")
+//    @ApiOperation("根据sysUserId删除管理员")
+//    @ResponseBody
+//    public Result<String> deleteById(@RequestParam Integer id) {
+//        log.info(id.toString());
+//        if (MyUserUtils.getId().equals(id)) {
+//            return ResultFactory.buildFailResult("不能删除当前登陆账号!");
+//        }
+//        try {
+//            userAdminService.deleteBySysUserId(id);
+//        } catch (EntityFieldException e) {
+//            return ResultFactory.buildFailResult(e.getMessage());
+//        }
+//        return ResultFactory.buildSuccessResult();
+//    }
 }

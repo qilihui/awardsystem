@@ -1,17 +1,10 @@
 package xyz.xhui.awardsystem.model.entity;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "sys_grade")
 public class SysGrade implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "name", nullable = false, unique = true)
     private Integer name;
 
     public Integer getId() {

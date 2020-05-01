@@ -1,4 +1,4 @@
-package xyz.xhui.awardsystem.dao.mybatis;
+package xyz.xhui.awardsystem.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

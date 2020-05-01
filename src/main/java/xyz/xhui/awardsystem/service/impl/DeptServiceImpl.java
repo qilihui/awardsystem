@@ -18,10 +18,10 @@ public class DeptServiceImpl implements DeptService {
     DeptDao deptDao;
 
     @Override
-    public SysDept save(String name) throws EntityFieldException {
+    public Integer save(String name) throws EntityFieldException {
         SysDept dept = new SysDept();
         dept.setName(name);
-        if (deptDao.existsByName(dept.getName())) {
+        if (deptDao.findSysDeptByName(dept.getName()).isPresent()) {
             throw new EntityFieldException("name已存在");
         }
         return deptDao.save(dept);
@@ -37,16 +37,16 @@ public class DeptServiceImpl implements DeptService {
         return deptDao.findById(id);
     }
 
-    @Override
-    @Transactional
-    public Boolean deleteById(Integer id) throws EntityFieldException {
-        Optional<SysDept> deptOptional = this.findById(id);
-        deptOptional.orElseThrow(() -> {
-            return new EntityFieldException("id:" + id + " 不存在");
-        });
-        deptDao.deleteById(id);
-        return true;
-    }
+//    @Override
+//    @Transactional
+//    public Boolean deleteById(Integer id) throws EntityFieldException {
+//        Optional<SysDept> deptOptional = this.findById(id);
+//        deptOptional.orElseThrow(() -> {
+//            return new EntityFieldException("id:" + id + " 不存在");
+//        });
+//        deptDao.deleteById(id);
+//        return true;
+//    }
 
     @Override
     @Transactional
@@ -63,16 +63,16 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public SysDept updateDept(SysDept dept) throws EntityFieldException {
+    public Integer updateDept(SysDept dept) throws EntityFieldException {
         if (dept.getId() == null) {
             throw new EntityFieldException("缺少id字段");
         }
         if (dept.getName() == null || "".equals(dept.getName())) {
             throw new EntityFieldException("name不能为空");
         }
-        if (deptDao.existsByName(dept.getName())) {
+        if (deptDao.findSysDeptByName(dept.getName()).isPresent()) {
             throw new EntityFieldException("name已存在");
         }
-        return deptDao.save(dept);
+        return deptDao.update(dept);
     }
 }

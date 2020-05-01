@@ -4,34 +4,34 @@
     {
       "id": 1,
       "name": "用户管理",
-      "css": "&#xe6b8;",
+      "css": "&#xe770;",
       "child": [
         {
           "name": "用户列表",
-          "href": "/getPage?name=user/user-list"
+          "href": "/admin/getPage?name=user/user-list"
         },
         {
           "name": "修改密码",
-          "href": "/getPage?name=user/user-change-password"
+          "href": "/change-password"
         }
       ]
     },
     {
       "id": 2,
       "name": "系统管理",
-      "css": "&#xe6ae;",
+      "css": "&#xe614;",
       "child": [
         {
           "name": "系部列表",
-          "href": "/getPage?name=sys/dept-list"
+          "href": "/admin/getPage?name=sys/dept-list"
         },
         {
           "name": "年级列表",
-          "href": "/getPage?name=sys/grade-list"
+          "href": "/admin/getPage?name=sys/grade-list"
         },
         {
           "name": "公寓列表",
-          "href": "/getPage?name=sys/apartment-list"
+          "href": "/admin/getPage?name=sys/apartment-list"
         }
       ]
     }

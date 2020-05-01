@@ -2,32 +2,20 @@ package xyz.xhui.awardsystem.model.entity;
 
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "sys_user")
 public class SysUser implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "role", nullable = false)
-    @Enumerated(EnumType.STRING)
     private RoleEnum role = RoleEnum.ROLE_ADMIN;
 
-    @Column(name = "real_name", nullable = false)
     private String realName;
 
-    @Column(name = "email", nullable = true)
     private String email;
 
     public Integer getId() {

@@ -39,14 +39,13 @@ public class UserHouseparentController {
         model.addAttribute("sysUser", userHouseparentOptional.get().getUser());
         model.addAttribute("userHouseparent", userHouseparentOptional.get());
         log.info(userHouseparentOptional.get().toString());
-        return "user/user-houseparent-edit";
+        return "admin/user/user-houseparent-edit";
     }
 
     @PostMapping("edit")
     @ApiOperation("修改用户信息")
     @ResponseBody
     public Result<String> editUserInfo(UserInfoDto userInfoDto, SysUserDto userDto) {
-//        log.info(id);
         log.info(userInfoDto.toString());
         log.info(userDto.toString());
         Integer count = null;
@@ -94,15 +93,15 @@ public class UserHouseparentController {
 //        return ResultFactory.buildSuccessResult(retUserHouseparent.orElse(null), "查询成功");
 //    }
 
-    @DeleteMapping(value = "")
-    @ApiOperation("根据sysUserId删除")
-    @ResponseBody
-    public Result<String> deleteById(@RequestParam Integer id) {
-        try {
-            userHouseparentService.deleteBySysUserId(id);
-        } catch (EntityFieldException e) {
-            return ResultFactory.buildFailResult(e.getMessage());
-        }
-        return ResultFactory.buildSuccessResult();
-    }
+//    @DeleteMapping(value = "")
+//    @ApiOperation("根据sysUserId删除")
+//    @ResponseBody
+//    public Result<String> deleteById(@RequestParam Integer id) {
+//        try {
+//            userHouseparentService.deleteBySysUserId(id);
+//        } catch (EntityFieldException e) {
+//            return ResultFactory.buildFailResult(e.getMessage());
+//        }
+//        return ResultFactory.buildSuccessResult();
+//    }
 }

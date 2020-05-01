@@ -14,7 +14,7 @@
 <body style="margin-top: 20px;">
 <div class="x-body">
     <form class="layui-form">
-        <input type="hidden" id="userAdminId" name="userInfoId" th:value="${userStu.id}">
+        <input type="hidden" id="userAdminId" name="userInfoId" th:value="${userHouseparent.id}">
         <input type="hidden" id="userId" name="id" th:value="${sysUser.id}">
         <input type="hidden" id="role" name="role" th:value="${sysUser.role}">
 
@@ -61,47 +61,10 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label"><span class="x-red">*</span>系部</label>
-            <div class="layui-input-inline">
-                <select name="deptId" class="show-dept-container" lay-verify="">
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label"><span class="x-red">*</span>年级</label>
-            <div class="layui-input-inline">
-                <select name="gradeId" class="show-grade-container" lay-verify="">
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
             <label class="layui-form-label"><span class="x-red">*</span>公寓</label>
             <div class="layui-input-inline">
                 <select name="apartmentId" class="show-apartment-container" lay-verify="">
                 </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label for="L_email" class="layui-form-label">
-                <span class="x-red">*</span>房间
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="L_room" th:value="${userStu.room}" name="room" required=""
-                       lay-verify="room" oninput="value=value.replace(/[^\d]/g,'')"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="L_email" class="layui-form-label">
-                <span class="x-red">*</span>床号
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="L_bed" th:value="${userStu.bed}" name="bed" required=""
-                       lay-verify="bed" oninput="value=value.replace(/[^\d]/g,'')"
-                       autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -115,9 +78,7 @@
     </form>
 </div>
 <script th:inline="javascript">
-    var deptId = [[${userStu.dept.id}]];
-    var gradeId = [[${userStu.grade.id}]];
-    var apartmentId = [[${userStu.apartment.id}]];
+    var apartmentId = [[${userHouseparent.apartmentId}]];
 </script>
 <script>
     layui.use(['form', 'layer', 'laydate'], function () {
@@ -126,7 +87,7 @@
             , layer = layui.layer
             , laydate = layui.laydate;
         var load = layer.load(1)
-        getAllDept(function () {
+        getAllApartment(function () {
             layui.form.render('select')
             layer.close(load)
         });
@@ -144,22 +105,6 @@
                 if (value == null || value === '') {
                     return '邮箱不正确';
                 }
-            },
-            room: function (value) {
-                if (value == null || value === '') {
-                    return '房间号不能为空'
-                }
-                if (value < 100 || value > 999) {
-                    return '房间号超出范围'
-                }
-            },
-            bed: function (value) {
-                if (value == null || value === '') {
-                    return '床号不能为空'
-                }
-                if (value < 1 || value > 10) {
-                    return '床号超出范围'
-                }
             }
         });
 
@@ -167,7 +112,7 @@
         form.on('submit(add)', function (data) {
             var load = layer.load(2)
             $.ajax({
-                url: "/user/stu/edit",
+                url: "/user/houseparent/edit",
                 type: "POST",
                 data: data.field,
                 dataType: 'json',
@@ -189,54 +134,6 @@
             return false;
         });
     });
-
-    function getAllDept(callback) {
-        $.ajax({
-            url: "/dept",
-            type: "GET",
-            dataType: 'json',
-            success: function (result) {
-                var html = '';
-                if (result.data && result.data.length > 0) {
-                    for (var i in result.data) {
-                        if (result.data[i].id === deptId) {
-                            html += '<option value="' + result.data[i].id + '" selected="selected">' + result.data[i].name + '</option>';
-                            console.log("true dept = " + deptId)
-                        } else
-                            html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
-                    }
-                    $(".show-dept-container").html(html);
-                    getAllGrade(callback);
-                }
-            }
-        });
-    }
-
-    function getAllGrade(callback) {
-        $.ajax({
-            url: "/grade",
-            type: "GET",
-            dataType: 'json',
-            success: function (result) {
-                var html = '';
-                if (result.data && result.data.length > 0) {
-                    for (var i in result.data) {
-                        if (result.data[i].id === gradeId) {
-                            html += '<option value="' + result.data[i].id + '" selected="selected">' + result.data[i].name + '</option>';
-                            console.log("true grade = " + gradeId)
-                        } else
-                            html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
-                    }
-                    $(".show-grade-container").html(html);
-                    getAllApartment(callback);
-                }
-                // if (callback) {
-                //     callback();
-                // }
-                // console.log(html)
-            }
-        });
-    }
 
     function getAllApartment(callback) {
         $.ajax({

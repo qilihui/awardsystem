@@ -1,0 +1,27 @@
+{
+  "homePage": "/union-home",
+  "data": [
+    {
+      "id": 1,
+      "name": "用户管理",
+      "css": "&#xe770;",
+      "child": [
+        {
+          "name": "修改密码",
+          "href": "/change-password"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "成绩管理",
+      "css": "&#xe60a;",
+      "child": [
+        {
+          "name": "扣分情况",
+          "href": "/union/getPage?name=score-list"
+        }
+      ]
+    }
+  ]
+}

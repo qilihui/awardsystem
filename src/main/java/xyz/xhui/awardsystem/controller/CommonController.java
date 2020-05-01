@@ -23,15 +23,9 @@ public class CommonController {
         return "login";
     }
 
-//    @GetMapping(value = "/403.html")
-//    public String noPermission() {
-//        return "403";
-//    }
-
-    @GetMapping(value = "/getPage")
-    public String getPage(@RequestParam("name") String pageName) {
-        log.info(pageName);
-        return pageName;
+    @GetMapping(value = "/403.html")
+    public String noPermission() {
+        return "403";
     }
 
     @GetMapping({"/index.html", "/"})
@@ -45,8 +39,14 @@ public class CommonController {
             log.error("系统错误：读取权限文件失败");
             e.printStackTrace();
         }
+        model.addAttribute("realName", MyUserUtils.getRealName());
         model.addAttribute("homePage", object.getHomePage());
         model.addAttribute("permission", object.getData());
         return "index";
+    }
+
+    @GetMapping("/change-password")
+    public String getPage() {
+        return "user-change-password";
     }
 }

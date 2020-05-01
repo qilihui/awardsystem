@@ -18,10 +18,10 @@ public class GradeServiceImpl implements GradeService {
     GradeDao gradeDao;
 
     @Override
-    public SysGrade save(Integer name) throws EntityFieldException {
+    public Integer save(Integer name) throws EntityFieldException {
         SysGrade grade = new SysGrade();
         grade.setName(name);
-        if (gradeDao.existsByName(grade.getName())) {
+        if (gradeDao.findSysGradeByName(grade.getName()).isPresent()) {
             throw new EntityFieldException("name已存在");
         }
         return gradeDao.save(grade);
@@ -37,14 +37,14 @@ public class GradeServiceImpl implements GradeService {
         return gradeDao.findById(id);
     }
 
-    @Override
-    public Integer deleteById(Integer id) throws EntityFieldException {
-        Optional<SysGrade> gradeOptional = this.findById(id);
-        gradeOptional.orElseThrow(() -> {
-            return new EntityFieldException("id:" + id + " 不存在");
-        });
-        return gradeDao.deleteSysGradeById(id);
-    }
+//    @Override
+//    public Integer deleteById(Integer id) throws EntityFieldException {
+//        Optional<SysGrade> gradeOptional = this.findById(id);
+//        gradeOptional.orElseThrow(() -> {
+//            return new EntityFieldException("id:" + id + " 不存在");
+//        });
+//        return gradeDao.deleteSysGradeById(id);
+//    }
 
     @Override
     @Transactional
@@ -61,16 +61,16 @@ public class GradeServiceImpl implements GradeService {
     }
 
     @Override
-    public SysGrade updateGrade(SysGrade grade) throws EntityFieldException {
+    public Integer updateGrade(SysGrade grade) throws EntityFieldException {
         if (grade.getId() == null) {
             throw new EntityFieldException("缺少id字段");
         }
-        if (grade.getName() == null || "".equals(grade.getName())) {
+        if (grade.getName() == null) {
             throw new EntityFieldException("name不能为空");
         }
-        if (gradeDao.existsByName(grade.getName())) {
+        if (gradeDao.findSysGradeByName(grade.getName()).isPresent()) {
             throw new EntityFieldException("name已存在");
         }
-        return gradeDao.save(grade);
+        return gradeDao.update(grade);
     }
 }

@@ -3,19 +3,13 @@ package xyz.xhui.awardsystem.controller.admin;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.PasswordErrorException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
-import xyz.xhui.awardsystem.config.utils.MyUserUtils;
-import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.service.UserService;
@@ -66,13 +60,12 @@ public class UserController {
     @RolesAllowed({"ADMIN"})
     @ResponseBody
     public Result<List<SysUserDto>> findAll(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize) {
-        Page<SysUser> page = userService.findAll(pagenum - 1, pagesize);
-        List<SysUser> content = page.getContent();
+        List<SysUser> userList = userService.findAll(pagenum - 1, pagesize);
         List<SysUserDto> userDtos = new ArrayList<>();
-        for (SysUser user : content) {
+        for (SysUser user : userList) {
             userDtos.add(new SysUserDto(user));
         }
-        return ResultFactory.buildSuccessResult((int) page.getTotalElements(), userDtos);
+        return ResultFactory.buildSuccessResult(userService.getCount(), userDtos);
     }
 
 //    @GetMapping(value = "/edit")
@@ -96,7 +89,7 @@ public class UserController {
     @PostMapping(value = "/changePassword")
     @ApiOperation("修改密码")
     @ResponseBody
-    public Result changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) {
+    public Result<String> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) {
         try {
             userService.changePassword(oldPassword, newPassword);
         } catch (PasswordErrorException e) {
@@ -120,6 +113,7 @@ public class UserController {
 
     @DeleteMapping("/users")
     @ApiOperation("批量删除")
+    @RolesAllowed({"ADMIN"})
     @ResponseBody
     public Result<String> deleteUsers(@RequestParam("ids[]") Integer[] ids) {
 //        log.info(Arrays.toString(ids));

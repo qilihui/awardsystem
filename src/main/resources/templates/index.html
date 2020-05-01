@@ -23,13 +23,13 @@
 <!-- 顶部开始 -->
 <div class="container">
     <div class="logo">
-        <a href="./index.bak.html">综合成绩管理系统</a></div>
+        <a href="./index.html">综合成绩管理系统</a></div>
     <div class="left_open">
         <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
     </div>
     <ul class="layui-nav right" lay-filter="">
         <li class="layui-nav-item">
-            <a href="javascript:;" id="show-nickName">admin</a>
+            <a href="javascript:;" th:text="${realName}"></a>
             <dl class="layui-nav-child">
                 <!-- 二级菜单 -->
                 <dd>
@@ -52,7 +52,8 @@
         <ul id="nav">
             <li th:each="p : ${permission}">
                 <a href="javascript:;">
-                    <i class="iconfont left-nav-li" th:lay-tips="${p.name}" th:utext="${p.css}"></i>
+                    <i class="layui-icon left-nav-li" th:lay-tips="${p.name}" th:utext="${p.css}"></i>
+<!--                    <i class="iconfont left-nav-li" th:lay-tips="${p.name}" th:utext="${p.css}"></i>-->
                     <cite th:text="${p.name}"></cite>
                     <i class="iconfont nav_right">&#xe697;</i>
                 </a>

@@ -38,7 +38,7 @@ public class UserUnionController {
         Optional<SysUserUnion> userTutorOptional = userUnionService.findBySysUserId(id);
         model.addAttribute("sysUser", userTutorOptional.get().getUser());
         model.addAttribute("userUnion", userTutorOptional.get());
-        return "user/user-union-edit";
+        return "admin/user/user-union-edit";
     }
 
     @PostMapping("edit")
@@ -92,15 +92,15 @@ public class UserUnionController {
 //        return ResultFactory.buildSuccessResult(retUserUnion.orElse(null), "查询成功");
 //    }
 
-    @DeleteMapping(value = "")
-    @ApiOperation("根据sysUserId删除")
-    @ResponseBody
-    public Result<String> deleteById(@RequestParam Integer id) {
-        try {
-            userUnionService.deleteBySysUserId(id);
-        } catch (EntityFieldException e) {
-            return ResultFactory.buildFailResult(e.getMessage());
-        }
-        return ResultFactory.buildSuccessResult();
-    }
+//    @DeleteMapping(value = "")
+//    @ApiOperation("根据sysUserId删除")
+//    @ResponseBody
+//    public Result<String> deleteById(@RequestParam Integer id) {
+//        try {
+//            userUnionService.deleteBySysUserId(id);
+//        } catch (EntityFieldException e) {
+//            return ResultFactory.buildFailResult(e.getMessage());
+//        }
+//        return ResultFactory.buildSuccessResult();
+//    }
 }

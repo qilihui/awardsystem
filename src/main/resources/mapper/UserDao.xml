@@ -2,7 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="xyz.xhui.awardsystem.dao.mybatis.UserMybatisDao">
+<mapper namespace="xyz.xhui.awardsystem.dao.UserDao">
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user(`username`, `password`, `real_name`, `role`, `email`) values(#{username}, #{password}, #{realName}, #{role}, #{email})
+    </insert>
 
     <update id="updateEmailAndRealName">
         update sys_user

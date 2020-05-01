@@ -25,6 +25,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyAuthenctiationFailureHandler myAuthenctiationFailureHandler;
 
+    @Autowired
+    private RestAuthenticationAccessDeniedHandler restAuthenticationAccessDeniedHandler;
+
     @Bean
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
@@ -70,7 +73,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(myAuthenticationSuccessHandler)
                 .failureHandler(myAuthenctiationFailureHandler)
                 .and().logout().permitAll().invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-        ;
+                .deleteCookies("JSESSIONID");
+        //异常处理
+        http.exceptionHandling().accessDeniedHandler(restAuthenticationAccessDeniedHandler);
     }
 }

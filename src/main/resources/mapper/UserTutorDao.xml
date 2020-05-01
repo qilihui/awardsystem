@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="xyz.xhui.awardsystem.dao.mybatis.UserTutorMybatisDao">
+<mapper namespace="xyz.xhui.awardsystem.dao.UserTutorDao">
 
     <resultMap id="userTutorMap" type="xyz.xhui.awardsystem.model.entity.SysUserTutor">
-        <association property="user" column="user_id" select="xyz.xhui.awardsystem.dao.mybatis.UserMybatisDao.findById"/>
+        <association property="user" column="user_id" select="xyz.xhui.awardsystem.dao.UserDao.findById"/>
     </resultMap>
 
     <update id="updateInfo">

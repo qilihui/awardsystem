@@ -9,32 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserUnionService {
-    /**
-     * 查询所有辅导员详细信息
-     * @return
-     */
-    List<SysUserUnion> findAll();
+//    List<SysUserUnion> findAll();
 
-    /**
-     * 添加辅导员
-     * @param
-     * @return
-     */
-    SysUserUnion save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
+    Integer save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
 
-    /**
-     * 根据id查询
-     * @param id
-     * @return
-     */
-    Optional<SysUserUnion> findById(Integer id);
+//    Optional<SysUserUnion> findById(Integer id);
 
-    /**
-     * 根据id删除
-     * @param id
-     * @return
-     */
-    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
+//    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
 
     Optional<SysUserUnion> findBySysUserId(Integer id);
 

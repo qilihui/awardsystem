@@ -2,10 +2,6 @@ package xyz.xhui.awardsystem.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,7 +13,6 @@ import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.*;
-import xyz.xhui.awardsystem.dao.mybatis.UserMybatisDao;
 import xyz.xhui.awardsystem.model.dto.LoginUser;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
@@ -32,30 +27,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
-    @Autowired
-    private UserMybatisDao userMybatisDao;
-
-    @Autowired
-    private UserAdminDao userAdminDao;
-    @Autowired
-    private UserStuDao userStuDao;
-    @Autowired
-    private UserTutorDao userTutorDao;
-    @Autowired
-    private UserUnionDao userUnionDao;
-    @Autowired
-    private UserHouseparentDao userHouseparentDao;
-
     @Override
-    public Page<SysUser> findAll(Integer pagenum, Integer pagesize) {
-        Pageable pageable = PageRequest.of(pagenum, pagesize);
-        return userDao.findAll(pageable);
+    public List<SysUser> findAll(Integer pagenum, Integer pagesize) {
+        return userDao.findAllByPagenumAndPagesize(pagenum, pagesize);
     }
 
-    @Override
-    public List<SysUser> findAll() {
-        return userDao.findAll();
-    }
+//    @Override
+//    public List<SysUser> findAll() {
+//        return userMybatisDao.findAll();
+//    }
 
     @Override
     public Optional<SysUser> findById(Integer id) {
@@ -69,23 +49,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public SysUser save(SysUser sysUser) throws EntityFieldException {
-//        sysUser.setId(null);
-//        if (this.findByUsernameEquals(sysUser.getUsername()) != null) {
-//            throw new EntityFieldException("用户名已经存在");
-//        }
-//        sysUser.setPassword(PasswordUtils.encode(sysUser.getPassword()));
-//        return userDao.save(sysUser);
-        return null;
+    public Integer save(SysUser sysUser) throws EntityFieldException {
+        sysUser.setId(null);
+        if (this.findByUsernameEquals(sysUser.getUsername()).isPresent()) {
+            throw new EntityFieldException("用户名已经存在");
+        }
+        sysUser.setPassword(PasswordUtils.encode(sysUser.getUsername()));
+        return userDao.save(sysUser);
     }
 
-    @Override
-    public Boolean deleteById(Integer id) {
-        if (userMybatisDao.deleteById(id) > 0) {
-            return true;
-        }
-        return false;
-    }
+//    @Override
+//    public Boolean deleteById(Integer id) {
+//        if (userMybatisDao.deleteById(id) > 0) {
+//            return true;
+//        }
+//        return false;
+//    }
 
     @Override
     public void changePassword(Integer userId) throws EntityFieldException {
@@ -93,18 +72,18 @@ public class UserServiceImpl implements UserService {
         optionalSysUser.orElseThrow(() -> {
             return new EntityFieldException("用户不存在");
         });
-        userMybatisDao.updatePassword(userId, PasswordUtils.encode(optionalSysUser.get().getUsername()));
+        userDao.updatePassword(userId, PasswordUtils.encode(optionalSysUser.get().getUsername()));
     }
 
     @Override
     public void changePassword(String oldPassword, String newPassword) throws PasswordErrorException {
         Integer userId = MyUserUtils.getId();
-        String password = userMybatisDao.selectPassword(userId);
+        String password = userDao.selectPassword(userId);
         log.info(password);
         if (!PasswordUtils.matches(oldPassword, password)) {
             throw new PasswordErrorException("旧密码错误");
         }
-        userMybatisDao.updatePassword(userId, PasswordUtils.encode(newPassword));
+        userDao.updatePassword(userId, PasswordUtils.encode(newPassword));
     }
 
     @Override
@@ -112,7 +91,7 @@ public class UserServiceImpl implements UserService {
         if (userDto.getId() == null) {
             throw new EntityFieldException("缺少id字段");
         }
-        return userMybatisDao.updateEmailAndRealName(userDto);
+        return userDao.updateEmailAndRealName(userDto);
     }
 
     @Override
@@ -130,27 +109,28 @@ public class UserServiceImpl implements UserService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 throw new EntityFieldException("id: " + id + " 不能删除admin用户");
             }
-            if (MyUserUtils.getId() == sysUser.getId()) {
+            if (MyUserUtils.getId().equals(sysUser.getId())) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 throw new EntityFieldException("id: " + id + " 不能删除当前登录用户");
             }
-            switch (sysUser.getRole()) {
-                case ROLE_ADMIN:
-                    retCount += userAdminDao.deleteSysUserAdminByUser_Id(sysUser.getId());
-                    break;
-                case ROLE_STU:
-                    retCount += userStuDao.deleteSysUserStuByUser_Id(sysUser.getId());
-                    break;
-                case ROLE_UNION:
-                    retCount += userUnionDao.deleteSysUserUnionByUser_Id(sysUser.getId());
-                    break;
-                case ROLE_TUTOR:
-                    retCount += userTutorDao.deleteSysUserTutorByUser_Id(sysUser.getId());
-                    break;
-                case ROLE_HOUSEPARENT:
-                    retCount += userHouseparentDao.deleteSysUserHouseparentByUser_Id(sysUser.getId());
-                    break;
-            }
+            retCount += userDao.deleteById(id);
+//            switch (sysUser.getRole()) {
+//                case ROLE_ADMIN:
+//                    retCount += userAdminDao.deleteSysUserAdminByUser_Id(sysUser.getId());
+//                    break;
+//                case ROLE_STU:
+//                    retCount += userStuDao.deleteSysUserStuByUser_Id(sysUser.getId());
+//                    break;
+//                case ROLE_UNION:
+//                    retCount += userUnionDao.deleteSysUserUnionByUser_Id(sysUser.getId());
+//                    break;
+//                case ROLE_TUTOR:
+//                    retCount += userTutorDao.deleteSysUserTutorByUser_Id(sysUser.getId());
+//                    break;
+//                case ROLE_HOUSEPARENT:
+//                    retCount += userHouseparentDao.deleteSysUserHouseparentByUser_Id(sysUser.getId());
+//                    break;
+//            }
         }
         log.info(retCount.toString());
         return retCount;

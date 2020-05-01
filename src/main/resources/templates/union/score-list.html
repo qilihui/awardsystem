@@ -56,17 +56,19 @@
                 </div>
                 <div class="layui-card-body">
                     <table class="layui-table"
-                           lay-data="{url:'/user',page:true,toolbar: '#toolbarDemo',id:'test'}"
+                           lay-data="{url:'/union/score',page:true,toolbar: '#toolbarDemo',id:'test'}"
                            lay-filter="test">
                         <thead>
                         <tr>
                             <th lay-data="{type:'checkbox'}">ID</th>
                             <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-                            <th lay-data="{field:'username', minWidth:100, sort: true, edit: 'text'}">用户名</th>
-                            <th lay-data="{field:'realName', edit: 'text', minWidth: 60}">姓名</th>
-                            <th lay-data="{field:'email', edit: 'text', minWidth: 120}">邮箱</th>
-                            <th lay-data="{field:'roleName', minWidth:80}">角色</th>
-                            <th lay-data="{toolbar: '#barOptional', minWidth:100}">操作</th>
+                            <th lay-data="{field:'username', minWidth:100, sort: true}">学号</th>
+                            <th lay-data="{field:'realName', minWidth: 60}">姓名</th>
+                            <th lay-data="{field:'score', minWidth: 120}">扣分数</th>
+                            <th lay-data="{field:'remark', minWidth: 120}">备注</th>
+                            <th lay-data="{field:'submitter', minWidth:80}">提交人</th>
+                            <th lay-data="{field:'createTime', minWidth:180, templet:'<div>{{layui.util.toDateString(d.createTime*1000, `yyyy-MM-dd HH:mm:ss`)}}</div>'}">提交时间</th>
+<!--                            <th lay-data="{toolbar: '#barOptional', minWidth:100}">操作</th>-->
                         </tr>
                         </thead>
                     </table>
@@ -91,15 +93,15 @@
             var table = layui.table;
 
             //监听单元格编辑
-            table.on('edit(test)',
-                function (obj) {
-                    var value = obj.value //得到修改后的值
-                        ,
-                        data = obj.data //得到所在行所有键值
-                        ,
-                        field = obj.field; //得到字段
-                    layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
-                });
+            // table.on('edit(test)',
+            //     function (obj) {
+            //         var value = obj.value //得到修改后的值
+            //             ,
+            //             data = obj.data //得到所在行所有键值
+            //             ,
+            //             field = obj.field; //得到字段
+            //         layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
+            //     });
 
             //头工具栏事件
             table.on('toolbar(test)',
@@ -141,7 +143,7 @@
                             // layer.alert(JSON.stringify(data));
                             break;
                         case 'add':
-                            xadmin.open('用户添加', '/getPage?name=user/user-add');
+                            xadmin.open('用户添加', '/admin/getPage?name=user/user-add');
                             break;
                         // case 'getCheckData':
                         //     var data = checkStatus.data;
@@ -226,15 +228,15 @@
 
 </script>
 
-<script type="text/html" id="barOptional">
-    <!--    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
-    <a class="" lay-event="edit" title="编辑">
-        <i class="layui-icon">&#xe642;</i>
-    </a>
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    <!--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>&nbsp;-->
-    <a class="" lay-event="resetPassword" title="恢复默认密码">
-        <i class="layui-icon">&#xe716;</i>
-    </a>
-</script>
+<!--<script type="text/html" id="barOptional">-->
+<!--    &lt;!&ndash;    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>&ndash;&gt;-->
+<!--    <a class="" lay-event="edit" title="编辑">-->
+<!--        <i class="layui-icon">&#xe642;</i>-->
+<!--    </a>-->
+<!--    &nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--    &lt;!&ndash;    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>&nbsp;&ndash;&gt;-->
+<!--    <a class="" lay-event="resetPassword" title="恢复默认密码">-->
+<!--        <i class="layui-icon">&#xe716;</i>-->
+<!--    </a>-->
+<!--</script>-->
 </html>

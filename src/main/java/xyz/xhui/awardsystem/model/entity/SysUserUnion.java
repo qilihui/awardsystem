@@ -1,23 +1,13 @@
 package xyz.xhui.awardsystem.model.entity;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "sys_user_union")
 public class SysUserUnion implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private SysUser user;
 
-    @OneToOne
-    @JoinColumn(name = "dept_id", nullable = false)
-    private SysDept dept;
+    private Integer deptId;
 
     public Integer getId() {
         return id;
@@ -35,12 +25,12 @@ public class SysUserUnion implements Serializable {
         this.user = user;
     }
 
-    public SysDept getDept() {
-        return dept;
+    public Integer getDeptId() {
+        return deptId;
     }
 
-    public void setDept(SysDept dept) {
-        this.dept = dept;
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
     }
 
     @Override
@@ -48,7 +38,7 @@ public class SysUserUnion implements Serializable {
         return "SysUserUnion{" +
                 "id=" + id +
                 ", user=" + user +
-                ", dept=" + dept +
+                ", deptId=" + deptId +
                 '}';
     }
 }

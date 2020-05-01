@@ -2,34 +2,21 @@ package xyz.xhui.awardsystem.model.entity;
 
 import xyz.xhui.awardsystem.config.utils.MyTimeUtils;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "apartment_score")
 public class ApartmentScore implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "apartment_id", nullable = false)
-    private SysApartment apartment;
+    private Integer apartmentId;
 
-    @Column(name = "room", nullable = false)
     private Integer room;
 
-    @Column(name = "bed", nullable = false)
     private Integer bed;
 
-    @Column(name = "score", nullable = false)
     private Integer score;
 
-    @Column(name = "remark")
     private String remark;
 
-    @Column(name = "crate_time", nullable = false)
     private Integer createTime;
 
     public ApartmentScore() {
@@ -44,12 +31,12 @@ public class ApartmentScore implements Serializable {
         this.id = id;
     }
 
-    public SysApartment getApartment() {
-        return apartment;
+    public Integer getApartmentId() {
+        return apartmentId;
     }
 
-    public void setApartment(SysApartment apartment) {
-        this.apartment = apartment;
+    public void setApartmentId(Integer apartmentId) {
+        this.apartmentId = apartmentId;
     }
 
     public Integer getRoom() {
@@ -88,19 +75,20 @@ public class ApartmentScore implements Serializable {
         return createTime;
     }
 
-    public void setCreateTime(Integer crateTime) {
-        this.createTime = crateTime;
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
     }
 
     @Override
     public String toString() {
         return "ApartmentScore{" +
                 "id=" + id +
-                ", apartment=" + apartment +
+                ", apartmentId=" + apartmentId +
                 ", room=" + room +
                 ", bed=" + bed +
                 ", score=" + score +
-                ", crateTime=" + createTime +
+                ", remark='" + remark + '\'' +
+                ", createTime=" + createTime +
                 '}';
     }
 }

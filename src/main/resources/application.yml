@@ -4,12 +4,6 @@ spring:
     url: jdbc:mysql:///test2?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=UTC
     username: root
     password: root
-  jpa:
-    database: mysql
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQL57Dialect
   thymeleaf:
     cache: false
 #  main:
@@ -30,5 +24,4 @@ logging:
     xyz:
       xhui:
         awardsystem:
-          dao:
-            mybatis: debug
+          dao: debug

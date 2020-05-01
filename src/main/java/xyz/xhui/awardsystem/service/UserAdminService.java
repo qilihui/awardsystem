@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserAdminService {
-    List<SysUserAdmin> findAll();
+//    List<SysUserAdmin> findAll();
 
-    Optional<SysUserAdmin> findById(Integer id);
+//    Optional<SysUserAdmin> findById(Integer id);
 
     Optional<SysUserAdmin> findBySysUserId(Integer id);
 
-    SysUserAdmin save(SysUserDto sysUserDto) throws EntityFieldException;
+    Integer save(SysUserDto sysUserDto) throws EntityFieldException;
 
-    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
+//    Boolean deleteBySysUserId(Integer id) throws EntityFieldException;
 
     Integer updateEmailAndRealName(SysUserDto userDto) throws EntityFieldException;
 }

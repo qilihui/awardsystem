@@ -1,13 +1,29 @@
 package xyz.xhui.awardsystem.dao;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import xyz.xhui.awardsystem.model.dto.SysUserDto;
+import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 import xyz.xhui.awardsystem.model.entity.SysUserAdmin;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface UserAdminDao  extends JpaRepository<SysUserAdmin, Integer> {
-    Optional<SysUserAdmin> findSysUserAdminByUser_Id(Integer sysUserId);
-    Integer deleteSysUserAdminByUser_Id(Integer id);
+@Mapper
+@Repository
+public interface UserAdminDao {
+    @Select("select * from sys_user_admin")
+    @ResultMap("userAdminMap")
+    List<SysUserAdmin> findAll();
+
+    @Select("select * from sys_user_admin where id = #{id} limit 1")
+    @ResultMap("userAdminMap")
+    Optional<SysUserAdmin> findById(Integer id);
+
+    @Select("select * from sys_user_admin where user_id = #{id} limit 1")
+    @ResultMap("userAdminMap")
+    Optional<SysUserAdmin> findSysUserAdminByUser_Id(Integer id);
+
+    @Delete("delete from sys_user_admin where id = #{id}")
+    Integer deleteById(Integer id);
+
+    Integer save(Integer sysUserId);
 }

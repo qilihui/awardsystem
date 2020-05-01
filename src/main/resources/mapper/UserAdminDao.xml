@@ -2,10 +2,13 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="xyz.xhui.awardsystem.dao.mybatis.UserAdminMybatisDao">
+<mapper namespace="xyz.xhui.awardsystem.dao.UserAdminDao">
 
     <resultMap id="userAdminMap" type="xyz.xhui.awardsystem.model.entity.SysUserAdmin">
-        <association property="user" column="user_id" select="xyz.xhui.awardsystem.dao.mybatis.UserMybatisDao.findById"/>
+        <association property="user" column="user_id" select="xyz.xhui.awardsystem.dao.UserDao.findById"/>
     </resultMap>
+    <insert id="save">
+        insert into sys_user_admin(`user_id`) values(#{sysUserId})
+    </insert>
 
 </mapper>

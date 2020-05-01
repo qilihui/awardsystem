@@ -1,36 +1,20 @@
 package xyz.xhui.awardsystem.model.entity;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "sys_user_stu")
 public class SysUserStu implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private SysUser user;
 
-    @OneToOne
-    @JoinColumn(name = "dept_id", nullable = false)
-    private SysDept dept;
+    private Integer deptId;
 
-    @OneToOne
-    @JoinColumn(name = "grade_id", nullable = false)
-    private SysGrade grade;
+    private Integer gradeId;
 
-    @OneToOne
-    @JoinColumn(name = "apartment_id", nullable = false)
-    private SysApartment apartment;
+    private Integer apartmentId;
 
-    @Column(name = "room", nullable = false)
     private Integer room;
 
-    @Column(name = "bed", nullable = false)
     private Integer bed;
 
     public Integer getId() {
@@ -49,28 +33,28 @@ public class SysUserStu implements Serializable {
         this.user = user;
     }
 
-    public SysDept getDept() {
-        return dept;
+    public Integer getDeptId() {
+        return deptId;
     }
 
-    public void setDept(SysDept dept) {
-        this.dept = dept;
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
     }
 
-    public SysGrade getGrade() {
-        return grade;
+    public Integer getGradeId() {
+        return gradeId;
     }
 
-    public void setGrade(SysGrade grade) {
-        this.grade = grade;
+    public void setGradeId(Integer gradeId) {
+        this.gradeId = gradeId;
     }
 
-    public SysApartment getApartment() {
-        return apartment;
+    public Integer getApartmentId() {
+        return apartmentId;
     }
 
-    public void setApartment(SysApartment apartment) {
-        this.apartment = apartment;
+    public void setApartmentId(Integer apartmentId) {
+        this.apartmentId = apartmentId;
     }
 
     public Integer getRoom() {
@@ -94,9 +78,9 @@ public class SysUserStu implements Serializable {
         return "SysUserStu{" +
                 "id=" + id +
                 ", user=" + user +
-                ", dept=" + dept +
-                ", grade=" + grade +
-                ", apartment=" + apartment +
+                ", deptId=" + deptId +
+                ", gradeId=" + gradeId +
+                ", apartmentId=" + apartmentId +
                 ", room=" + room +
                 ", bed=" + bed +
                 '}';

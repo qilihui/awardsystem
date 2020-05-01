@@ -2,31 +2,19 @@ package xyz.xhui.awardsystem.model.entity;
 
 import xyz.xhui.awardsystem.config.utils.MyTimeUtils;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "union_score")
 public class UnionScore implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "stu_id", nullable = false)
-    private SysUserStu userStu;
+    private Integer stuId;
 
-    @Column(name = "score", nullable = false)
     private Integer score;
 
-    @Column(name = "remark")
     private String remark;
 
-    @Column(name = "submitter")
-    private String submitter;
+    private Integer unionId;
 
-    @Column(name = "crate_time", nullable = false)
     private Integer createTime;
 
     public UnionScore() {
@@ -41,12 +29,12 @@ public class UnionScore implements Serializable {
         this.id = id;
     }
 
-    public SysUserStu getUserStu() {
-        return userStu;
+    public Integer getStuId() {
+        return stuId;
     }
 
-    public void setUserStu(SysUserStu sysUserStu) {
-        this.userStu = sysUserStu;
+    public void setStuId(Integer stuId) {
+        this.stuId = stuId;
     }
 
     public Integer getScore() {
@@ -65,12 +53,12 @@ public class UnionScore implements Serializable {
         this.remark = remark;
     }
 
-    public String getSubmitter() {
-        return submitter;
+    public Integer getUnionId() {
+        return unionId;
     }
 
-    public void setSubmitter(String submitter) {
-        this.submitter = submitter;
+    public void setUnionId(Integer unionId) {
+        this.unionId = unionId;
     }
 
     public Integer getCreateTime() {
@@ -85,10 +73,10 @@ public class UnionScore implements Serializable {
     public String toString() {
         return "UnionScore{" +
                 "id=" + id +
-                ", sysUserStu=" + userStu +
+                ", stuId=" + stuId +
                 ", score=" + score +
                 ", remark='" + remark + '\'' +
-                ", submitter='" + submitter + '\'' +
+                ", unionId=" + unionId +
                 ", createTime=" + createTime +
                 '}';
     }
