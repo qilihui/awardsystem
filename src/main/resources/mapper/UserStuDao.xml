@@ -8,6 +8,23 @@
         <association property="user" column="user_id" select="xyz.xhui.awardsystem.dao.UserDao.findById"/>
     </resultMap>
 
+    <resultMap id="userStuMap2" type="xyz.xhui.awardsystem.model.entity.SysUserStu">
+        <id property="id" column="id"/>
+        <result property="apartmentId" column="apartment_id"/>
+        <result property="bed" column="bed"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="gradeId" column="grade_id"/>
+        <result property="room" column="room"/>
+        <association property="user" javaType="xyz.xhui.awardsystem.model.entity.SysUser">
+            <id property="id" column="id2"/>
+            <result property="username" column="username"/>
+            <result property="role" column="role"/>
+            <result property="realName" column="real_name"/>
+            <result property="email" column="email"/>
+            <result property="password" column="password"/>
+        </association>
+    </resultMap>
+
     <update id="updateInfo">
         update sys_user_stu
         <trim prefix="set" prefixOverrides=",">

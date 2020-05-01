@@ -35,4 +35,8 @@ public interface UserStuDao {
 
     @Select("select u.* from sys_user u, sys_user_stu s where u.id=s.user_id and s.id=#{stuId}")
     Optional<SysUser> findSysUserByStuId(Integer stuId);
+
+    @Select("select s.*, u.*, u.id as id2 from sys_user u, sys_user_stu s where u.id=s.user_id and u.username=#{username}")
+    @ResultMap("userStuMap2")
+    Optional<SysUserStu> findStuByUsername(String username);
 }

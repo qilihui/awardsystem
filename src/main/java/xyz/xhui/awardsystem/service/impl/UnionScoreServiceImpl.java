@@ -3,14 +3,17 @@ package xyz.xhui.awardsystem.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
+import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.dao.UnionScoreDao;
 import xyz.xhui.awardsystem.dao.UserStuDao;
 import xyz.xhui.awardsystem.dao.UserUnionDao;
 import xyz.xhui.awardsystem.model.dto.ScoreDto;
-import xyz.xhui.awardsystem.model.dto.UnionScoreDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
+import xyz.xhui.awardsystem.model.entity.SysUserStu;
+import xyz.xhui.awardsystem.model.entity.SysUserUnion;
 import xyz.xhui.awardsystem.model.entity.UnionScore;
 import xyz.xhui.awardsystem.service.UnionScoreService;
 
@@ -37,8 +40,13 @@ public class UnionScoreServiceImpl implements UnionScoreService {
     }
 
     @Override
+    @RolesAllowed("UNION")
     public List<ScoreDto> findAll(Integer pageNum, Integer pageSize) throws UnknownException {
-        List<UnionScore> unionScoreList = unionScoreDao.findByPage(pageNum, pageSize);
+        Optional<SysUserUnion> loginUser = userUnionDao.findSysUserUnionByUser_Id(MyUserUtils.getId());
+        loginUser.orElseThrow(
+                () -> new UnknownException("未知错误 请联系管理员")
+        );
+        List<UnionScore> unionScoreList = unionScoreDao.findByPageAndDeptId(loginUser.get().getDeptId(), pageNum, pageSize);
         List<ScoreDto> scoreDtoList = new ArrayList<>();
         for (UnionScore unionScore : unionScoreList) {
             Optional<SysUser> stuOptional = userStuDao.findSysUserByStuId(unionScore.getStuId());
@@ -55,34 +63,42 @@ public class UnionScoreServiceImpl implements UnionScoreService {
         return scoreDtoList;
     }
 
-
-//    @Override
-//    public Boolean deleteById(Integer id) {
-//        try {
-//            unionScoreDao.deleteById(id);
-//        } catch (EmptyResultDataAccessException e) {
-//            return false;
-//        }
-//        return true;
-//    }
-
     @Override
     @RolesAllowed("UNION")
-    public Integer save(UnionScoreDto unionScoreDto) throws EntityFieldException, UnknownException {
-//        SysUser user = userDao.findSysUserByUsernameEqualsAndRoleEquals(unionScoreDto.getUsername(), RoleEnum.ROLE_STU);
-//        if (user == null) {
-//            throw new EntityFieldException("学号不存在");
-//        }
-//        SysUserStu sysUserStu = userStuDao.findSysUserStuByUser_Id(user.getId()).get();
-//        if (sysUserStu == null) {
-//            throw new UnknownException("未知错误");
-//        }
-//        UnionScore unionScore = new UnionScore();
-//        unionScore.setUserStu(sysUserStu);
-//        unionScore.setRemark(unionScoreDto.getRemark());
-//        unionScore.setScore(unionScoreDto.getScore());
-//        unionScore.setSubmitter(MyUserUtils.getUsername());
-//        return unionScoreDao.save(unionScore);
-        return null;
+    @Transactional
+    public Integer save(ScoreDto scoreDto) throws EntityFieldException, UnknownException {
+        Optional<SysUserStu> stuOptional = userStuDao.findStuByUsername(scoreDto.getUsername());
+        SysUserStu userStu = stuOptional.orElseThrow(
+                () -> new EntityFieldException("学号: " + scoreDto.getUsername() + " 学生不存在")
+        );
+        Optional<SysUserUnion> unionOptional = userUnionDao.findSysUserUnionByUser_Id(MyUserUtils.getId());
+        SysUserUnion userUnion = unionOptional.orElseThrow(
+                () -> new UnknownException("系统错误 请联系管理员")
+        );
+        if (!userUnion.getDeptId().equals(userStu.getDeptId())){
+            throw new EntityFieldException("学号: " + scoreDto.getUsername() + " 不是本系学生");
+        }
+        UnionScore unionScore = new UnionScore();
+        unionScore.setRemark(scoreDto.getRemark());
+        unionScore.setScore(scoreDto.getScore());
+        unionScore.setDeptId(userUnion.getDeptId());
+        unionScore.setStuId(userStu.getId());
+        unionScore.setUnionId(userUnion.getId());
+        return unionScoreDao.save(unionScore);
+    }
+
+    @Override
+    public Integer deletes(Integer[] ids) throws EntityFieldException {
+        Integer retCount = 0;
+        for (Integer id : ids) {
+            log.info(id.toString());
+            Optional<UnionScore> unionScoreOptional = unionScoreDao.findById(id);
+            unionScoreOptional.orElseThrow(
+                    ()->new EntityFieldException("id: " + id + " 不存在")
+            );
+            retCount += unionScoreDao.deleteById(id);
+        }
+        log.info(retCount.toString());
+        return retCount;
     }
 }

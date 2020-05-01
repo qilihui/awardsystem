@@ -11,6 +11,7 @@
         <result property="score" column="score"/>
         <result property="stuId" column="stu_id"/>
         <result property="unionId" column="union_id"/>
+        <result property="deptId" column="dept_id"/>
     </resultMap>
 
 </mapper>

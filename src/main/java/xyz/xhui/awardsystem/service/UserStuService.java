@@ -3,6 +3,7 @@ package xyz.xhui.awardsystem.service;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
+import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserStu;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface UserStuService {
     Optional<SysUserStu> findBySysUserId(Integer id);
 
     Integer updateEmailAndRealName(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
+
+    SysUserStu findSysUserStuByUsername(String username) throws EntityFieldException;
 }

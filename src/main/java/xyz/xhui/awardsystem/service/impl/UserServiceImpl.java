@@ -114,23 +114,6 @@ public class UserServiceImpl implements UserService {
                 throw new EntityFieldException("id: " + id + " 不能删除当前登录用户");
             }
             retCount += userDao.deleteById(id);
-//            switch (sysUser.getRole()) {
-//                case ROLE_ADMIN:
-//                    retCount += userAdminDao.deleteSysUserAdminByUser_Id(sysUser.getId());
-//                    break;
-//                case ROLE_STU:
-//                    retCount += userStuDao.deleteSysUserStuByUser_Id(sysUser.getId());
-//                    break;
-//                case ROLE_UNION:
-//                    retCount += userUnionDao.deleteSysUserUnionByUser_Id(sysUser.getId());
-//                    break;
-//                case ROLE_TUTOR:
-//                    retCount += userTutorDao.deleteSysUserTutorByUser_Id(sysUser.getId());
-//                    break;
-//                case ROLE_HOUSEPARENT:
-//                    retCount += userHouseparentDao.deleteSysUserHouseparentByUser_Id(sysUser.getId());
-//                    break;
-//            }
         }
         log.info(retCount.toString());
         return retCount;

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.dao.UserStuDao;
@@ -20,6 +21,9 @@ import java.util.Optional;
 public class UserStuServiceImpl implements UserStuService {
     @Autowired
     private UserStuDao userStuDao;
+
+    @Autowired
+    UserUnionDao userUnionDao;
 
     @Autowired
     private DeptDao deptDao;
@@ -93,6 +97,17 @@ public class UserStuServiceImpl implements UserStuService {
         Integer integer = userService.updateEmailAndRealName(userDto);
         Integer integer1 = userStuDao.updateInfo(userInfoDto);
         return integer + integer1;
+    }
+
+    @Override
+    public SysUserStu findSysUserStuByUsername(String username) throws EntityFieldException {
+        Optional<SysUserStu> sysUserOptional = userStuDao.findStuByUsername(username);
+        SysUserStu userStu = sysUserOptional.orElseThrow(() -> new EntityFieldException("该用户名学生不存在"));
+        Optional<SysUserUnion> userUnionOptional = userUnionDao.findSysUserUnionByUser_Id(MyUserUtils.getId());
+        if (!userUnionOptional.get().getDeptId().equals(userStu.getDeptId())) {
+            throw new EntityFieldException("不是本系学生");
+        }
+        return sysUserOptional.get();
     }
 
 //    @Override

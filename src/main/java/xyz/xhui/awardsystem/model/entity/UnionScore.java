@@ -15,6 +15,8 @@ public class UnionScore implements Serializable {
 
     private Integer unionId;
 
+    private Integer deptId;
+
     private Integer createTime;
 
     public UnionScore() {
@@ -61,6 +63,14 @@ public class UnionScore implements Serializable {
         this.unionId = unionId;
     }
 
+    public Integer getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
+    }
+
     public Integer getCreateTime() {
         return createTime;
     }
@@ -77,6 +87,7 @@ public class UnionScore implements Serializable {
                 ", score=" + score +
                 ", remark='" + remark + '\'' +
                 ", unionId=" + unionId +
+                ", deptId=" + deptId +
                 ", createTime=" + createTime +
                 '}';
     }

@@ -74,6 +74,21 @@ public class UserStuController {
         return ResultFactory.buildSuccessResult("添加成功");
     }
 
+    @GetMapping("/findByUsername")
+    @ApiOperation("根据用户名查找")
+    @RolesAllowed("UNION")
+    @ResponseBody
+    public Result<String> findByUsername(@RequestParam("username") String username) {
+        log.info(username);
+        SysUserStu userStu = null;
+        try {
+            userStu = userStuService.findSysUserStuByUsername(username);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult(userStu.getUser().getRealName());
+    }
+
 //    @GetMapping(value = "")
 //    @ApiOperation("查询所有学生详细信息")
 //    public Result findStuAll() {

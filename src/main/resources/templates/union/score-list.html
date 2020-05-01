@@ -67,8 +67,9 @@
                             <th lay-data="{field:'score', minWidth: 120}">扣分数</th>
                             <th lay-data="{field:'remark', minWidth: 120}">备注</th>
                             <th lay-data="{field:'submitter', minWidth:80}">提交人</th>
-                            <th lay-data="{field:'createTime', minWidth:180, templet:'<div>{{layui.util.toDateString(d.createTime*1000, `yyyy-MM-dd HH:mm:ss`)}}</div>'}">提交时间</th>
-<!--                            <th lay-data="{toolbar: '#barOptional', minWidth:100}">操作</th>-->
+                            <th lay-data="{field:'createTime', minWidth:180, templet:'<div>{{layui.util.toDateString(d.createTime*1000, `yyyy-MM-dd HH:mm:ss`)}}</div>'}">
+                                提交时间
+                            </th>
                         </tr>
                         </thead>
                     </table>
@@ -82,99 +83,32 @@
     <div class="layui-btn-container">
         <div class="layui-inline" title="批量删除" lay-event="delete"><i class="layui-icon layui-icon-delete"></i></div>
         <div class="layui-inline" title="添加" lay-event="add"><i class="layui-icon layui-icon-add-1"></i></div>
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"> 获取选中行数据</button>-->
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>-->
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="isAll"> 验证是否全选</button>-->
     </div>
 </script>
 <script>
-    layui.use('table',
-        function () {
-            var table = layui.table;
-
-            //监听单元格编辑
-            // table.on('edit(test)',
-            //     function (obj) {
-            //         var value = obj.value //得到修改后的值
-            //             ,
-            //             data = obj.data //得到所在行所有键值
-            //             ,
-            //             field = obj.field; //得到字段
-            //         layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
-            //     });
-
-            //头工具栏事件
-            table.on('toolbar(test)',
-                function (obj) {
-                    var checkStatus = table.checkStatus(obj.config.id);
-                    switch (obj.event) {
-                        case 'delete':
-                            var data = checkStatus.data;
-                            var idArray = [];
-                            for (var i in data) {
-                                idArray[i] = data[i].id;
-                            }
-                            if (idArray.length === 0) {
-                                layer.alert("未选中", {icon: 5});
-                                break;
-                            }
-                            console.log(idArray.toString());
-                            layer.confirm('真的要删除用户? 请谨慎操作!', function (index) {
-                                var load = layer.load(2)
-                                $.ajax({
-                                    url: '/user/users',
-                                    type: "DELETE",
-                                    data: {ids: idArray},
-                                    dataType: 'json',
-                                    success: function (result) {
-                                        layer.close(load)
-                                        if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
-                                            layer.alert(result.msg, {icon: 2});
-                                        } else {
-                                            layer.alert("删除成功", {icon: 1}, function (index1) {
-                                                layer.close(index1);
-                                                //xadmin.father_reload();
-                                                table.reload('test');
-                                            });
-                                        }
-                                    },
-                                });
-                            });
-                            // layer.alert(JSON.stringify(data));
-                            break;
-                        case 'add':
-                            xadmin.open('用户添加', '/admin/getPage?name=user/user-add');
-                            break;
-                        // case 'getCheckData':
-                        //     var data = checkStatus.data;
-                        //     layer.alert(JSON.stringify(data));
-                        //     break;
-                        // case 'getCheckLength':
-                        //     var data = checkStatus.data;
-                        //     layer.msg('选中了：' + data.length + ' 个');
-                        //     break;
-                        // case 'isAll':
-                        //     layer.msg(checkStatus.isAll ? '全选' : '未全选');
-                        //     break;
+    layui.use('table', function () {
+        var table = layui.table;
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'delete':
+                    var data = checkStatus.data;
+                    var idArray = [];
+                    for (var i in data) {
+                        idArray[i] = data[i].id;
                     }
-                });
-        });
-
-
-    //监听工具条
-    layui.use('table',
-        function () {
-            var table = layui.table;
-            table.on('tool(test)', function (obj) {
-                var data = obj.data;
-                var roleStr = data.role.replace("ROLE_", "").toLocaleLowerCase();
-                if (obj.event === 'del') {
-                    layer.confirm('真的删除行么', function (index) {
+                    if (idArray.length === 0) {
+                        layer.alert("未选中", {icon: 5});
+                        break;
+                    }
+                    console.log(idArray.toString());
+                    layer.confirm('真的要删除用户? 请谨慎操作!', function (index) {
                         var load = layer.load(2)
                         $.ajax({
-                            url: '/user/' + roleStr,
+                            url: '/union/score/delete',
                             type: "DELETE",
-                            data: {id: data.id},
+                            data: {ids: idArray},
                             dataType: 'json',
                             success: function (result) {
                                 layer.close(load)
@@ -189,54 +123,13 @@
                                 }
                             },
                         });
-
                     });
-                } else if (obj.event === 'edit') {
-                    // console.log($(window).width())
-                    xadmin.open('用户详情', '/user/' + roleStr + '/edit/?id=' + data.id);
-                } else if (obj.event === 'resetPassword') {
-                    layer.confirm('确定恢复密码？', function (index) {
-                        var load = layer.load(2)
-                        $.ajax({
-                            url: "/user/resetPassword",
-                            type: "POST",
-                            data: {userId: data.id},
-                            dataType: 'json',
-                            success: function (result) {
-                                layer.close(load)
-                                console.log("success")
-                                layer.alert("恢复成功", {icon: 1}, function (index1) {
-                                    layer.close(index1);
-                                    //xadmin.father_reload();
-                                    table.reload('test');
-                                });
-                            },
-                            error: function (result) {
-                                console.log("fail")
-                                console.log(result)
-                                layer.alert(result.msg, {icon: 2}, function (index1) {
-                                    layer.close(index1);
-                                    //xadmin.father_reload();
-                                    table.reload('test');
-                                });
-                            }
-                        });
-                    });
-                }
-            })
+                    break;
+                case 'add':
+                    xadmin.open('扣分', '/union/getPage?name=score-add');
+                    break;
+            }
         });
-
+    });
 </script>
-
-<!--<script type="text/html" id="barOptional">-->
-<!--    &lt;!&ndash;    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>&ndash;&gt;-->
-<!--    <a class="" lay-event="edit" title="编辑">-->
-<!--        <i class="layui-icon">&#xe642;</i>-->
-<!--    </a>-->
-<!--    &nbsp;&nbsp;&nbsp;&nbsp;-->
-<!--    &lt;!&ndash;    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>&nbsp;&ndash;&gt;-->
-<!--    <a class="" lay-event="resetPassword" title="恢复默认密码">-->
-<!--        <i class="layui-icon">&#xe716;</i>-->
-<!--    </a>-->
-<!--</script>-->
 </html>

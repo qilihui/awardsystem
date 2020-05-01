@@ -7,19 +7,19 @@ public class ScoreDto {
     private Integer score;
     private String remark;
     private String submitter;
-    private Integer create_time;
+    private Integer createTime;
 
     public ScoreDto() {
     }
 
-    public ScoreDto(Integer id, String username, String realName, Integer score, String remark, String submitter, Integer create_time) {
+    public ScoreDto(Integer id, String username, String realName, Integer score, String remark, String submitter, Integer createTime) {
         this.id = id;
         this.username = username;
         this.realName = realName;
         this.score = score;
         this.remark = remark;
         this.submitter = submitter;
-        this.create_time = create_time;
+        this.createTime = createTime;
     }
 
     public Integer getId() {
@@ -70,12 +70,12 @@ public class ScoreDto {
         this.submitter = submitter;
     }
 
-    public Integer getCreate_time() {
-        return create_time;
+    public Integer getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Integer create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class ScoreDto {
                 ", score=" + score +
                 ", remark='" + remark + '\'' +
                 ", submitter='" + submitter + '\'' +
-                ", create_time=" + create_time +
+                ", createTime=" + createTime +
                 '}';
     }
 }

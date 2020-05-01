@@ -18,5 +18,7 @@ public interface UnionScoreService {
 
 //    Boolean deleteById(Integer id);
 
-    Integer save(UnionScoreDto unionScoreDto) throws EntityFieldException, UnknownException;
+    Integer save(ScoreDto scoreDto) throws EntityFieldException, UnknownException;
+
+    Integer deletes(Integer[] ids) throws EntityFieldException;
 }

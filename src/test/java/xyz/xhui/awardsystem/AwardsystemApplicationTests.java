@@ -8,10 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
 import xyz.xhui.awardsystem.dao.*;
-import xyz.xhui.awardsystem.model.entity.SysUser;
-import xyz.xhui.awardsystem.model.entity.SysUserAdmin;
-import xyz.xhui.awardsystem.model.entity.SysUserHouseparent;
-import xyz.xhui.awardsystem.model.entity.UnionScore;
+import xyz.xhui.awardsystem.model.entity.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -155,6 +152,12 @@ class AwardsystemApplicationTests {
     @Test
     public void test17() {
         Optional<SysUser> sysUserByStuId = userStuDao.findSysUserByStuId(1);
+        System.out.println(sysUserByStuId.get());
+    }
+
+    @Test
+    public void test18() {
+        Optional<SysUserStu> sysUserByStuId = userStuDao.findStuByUsername("1730090712");
         System.out.println(sysUserByStuId.get());
     }
 }
