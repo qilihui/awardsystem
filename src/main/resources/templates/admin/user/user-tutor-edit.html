@@ -6,7 +6,6 @@
     <title>修改用户信息</title>
     <link rel="stylesheet" th:href="@{/xadmin/css/font.css}"/>
     <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}"/>
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
     <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
 </head>
@@ -19,7 +18,7 @@
         <input type="hidden" id="role" name="role" th:value="${sysUser.role}">
 
         <div class="layui-form-item">
-            <label class="layui-form-label">角色</label>
+            <label for="L_role" class="layui-form-label">角色</label>
             <div class="layui-input-inline">
                 <input type="text" id="L_role" th:value="${sysUser.role.getName()}" name="roleName" required=""
                        lay-verify=""
@@ -77,7 +76,7 @@
         </div>
 
         <div class="layui-form-item">
-            <label for="L_email" class="layui-form-label">
+            <label class="layui-form-label">
             </label>
             <button class="layui-btn" lay-filter="add" lay-submit="">
                 更新

@@ -12,22 +12,23 @@ import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
+import xyz.xhui.awardsystem.model.dto.StuDto;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysUserStu;
 import xyz.xhui.awardsystem.service.UserStuService;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/user/stu")
-@Api(tags = "学生管理接口")
+@Api(tags = "用户管理：学生")
 @RolesAllowed({"ADMIN"})
 @Slf4j
 public class UserStuController {
-    private static final Logger logger = LoggerFactory.getLogger(UserStuController.class);
-
     @Autowired
     private UserStuService userStuService;
 
@@ -64,13 +65,28 @@ public class UserStuController {
     @ApiOperation("添加")
     @ResponseBody
     public Result<String> save(UserInfoDto userInfoDto, SysUserDto userDto) {
-        logger.info(userInfoDto.toString());
-        logger.info(userDto.toString());
+        log.info(userInfoDto.toString());
+        log.info(userDto.toString());
         try {
             userStuService.save(userInfoDto, userDto);
         } catch (EntityFieldException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
+        return ResultFactory.buildSuccessResult("添加成功");
+    }
+
+    @PostMapping(value = "/adds")
+    @ApiOperation("批量添加")
+    @ResponseBody
+    public Result<String> saves(@RequestBody StuDto[] stuDtos) {
+        log.info(Arrays.toString(stuDtos));
+//        log.info(json);
+        //        logger.info(userDto.toString());
+//        try {
+//            userStuService.save(userInfoDto, userDto);
+//        } catch (EntityFieldException e) {
+//            return ResultFactory.buildFailResult(e.getMessage());
+//        }
         return ResultFactory.buildSuccessResult("添加成功");
     }
 

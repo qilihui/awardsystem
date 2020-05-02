@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/user/houseparent")
-@Api(tags = "宿管管理接口")
+@Api(tags = "用户管理：宿管")
 @RolesAllowed({"ADMIN"})
 @Slf4j
 public class UserHouseparentController {

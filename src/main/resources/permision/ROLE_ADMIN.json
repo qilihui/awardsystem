@@ -11,6 +11,10 @@
           "href": "/admin/getPage?name=user/user-list"
         },
         {
+          "name": "批量添加学生",
+          "href": "/admin/getPage?name=user/users-stu-add"
+        },
+        {
           "name": "修改密码",
           "href": "/change-password"
         }

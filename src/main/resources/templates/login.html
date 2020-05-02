@@ -11,7 +11,6 @@
     <link rel="stylesheet" th:href="@{/xadmin/css/font.css}">
     <link rel="stylesheet" th:href="@{/xadmin/css/login.css}">
     <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}">
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
 </head>
 <body class="login-bg">
@@ -31,52 +30,51 @@
 </div>
 
 <script>
-    $(function () {
-        layui.use('form', function () {
-            var form = layui.form;
-            // layer.msg('玩命卖萌中', function(){
-            //   //关闭后的操作
-            //   });
-            // 监听提交
-            form.on('submit(login)', function (data) {
-                // alert(1);
-                var load = layer.load(2)
-                $.ajax({
-                    type: 'post',
-                    url: '/login',
-                    data: $(".layui-form").serialize(),
-                    success: function (datas) {
-                        layer.close(load)
-                        if (datas.authenticated === true) {
-                            localStorage.setItem("userId", datas.principal.sysUser.id);
-                            localStorage.setItem("username", datas.principal.sysUser.username);
-                            localStorage.setItem("nickName", datas.principal.sysUser.realName);
-                            var authorities = datas.authorities.authority;
-                            // var permission = [];
-                            // for(var i in authorities){
-                            //     permission.push(authorities[i].authority);
-                            // }
-                            // localStorage.setItem("permission", JSON.stringify(permission));
-                            // alert(988)
-                            location.href = '/'
-                            // layer.msg("登录成功", {time: 500}, function () {
-                            //     location.href = '/'
-                            // });
-                        } else {
-                            layer.msg("登录异常，请联系管理员");
-                        }
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        layer.close(load)
-                        var msg = xhr.responseText;
-                        var response = JSON.parse(msg);
-                        layer.msg(response.message);
+    layui.use('form', function () {
+        $ = layui.jquery;
+        var form = layui.form;
+        // layer.msg('玩命卖萌中', function(){
+        //   //关闭后的操作
+        //   });
+        // 监听提交
+        form.on('submit(login)', function (data) {
+            // alert(1);
+            var load = layer.load(2);
+            $.ajax({
+                type: 'post',
+                url: '/login',
+                data: $(".layui-form").serialize(),
+                success: function (datas) {
+                    layer.close(load);
+                    if (datas.authenticated === true) {
+                        localStorage.setItem("userId", datas.principal.sysUser.id);
+                        localStorage.setItem("username", datas.principal.sysUser.username);
+                        localStorage.setItem("nickName", datas.principal.sysUser.realName);
+                        var authorities = datas.authorities.authority;
+                        // var permission = [];
+                        // for(var i in authorities){
+                        //     permission.push(authorities[i].authority);
+                        // }
+                        // localStorage.setItem("permission", JSON.stringify(permission));
+                        // alert(988)
+                        location.href = '/'
+                        // layer.msg("登录成功", {time: 500}, function () {
+                        //     location.href = '/'
+                        // });
+                    } else {
+                        layer.msg("登录异常，请联系管理员");
                     }
-                });
-                return false;
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    layer.close(load)
+                    var msg = xhr.responseText;
+                    var response = JSON.parse(msg);
+                    layer.msg(response.message);
+                }
             });
+            return false;
         });
-    })
+    });
 </script>
 </body>
 </html>

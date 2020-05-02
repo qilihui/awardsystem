@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/user/tutor")
-@Api(tags = "辅导员管理接口")
+@Api(tags = "用户管理：辅导员")
 @RolesAllowed({"ADMIN"})
 @Slf4j
 public class UserTutorController {

@@ -27,7 +27,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/user/admin")
-@Api(tags = "管理员管理接口")
+@Api(tags = "用户管理：admin")
 @RolesAllowed({"ADMIN"})
 @Slf4j
 public class UserAdminController {

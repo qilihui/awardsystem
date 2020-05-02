@@ -49,4 +49,9 @@ public class CommonController {
     public String getPage() {
         return "user-change-password";
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "test";
+    }
 }

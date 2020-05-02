@@ -19,8 +19,9 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/user")
-@Api(tags = "用户管理接口")
+@Api(tags = "用户管理：USER")
 @Slf4j
+@RolesAllowed({"ADMIN"})
 //@Secured("ROLE_ADMIN")
 //@PreAuthorize("hasRole('STU')")
 public class UserController {
@@ -57,7 +58,6 @@ public class UserController {
 
     @GetMapping(value = "")
     @ApiOperation("分页查询所有用户")
-    @RolesAllowed({"ADMIN"})
     @ResponseBody
     public Result<List<SysUserDto>> findAll(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize) {
         List<SysUser> userList = userService.findAll(pagenum - 1, pagesize);
@@ -89,6 +89,7 @@ public class UserController {
     @PostMapping(value = "/changePassword")
     @ApiOperation("修改密码")
     @ResponseBody
+    @RolesAllowed({"ADMIN", "TUTOR", "UNION", "HOUSEPARENT", "STU"})
     public Result<String> changePassword(@RequestParam("oldPassword") String oldPassword, @RequestParam("newPassword") String newPassword) {
         try {
             userService.changePassword(oldPassword, newPassword);
@@ -100,7 +101,6 @@ public class UserController {
 
     @PostMapping(value = "/resetPassword")
     @ApiOperation("恢复默认密码")
-    @RolesAllowed({"ADMIN"})
     @ResponseBody
     public Result<String> resetPassword(@RequestParam("userId") Integer userId) {
         try {
@@ -113,7 +113,6 @@ public class UserController {
 
     @DeleteMapping("/users")
     @ApiOperation("批量删除")
-    @RolesAllowed({"ADMIN"})
     @ResponseBody
     public Result<String> deleteUsers(@RequestParam("ids[]") Integer[] ids) {
 //        log.info(Arrays.toString(ids));

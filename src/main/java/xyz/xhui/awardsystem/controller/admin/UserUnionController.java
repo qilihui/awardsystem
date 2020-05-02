@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/user/union")
-@Api(tags = "学生会管理接口")
+@Api(tags = "用户管理：学生会")
 @RolesAllowed({"ADMIN"})
 @Slf4j
 public class UserUnionController {
