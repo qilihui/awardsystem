@@ -99,21 +99,26 @@ public class UserServiceImpl implements UserService {
     public Integer deleteUsers(Integer[] ids) throws EntityFieldException {
         Integer retCount = 0;
         for (Integer id : ids) {
-            log.info(id.toString());
-            Optional<SysUser> sysUserOptional = this.findById(id);
-            sysUserOptional.orElseThrow(() -> {
-                return new EntityFieldException("id: " + id + " 不存在");
-            });
-            SysUser sysUser = sysUserOptional.get();
-            if ("admin".equals(sysUser.getUsername())) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                throw new EntityFieldException("id: " + id + " 不能删除admin用户");
+            try {
+                log.info(id.toString());
+                Optional<SysUser> sysUserOptional = this.findById(id);
+                sysUserOptional.orElseThrow(() -> {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return new EntityFieldException("不存在");
+                });
+                SysUser sysUser = sysUserOptional.get();
+                if ("admin".equals(sysUser.getUsername())) {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    throw new EntityFieldException("不能删除admin用户");
+                }
+                if (MyUserUtils.getId().equals(sysUser.getId())) {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    throw new EntityFieldException("不能删除当前登录用户");
+                }
+                retCount += userDao.deleteById(id);
+            } catch (EntityFieldException e) {
+                throw new EntityFieldException("id: " + id + " " + e.getMessage());
             }
-            if (MyUserUtils.getId().equals(sysUser.getId())) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                throw new EntityFieldException("id: " + id + " 不能删除当前登录用户");
-            }
-            retCount += userDao.deleteById(id);
         }
         log.info(retCount.toString());
         return retCount;

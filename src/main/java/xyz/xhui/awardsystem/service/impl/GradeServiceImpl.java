@@ -3,6 +3,7 @@ package xyz.xhui.awardsystem.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.dao.GradeDao;
 import xyz.xhui.awardsystem.model.entity.SysDept;
@@ -53,6 +54,7 @@ public class GradeServiceImpl implements GradeService {
         for (Integer id : ids) {
             Optional<SysGrade> gradeOptional = this.findById(id);
             gradeOptional.orElseThrow(() -> {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return new EntityFieldException("id:" + id + " 不存在");
             });
             count += gradeDao.deleteSysGradeById(id);

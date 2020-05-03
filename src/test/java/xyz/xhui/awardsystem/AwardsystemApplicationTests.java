@@ -160,4 +160,13 @@ class AwardsystemApplicationTests {
         Optional<SysUserStu> sysUserByStuId = userStuDao.findStuByUsername("1730090712");
         System.out.println(sysUserByStuId.get());
     }
+
+    @Autowired
+    private ApartmentScoreDao apartmentScoreDao;
+
+    @Test
+    public void test19() {
+        List<ApartmentScore> allByPagenumAndPagesize = apartmentScoreDao.findAllByPagenumAndPagesize(1, 0, 2);
+        System.out.println(allByPagenumAndPagesize);
+    }
 }

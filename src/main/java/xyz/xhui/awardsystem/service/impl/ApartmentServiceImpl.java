@@ -3,6 +3,7 @@ package xyz.xhui.awardsystem.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.dao.ApartmentDao;
 import xyz.xhui.awardsystem.model.entity.SysApartment;
@@ -67,6 +68,7 @@ public class ApartmentServiceImpl implements ApartmentService {
         for (Integer id : ids) {
             Optional<SysApartment> apartmentOptional = this.findById(id);
             apartmentOptional.orElseThrow(() -> {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return new EntityFieldException("id:" + id + " 不存在");
             });
             count += apartmentDao.deleteSysApartmentById(id);

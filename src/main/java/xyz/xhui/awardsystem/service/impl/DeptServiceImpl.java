@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.dao.DeptDao;
 import xyz.xhui.awardsystem.model.entity.SysDept;
@@ -55,6 +56,7 @@ public class DeptServiceImpl implements DeptService {
         for (Integer id : ids) {
             Optional<SysDept> deptOptional = this.findById(id);
             deptOptional.orElseThrow(() -> {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return new EntityFieldException("id:" + id + " 不存在");
             });
             count += deptDao.deleteSysDeptById(id);

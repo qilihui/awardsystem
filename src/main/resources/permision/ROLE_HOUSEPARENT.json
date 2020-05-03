@@ -1,0 +1,31 @@
+{
+  "homePage": "/houseparent-home",
+  "data": [
+    {
+      "id": 1,
+      "name": "用户管理",
+      "css": "&#xe770;",
+      "child": [
+        {
+          "name": "修改密码",
+          "href": "/change-password"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "成绩管理",
+      "css": "&#xe60a;",
+      "child": [
+        {
+          "name": "分数列表",
+          "href": "/houseparent/getPage?name=score-list"
+        },
+        {
+          "name": "批量添加",
+          "href": "/houseparent/getPage?name=score-adds"
+        }
+      ]
+    }
+  ]
+}

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UnionScoreDao {
     @Select("select * from union_score limit ${pageNum*pageSize}, #{pageSize}")
-    @ResultMap("unionScoreMaapper")
+//    @ResultMap("unionScoreMaapper")
     List<UnionScore> findAllByPagenumAndPagesize(Integer pageNum, Integer pageSize);
 
     @Select("select * from union_score")

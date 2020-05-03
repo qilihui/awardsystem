@@ -109,13 +109,16 @@ public class UnionScoreServiceImpl implements UnionScoreService {
     }
 
     @Override
+    @Transactional
     public Integer deletes(Integer[] ids) throws EntityFieldException {
         Integer retCount = 0;
         for (Integer id : ids) {
             log.info(id.toString());
             Optional<UnionScore> unionScoreOptional = unionScoreDao.findById(id);
-            unionScoreOptional.orElseThrow(
-                    () -> new EntityFieldException("id: " + id + " 不存在")
+            unionScoreOptional.orElseThrow(() -> {
+                        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                        return new EntityFieldException("id: " + id + " 不存在");
+                    }
             );
             retCount += unionScoreDao.deleteById(id);
         }
