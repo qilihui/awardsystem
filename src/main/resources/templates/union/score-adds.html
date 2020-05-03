@@ -23,6 +23,7 @@
 
 <div class="layui-upload">
     <button type="button" class="layui-btn layui-btn-normal" id="LAY-excel-upload">选择文件</button>
+    <a th:href="@{/excel/union-score-example.xlsx}" class="layui-btn">下载样表</a>
 </div>
 
 <div id="user-view"></div>
@@ -54,7 +55,7 @@
                     </tr>
                     {{# });}}
                 </table>
-<!--                <pre class="layui-code">{{JSON.stringify(content, null, 2)}}</pre>-->
+                <!--                <pre class="layui-code">{{JSON.stringify(content, null, 2)}}</pre>-->
             </div>
             {{# }); }}
         </div>
@@ -87,13 +88,8 @@
                         // 读取数据的同时梳理数据
                         fields: {
                             'username': 'A'
-                            , 'realName': 'B'
-                            , 'email': 'C'
-                            , 'deptName': 'D'
-                            , 'gradeName': 'E'
-                            , 'apartmentName': 'F'
-                            , 'room': 'G'
-                            , 'bed': 'H'
+                            , 'scoreStr': 'B'
+                            , 'remark': 'C'
                         }
                     }, function (data) {
                         file_data = data;
@@ -136,13 +132,13 @@
             if (text === "" || text === null) {
                 return layer.alert("未选中", {icon: 5});
             }
-            file_data[0][text].shift();
+            // file_data[0][text].shift();
             console.log(file_data[0][text]);
             let file_json = JSON.stringify(file_data[0][text]);
             console.log(file_json);
             let load = layer.load(2);
             $.ajax({
-                url: "/user/stu/adds",
+                url: "/union/score/adds",
                 type: "POST",
                 data: file_json,
                 contentType: "application/json",
@@ -154,6 +150,7 @@
                     } else {
                         layer.alert("添加成功", {icon: 6}, function (index1) {
                             layer.close(index1);
+                            window.location.reload();
                         });
                     }
                 }

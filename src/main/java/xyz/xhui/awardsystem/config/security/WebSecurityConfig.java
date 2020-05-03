@@ -45,11 +45,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/login.html",
                         "/login",
-                        "/my/**",
-                        "/treetable-lay/**",
                         "/xadmin/**",
-                        "/ztree/**",
-                        "/statics/**",
+                        "/excel/**",
 
                         "/v2/api-docs",
                         "/swagger-resources/configuration/ui",

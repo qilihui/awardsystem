@@ -1,23 +1,28 @@
 package xyz.xhui.awardsystem.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.dao.UserStuDao;
+import xyz.xhui.awardsystem.model.dto.StuDto;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.*;
 import xyz.xhui.awardsystem.service.UserService;
 import xyz.xhui.awardsystem.service.UserStuService;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserStuServiceImpl implements UserStuService {
     @Autowired
     private UserStuDao userStuDao;
@@ -78,6 +83,55 @@ public class UserStuServiceImpl implements UserStuService {
         }
         userStu.setUser(sysUser);
         return userStuDao.save(userStu);
+    }
+
+    @Override
+    @Transactional
+    public Integer saves(StuDto[] stuDtos) throws EntityFieldException {
+        int j = 0;
+        for (int i = 1; i < stuDtos.length; i++) {
+            try {
+                log.info(stuDtos[i].toString());
+                Optional<SysDept> deptOptional = deptDao.findSysDeptByName(stuDtos[i].getDeptName());
+                Optional<SysGrade> gradeOptional = gradeDao.findSysGradeByName(Integer.valueOf(stuDtos[i].getGradeName().trim()));
+                Optional<SysApartment> apartmentOptional = apartmentDao.findSysApartmentByName(stuDtos[i].getApartmentName());
+                SysDept dept = deptOptional.orElseThrow(() -> {
+                            return new EntityFieldException("系部不存在");
+                        }
+                );
+                SysGrade grade = gradeOptional.orElseThrow(() -> {
+                            return new EntityFieldException("年级不存在");
+                        }
+                );
+                SysApartment apartment = apartmentOptional.orElseThrow(() -> {
+                            return new EntityFieldException("公寓不存在");
+                        }
+                );
+                SysUser sysUser = new SysUser();
+                sysUser.setUsername(stuDtos[i].getUsername().trim());
+                sysUser.setRole(RoleEnum.ROLE_STU);
+                sysUser.setEmail(stuDtos[i].getEmail().trim());
+                sysUser.setRealName(stuDtos[i].getRealName().trim());
+                if (userService.save(sysUser) <= 0) {
+                    throw new EntityFieldException("未知错误");
+                }
+                SysUserStu userStu = new SysUserStu();
+                userStu.setUser(sysUser);
+                userStu.setDeptId(dept.getId());
+                userStu.setGradeId(grade.getId());
+                userStu.setApartmentId(apartment.getId());
+                userStu.setRoom(Integer.valueOf(stuDtos[i].getRoom().trim()));
+                userStu.setBed(Integer.valueOf(stuDtos[i].getBed().trim()));
+                j += userStuDao.save(userStu);
+            } catch (EntityFieldException e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new EntityFieldException("序号" + i + " " + e.getMessage());
+            } catch (NumberFormatException e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new EntityFieldException("序号" + i + " 格式错误" + e.getMessage());
+            }
+        }
+        return j;
     }
 
     @Override

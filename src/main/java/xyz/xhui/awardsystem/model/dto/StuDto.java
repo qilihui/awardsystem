@@ -2,10 +2,10 @@ package xyz.xhui.awardsystem.model.dto;
 
 public class StuDto {
     private String username;
-    private String roleName;
+    private String realName;
     private String email;
-    private Integer room;
-    private Integer bed;
+    private String room;
+    private String bed;
     private String apartmentName;
     private String deptName;
     private String gradeName;
@@ -18,12 +18,12 @@ public class StuDto {
         this.username = username;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getRealName() {
+        return realName;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public String getEmail() {
@@ -34,19 +34,19 @@ public class StuDto {
         this.email = email;
     }
 
-    public Integer getRoom() {
+    public String getRoom() {
         return room;
     }
 
-    public void setRoom(Integer room) {
+    public void setRoom(String room) {
         this.room = room;
     }
 
-    public Integer getBed() {
+    public String getBed() {
         return bed;
     }
 
-    public void setBed(Integer bed) {
+    public void setBed(String bed) {
         this.bed = bed;
     }
 
@@ -78,13 +78,13 @@ public class StuDto {
     public String toString() {
         return "StuDto{" +
                 "username='" + username + '\'' +
-                ", roleName='" + roleName + '\'' +
+                ", realName='" + realName + '\'' +
                 ", email='" + email + '\'' +
                 ", room=" + room +
                 ", bed=" + bed +
                 ", apartmentName='" + apartmentName + '\'' +
                 ", deptName='" + deptName + '\'' +
-                ", gradeName='" + gradeName + '\'' +
+                ", gradeName=" + gradeName +
                 '}';
     }
 }

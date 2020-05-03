@@ -20,6 +20,10 @@
         {
           "name": "扣分情况",
           "href": "/union/getPage?name=score-list"
+        },
+        {
+          "name": "批量扣分",
+          "href": "/union/getPage?name=score-adds"
         }
       ]
     }

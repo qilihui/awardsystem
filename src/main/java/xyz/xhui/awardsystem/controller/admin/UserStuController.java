@@ -79,14 +79,11 @@ public class UserStuController {
     @ApiOperation("批量添加")
     @ResponseBody
     public Result<String> saves(@RequestBody StuDto[] stuDtos) {
-        log.info(Arrays.toString(stuDtos));
-//        log.info(json);
-        //        logger.info(userDto.toString());
-//        try {
-//            userStuService.save(userInfoDto, userDto);
-//        } catch (EntityFieldException e) {
-//            return ResultFactory.buildFailResult(e.getMessage());
-//        }
+        try {
+            userStuService.saves(stuDtos);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
         return ResultFactory.buildSuccessResult("添加成功");
     }
 

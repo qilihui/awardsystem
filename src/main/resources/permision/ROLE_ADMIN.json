@@ -12,7 +12,7 @@
         },
         {
           "name": "批量添加学生",
-          "href": "/admin/getPage?name=user/users-stu-add"
+          "href": "/admin/getPage?name=user/user-stu-adds"
         },
         {
           "name": "修改密码",

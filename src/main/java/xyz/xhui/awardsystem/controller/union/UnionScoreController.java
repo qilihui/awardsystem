@@ -39,6 +39,19 @@ public class UnionScoreController {
         return ResultFactory.buildSuccessResult();
     }
 
+    @PostMapping("/adds")
+    @ApiOperation("批量添加")
+    @ResponseBody
+    public Result<String> saves(@RequestBody ScoreDto[] scoreDtos) {
+        log.info(Arrays.toString(scoreDtos));
+        try {
+            unionScoreService.saves(scoreDtos);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult();
+    }
+
     @GetMapping(name = "")
     @ApiOperation("分页查询")
     @ResponseBody

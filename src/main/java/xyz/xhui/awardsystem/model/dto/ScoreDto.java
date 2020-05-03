@@ -5,6 +5,7 @@ public class ScoreDto {
     private String username;
     private String realName;
     private Integer score;
+    private String scoreStr;
     private String remark;
     private String submitter;
     private Integer createTime;
@@ -54,6 +55,14 @@ public class ScoreDto {
         this.score = score;
     }
 
+    public String getScoreStr() {
+        return scoreStr;
+    }
+
+    public void setScoreStr(String scoreStr) {
+        this.scoreStr = scoreStr;
+    }
+
     public String getRemark() {
         return remark;
     }
@@ -85,6 +94,7 @@ public class ScoreDto {
                 ", username='" + username + '\'' +
                 ", realName='" + realName + '\'' +
                 ", score=" + score +
+                ", scoreStr='" + scoreStr + '\'' +
                 ", remark='" + remark + '\'' +
                 ", submitter='" + submitter + '\'' +
                 ", createTime=" + createTime +

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
@@ -75,7 +76,7 @@ public class UnionScoreServiceImpl implements UnionScoreService {
         SysUserUnion userUnion = unionOptional.orElseThrow(
                 () -> new UnknownException("系统错误 请联系管理员")
         );
-        if (!userUnion.getDeptId().equals(userStu.getDeptId())){
+        if (!userUnion.getDeptId().equals(userStu.getDeptId())) {
             throw new EntityFieldException("学号: " + scoreDto.getUsername() + " 不是本系学生");
         }
         UnionScore unionScore = new UnionScore();
@@ -88,13 +89,33 @@ public class UnionScoreServiceImpl implements UnionScoreService {
     }
 
     @Override
+    @RolesAllowed("UNION")
+    @Transactional
+    public Integer saves(ScoreDto[] scoreDtos) throws EntityFieldException {
+        int j = 0;
+        for (int i = 1; i < scoreDtos.length; i++) {
+            try {
+                scoreDtos[i].setScore(Integer.valueOf(scoreDtos[i].getScoreStr()));
+                j += this.save(scoreDtos[i]);
+            } catch (EntityFieldException | UnknownException e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new EntityFieldException("序号" + i + " " + e.getMessage());
+            } catch (NumberFormatException e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new EntityFieldException("序号" + i + " 格式错误" + e.getMessage());
+            }
+        }
+        return j;
+    }
+
+    @Override
     public Integer deletes(Integer[] ids) throws EntityFieldException {
         Integer retCount = 0;
         for (Integer id : ids) {
             log.info(id.toString());
             Optional<UnionScore> unionScoreOptional = unionScoreDao.findById(id);
             unionScoreOptional.orElseThrow(
-                    ()->new EntityFieldException("id: " + id + " 不存在")
+                    () -> new EntityFieldException("id: " + id + " 不存在")
             );
             retCount += unionScoreDao.deleteById(id);
         }

@@ -1,6 +1,7 @@
 package xyz.xhui.awardsystem.service;
 
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
+import xyz.xhui.awardsystem.model.dto.StuDto;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
@@ -17,6 +18,8 @@ public interface UserStuService {
 //    Optional<SysUserStu> findById(Integer id);
 
     Integer save(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
+
+    Integer saves(StuDto[] stuDtos) throws EntityFieldException;
 
     Optional<SysUserStu> findBySysUserId(Integer id);
 

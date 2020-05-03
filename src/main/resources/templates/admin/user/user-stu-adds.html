@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>批量添加</title>
+    <link rel="stylesheet" th:href="@{/xadmin/lib/layui/css/layui.css}">
+    <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
+    <script>
+        layui.config({
+            base: '/xadmin/lib/layui/',
+        }).extend({
+            excel: 'excel',
+        });
+    </script>
+    <style>
+        #user-view {
+            background-color: white;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body style="margin-top: 20px">
+
+<div class="layui-upload">
+    <button type="button" class="layui-btn layui-btn-normal" id="LAY-excel-upload">选择文件</button>
+    <a th:href="@{/excel/stu-example.xlsx}" class="layui-btn">下载样表</a>
+</div>
+
+<div id="user-view"></div>
+
+<script type="text/html" id="LAY-excel-export-ans">
+    {{# layui.each(d.data, function(file_index, item){ }}
+    <blockquote class="layui-elem-quote">
+        <i class="layui-icon">&#xe621;</i>
+        {{d.files[file_index].name}}
+        <button type="button" class="layui-btn" lay-submit>开始上传</button>
+    </blockquote>
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            {{# layui.each(item, function(sheet_name, content) { }}
+            <li>{{sheet_name}}</li>
+            {{# }); }}
+        </ul>
+        <div class="layui-tab-content">
+            {{# layui.each(item, function(sheet_name, content) { }}
+            <div class="layui-tab-item">
+                <table class="layui-table">
+                    {{# layui.each(content, function(row_index, value) { }}
+                    {{# var col_index = 1 }}
+                    <tr>
+                        <td id="table-export-{{file_index}}-{{sheet_name}}-{{row_index}}-0">{{row_index}}</td>
+                        {{# layui.each(value, function(col_key, val) { }}
+                        <td id="table-export-{{file_index}}-{{sheet_name}}-{{row_index}}-{{col_index++}}">{{val}}</td>
+                        {{# });}}
+                    </tr>
+                    {{# });}}
+                </table>
+                <!--                <pre class="layui-code">{{JSON.stringify(content, null, 2)}}</pre>-->
+            </div>
+            {{# }); }}
+        </div>
+    </div>
+    {{# }) }}
+</script>
+
+<script>
+    layui.use(['jquery', 'layer', 'upload', 'excel', 'laytpl', 'element', 'code', 'form'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var upload = layui.upload;
+        var excel = layui.excel;
+        var laytpl = layui.laytpl;
+        var element = layui.element;
+        var form = layui.form;
+        file_data = null;
+
+        /**
+         * 上传excel的处理函数，传入文件对象数组
+         * @param  {FileList} files [description]
+         * @return {[type]}       [description]
+         */
+        function uploadExcel(files) {
+            layui.use(['excel', 'layer'], function () {
+                var excel = layui.excel
+                var layer = layui.layer
+                try {
+                    excel.importExcel(files, {
+                        // 读取数据的同时梳理数据
+                        fields: {
+                            'username': 'A'
+                            , 'realName': 'B'
+                            , 'email': 'C'
+                            , 'deptName': 'D'
+                            , 'gradeName': 'E'
+                            , 'apartmentName': 'F'
+                            , 'room': 'G'
+                            , 'bed': 'H'
+                        }
+                    }, function (data) {
+                        file_data = data;
+                        console.log(data);
+                        document.getElementById('user-view').innerHTML = laytpl($('#LAY-excel-export-ans').html()).render({
+                            data: data,
+                            files: files
+                        });
+                    })
+                } catch (e) {
+                    layer.alert(e.message)
+                }
+            })
+        }
+
+        //upload上传实例
+        var uploadInst = upload.render({
+            elem: '#LAY-excel-upload' //绑定元素
+            , url: '/upload/' //上传接口（PS:这里不用传递整个 excel）
+            , auto: false //选择文件后不自动上传
+            , accept: 'file'
+            , choose: function (obj) {// 选择文件回调
+                var files = obj.pushFile()
+                var fileArr = Object.values(files)// 注意这里的数据需要是数组，所以需要转换一下
+
+                // 用完就清理掉，避免多次选中相同文件时出现问题
+                for (var index in files) {
+                    if (files.hasOwnProperty(index)) {
+                        delete files[index]
+                    }
+                }
+                $('#LAY-excel-upload').next().val('');
+
+                uploadExcel(fileArr) // 如果只需要最新选择的文件，可以这样写： uploadExcel([files.pop()])
+            }
+        });
+
+        form.on('submit', function (data) {
+            let text = $('.layui-tab-title').children('.layui-this').text();
+            if (text === "" || text === null) {
+                return layer.alert("未选中", {icon: 5});
+            }
+            console.log(file_data[0][text]);
+            let file_json = JSON.stringify(file_data[0][text]);
+            console.log(file_json);
+            let load = layer.load(2);
+            $.ajax({
+                url: "/user/stu/adds",
+                type: "POST",
+                data: file_json,
+                contentType: "application/json",
+                dataType: 'json',
+                success: function (result) {
+                    layer.close(load);
+                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                        layer.alert(result.msg, {icon: 2});
+                    } else {
+                        layer.alert("添加成功", {icon: 6}, function (index1) {
+                            layer.close(index1);
+                            window.location.reload();
+                        });
+                    }
+                }
+            });
+        })
+    });
+</script>
+</body>
+</html>
