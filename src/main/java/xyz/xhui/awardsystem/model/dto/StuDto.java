@@ -10,6 +10,20 @@ public class StuDto {
     private String deptName;
     private String gradeName;
 
+    public StuDto() {
+    }
+
+    public StuDto(String username, String realName, String email, String room, String bed, String apartmentName, String deptName, String gradeName) {
+        this.username = username;
+        this.realName = realName;
+        this.email = email;
+        this.room = room;
+        this.bed = bed;
+        this.apartmentName = apartmentName;
+        this.deptName = deptName;
+        this.gradeName = gradeName;
+    }
+
     public String getUsername() {
         return username;
     }

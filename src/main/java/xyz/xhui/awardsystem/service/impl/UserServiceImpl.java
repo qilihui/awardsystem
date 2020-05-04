@@ -14,6 +14,7 @@ import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.model.dto.LoginUser;
+import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.service.UserService;
@@ -28,14 +29,12 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public List<SysUser> findAll(Integer pagenum, Integer pagesize) {
-        return userDao.findAllByPagenumAndPagesize(pagenum, pagesize);
+    public PageDto<List<SysUser>> findAll(Integer pagenum, Integer pagesize) {
+        PageDto<List<SysUser>> pageDto = new PageDto<>();
+        pageDto.setCount(this.getCount());
+        pageDto.setObj(userDao.findAllByPagenumAndPagesize(pagenum, pagesize));
+        return pageDto;
     }
-
-//    @Override
-//    public List<SysUser> findAll() {
-//        return userMybatisDao.findAll();
-//    }
 
     @Override
     public Optional<SysUser> findById(Integer id) {
@@ -58,13 +57,6 @@ public class UserServiceImpl implements UserService {
         return userDao.save(sysUser);
     }
 
-//    @Override
-//    public Boolean deleteById(Integer id) {
-//        if (userMybatisDao.deleteById(id) > 0) {
-//            return true;
-//        }
-//        return false;
-//    }
 
     @Override
     public void changePassword(Integer userId) throws EntityFieldException {

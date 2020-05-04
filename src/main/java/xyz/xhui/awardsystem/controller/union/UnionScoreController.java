@@ -10,6 +10,7 @@ import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
+import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.ScoreDto;
 import xyz.xhui.awardsystem.model.entity.UnionScore;
 import xyz.xhui.awardsystem.service.UnionScoreService;
@@ -56,15 +57,13 @@ public class UnionScoreController {
     @ApiOperation("分页查询")
     @ResponseBody
     public Result<List<ScoreDto>> findAll(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize) {
-        log.info(pagenum.toString() + "   " + pagesize.toString());
-        List<ScoreDto> list = null;
+        PageDto<List<ScoreDto>> pageDto = null;
         try {
-            list = unionScoreService.findAll(pagenum - 1, pagesize);
+            pageDto = unionScoreService.findAll(pagenum - 1, pagesize);
         } catch (UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
-//        log.info(list.toString());
-        return ResultFactory.buildSuccessResult(list.size(), list);
+        return ResultFactory.buildSuccessResult(pageDto.getCount(), pageDto.getObj());
     }
 
     @DeleteMapping("/delete")

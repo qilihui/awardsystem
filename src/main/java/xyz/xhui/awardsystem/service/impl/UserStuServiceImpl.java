@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
+import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.dao.UserStuDao;
+import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.StuDto;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
@@ -18,7 +20,9 @@ import xyz.xhui.awardsystem.model.entity.*;
 import xyz.xhui.awardsystem.service.UserService;
 import xyz.xhui.awardsystem.service.UserStuService;
 
-import java.util.Arrays;
+import javax.annotation.security.RolesAllowed;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +45,12 @@ public class UserStuServiceImpl implements UserStuService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserHouseparentDao userHouseparentDao;
+
+    @Autowired
+    private UserTutorDao userTutorDao;
 
 
 //    @Override
@@ -164,17 +174,45 @@ public class UserStuServiceImpl implements UserStuService {
         return sysUserOptional.get();
     }
 
-//    @Override
-//    @Transactional
-//    public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
-//        Optional<SysUserStu> retUserStu = this.findBySysUserId(id);
-//        retUserStu.orElseThrow(() -> {
-//            return new EntityFieldException("用户不存在");
-//        });
-//        SysUserStu userStu = retUserStu.get();
-//        userStuDao.deleteById(userStu.getId());
-////        userStuDao.delete(userStu);
-////        userDao.delete(userStu.getUser());
-//        return true;
-//    }
+    @Override
+    @RolesAllowed("HOUSEPARENT")
+    @Transactional
+    public PageDto<List<StuDto>> findByHouseparent(Integer pageNum, Integer pageSize) throws UnknownException {
+        Optional<SysUserHouseparent> userHouseparentOptional = userHouseparentDao.findSysUserHouseparentByUser_Id(MyUserUtils.getId());
+        Integer apartmentId = userHouseparentOptional.orElseThrow(() -> new UnknownException("未知错误 请联系管理员")).getApartmentId();
+        List<SysUserStu> sysUserStus = userStuDao.findByApartmentId(apartmentId, pageNum, pageSize);
+        ArrayList<StuDto> stuDtos = new ArrayList<>();
+        for (SysUserStu userStu : sysUserStus) {
+            SysUser sysUser = userStu.getUser();
+            String deptName = deptDao.findById(userStu.getDeptId()).orElseThrow(() -> new UnknownException("未知错误 请联系管理员")).getName();
+            StuDto stuDto = new StuDto(sysUser.getUsername(), sysUser.getRealName(), sysUser.getEmail(), userStu.getRoom().toString(), userStu.getBed().toString(), null, deptName, null);
+            stuDtos.add(stuDto);
+        }
+        Integer count = userStuDao.findCountByApartmentId(apartmentId);
+        PageDto<List<StuDto>> pageDto = new PageDto<>();
+        pageDto.setCount(count);
+        pageDto.setObj(stuDtos);
+        return pageDto;
+    }
+
+    @Override
+    @RolesAllowed("TUTOR")
+    @Transactional
+    public PageDto<List<StuDto>> findByTutor(Integer pageNum, Integer pageSize) throws UnknownException {
+        Optional<SysUserTutor> tutorOptional = userTutorDao.findSysUserTutorByUser_Id(MyUserUtils.getId());
+        SysUserTutor userTutor = tutorOptional.orElseThrow(() -> new UnknownException("未知错误 请联系管理员"));
+        List<SysUserStu> sysUserStus = userStuDao.findByDeptIdAndGradeId(userTutor.getDeptId(), userTutor.getGradeId(), pageNum, pageSize);
+        ArrayList<StuDto> stuDtos = new ArrayList<>();
+        for (SysUserStu userStu : sysUserStus) {
+            SysUser sysUser = userStu.getUser();
+            String apartmentName = apartmentDao.findById(userStu.getApartmentId()).orElseThrow(() -> new UnknownException("未知错误 请联系管理员")).getName();
+            StuDto stuDto = new StuDto(sysUser.getUsername(), sysUser.getRealName(), sysUser.getEmail(), userStu.getRoom().toString(), userStu.getBed().toString(), apartmentName, null, null);
+            stuDtos.add(stuDto);
+        }
+        Integer count = userStuDao.findCountByDeptIdAndGradeId(userTutor.getDeptId(), userTutor.getGradeId());
+        PageDto<List<StuDto>> pageDto = new PageDto<>();
+        pageDto.setCount(count);
+        pageDto.setObj(stuDtos);
+        return pageDto;
+    }
 }

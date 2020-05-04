@@ -13,6 +13,9 @@ public interface ApartmentScoreDao {
     @Select("select * from apartment_score where apartment_id=#{apartmentId} limit ${pageNum*pageSize}, #{pageSize}")
     List<ApartmentScore> findAllByPagenumAndPagesize(Integer apartmentId, Integer pageNum, Integer pageSize);
 
+    @Select("select count(*) from apartment_score where apartment_id=#{apartmentId}")
+    Integer findCountAllApartmentId(Integer apartmentId);
+
     @Insert("insert into apartment_score(`apartment_id`, `room`, `bed`, `score`, `remark`, `create_time`) values(#{apartmentId}, #{room}, #{bed}, #{score}, #{remark}, #{createTime})")
     Integer save(ApartmentScore apartmentScore);
 

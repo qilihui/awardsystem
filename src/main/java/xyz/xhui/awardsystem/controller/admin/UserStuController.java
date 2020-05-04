@@ -10,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
+import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
+import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.StuDto;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
@@ -102,33 +104,33 @@ public class UserStuController {
         return ResultFactory.buildSuccessResult(userStu.getUser().getRealName());
     }
 
-//    @GetMapping(value = "")
-//    @ApiOperation("查询所有学生详细信息")
-//    public Result findStuAll() {
-//        List<SysUserStu> userStus = userStuService.findAll();
-//        for (SysUserStu userStu : userStus) {
-//            PasswordUtils.hiddenPassword(userStu);
-//        }
-//        return ResultFactory.buildSuccessResult(userStus, "查询成功");
-//    }
-//
-//    @GetMapping(value = "{id}")
-//    @ApiOperation("根据id查询")
-//    public Result findById(@PathVariable Integer id) {
-//        Optional<SysUserStu> retUserStu = userStuService.findById(id);
-//        retUserStu.ifPresent(PasswordUtils::hiddenPassword);
-//        return ResultFactory.buildSuccessResult(retUserStu.orElse(null), "查询成功");
-//    }
+    @GetMapping("getApartment")
+    @ApiOperation("按照公寓查找学生")
+    @RolesAllowed("HOUSEPARENT")
+    @ResponseBody
+    public Result<List<StuDto>> getApartment(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize) {
+        PageDto<List<StuDto>> pageDto = null;
+        try {
+            pageDto = userStuService.findByHouseparent(pageNum - 1, pageSize);
+        } catch (UnknownException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult(pageDto.getCount(), pageDto.getObj());
+    }
 
-//    @DeleteMapping(value = "")
-//    @ApiOperation("根据sysUserId删除学生")
-//    @ResponseBody
-//    public Result<String> deleteById(@RequestParam Integer id) {
-//        try {
-//            userStuService.deleteBySysUserId(id);
-//        } catch (EntityFieldException e) {
-//            return ResultFactory.buildFailResult(e.getMessage());
-//        }
-//        return ResultFactory.buildSuccessResult();
-//    }
+    @GetMapping("getByTutor")
+    @ApiOperation("按照公寓查找学生")
+    @RolesAllowed("TUTOR")
+    @ResponseBody
+    public Result<List<StuDto>> getByTutor(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize) {
+        PageDto<List<StuDto>> pageDto = null;
+        try {
+            pageDto = userStuService.findByTutor(pageNum - 1, pageSize);
+        } catch (UnknownException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult(pageDto.getCount(), pageDto.getObj());
+    }
+
+
 }

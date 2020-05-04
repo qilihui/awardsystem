@@ -1,10 +1,11 @@
 package xyz.xhui.awardsystem.service;
 
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
+import xyz.xhui.awardsystem.config.exception.UnknownException;
+import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.StuDto;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
-import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserStu;
 
 import java.util.List;
@@ -26,4 +27,8 @@ public interface UserStuService {
     Integer updateEmailAndRealName(UserInfoDto userInfoDto, SysUserDto userDto) throws EntityFieldException;
 
     SysUserStu findSysUserStuByUsername(String username) throws EntityFieldException;
+
+    PageDto<List<StuDto>> findByHouseparent(Integer pageNum, Integer pageSize) throws UnknownException;
+
+    PageDto<List<StuDto>> findByTutor(Integer pageNum, Integer pageSize) throws UnknownException;
 }

@@ -11,6 +11,7 @@ import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.dao.UnionScoreDao;
 import xyz.xhui.awardsystem.dao.UserStuDao;
 import xyz.xhui.awardsystem.dao.UserUnionDao;
+import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.ScoreDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserStu;
@@ -42,7 +43,8 @@ public class UnionScoreServiceImpl implements UnionScoreService {
 
     @Override
     @RolesAllowed("UNION")
-    public List<ScoreDto> findAll(Integer pageNum, Integer pageSize) throws UnknownException {
+    @Transactional
+    public PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize) throws UnknownException {
         Optional<SysUserUnion> loginUser = userUnionDao.findSysUserUnionByUser_Id(MyUserUtils.getId());
         loginUser.orElseThrow(
                 () -> new UnknownException("未知错误 请联系管理员")
@@ -61,7 +63,10 @@ public class UnionScoreServiceImpl implements UnionScoreService {
             ScoreDto scoreDto = new ScoreDto(unionScore.getId(), stuOptional.get().getUsername(), stuOptional.get().getRealName(), unionScore.getScore(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime());
             scoreDtoList.add(scoreDto);
         }
-        return scoreDtoList;
+        PageDto<List<ScoreDto>> pageDto = new PageDto<>();
+        pageDto.setObj(scoreDtoList);
+        pageDto.setCount(unionScoreDao.findCountByPageAndDeptId(loginUser.get().getDeptId()));
+        return pageDto;
     }
 
     @Override

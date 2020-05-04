@@ -39,4 +39,18 @@ public interface UserStuDao {
     @Select("select s.*, u.*, u.id as id2 from sys_user u, sys_user_stu s where u.id=s.user_id and u.username=#{username}")
     @ResultMap("userStuMap2")
     Optional<SysUserStu> findStuByUsername(String username);
+
+    @Select("select s.*, u.*, u.id as id2 from sys_user u, sys_user_stu s where u.id=s.user_id and s.apartment_id=#{apartmentId} ORDER BY room ASC, bed ASC limit ${pageNum*pageSize}, #{pageSize}")
+    @ResultMap("userStuMap2")
+    List<SysUserStu> findByApartmentId(Integer apartmentId, Integer pageNum, Integer pageSize);
+
+    @Select("select count(*) from sys_user u, sys_user_stu s where u.id=s.user_id and s.apartment_id=#{apartmentId}")
+    Integer findCountByApartmentId(Integer apartmentId);
+
+    @Select("select s.*, u.*, u.id as id2 from sys_user u, sys_user_stu s where u.id=s.user_id and s.dept_id=#{deptId} and grade_id=#{gradeId} ORDER BY username ASC limit ${pageNum*pageSize}, #{pageSize}")
+    @ResultMap("userStuMap2")
+    List<SysUserStu> findByDeptIdAndGradeId(Integer deptId, Integer gradeId, Integer pageNum, Integer pageSize);
+
+    @Select("select count(*) from sys_user u, sys_user_stu s where u.id=s.user_id and s.dept_id=#{deptId} and grade_id=#{gradeId}")
+    Integer findCountByDeptIdAndGradeId(Integer deptId, Integer gradeId);
 }

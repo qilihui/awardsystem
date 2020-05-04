@@ -11,6 +11,7 @@ import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
 import xyz.xhui.awardsystem.model.dto.ApartmentScoreDto;
+import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.ScoreDto;
 import xyz.xhui.awardsystem.model.entity.ApartmentScore;
 import xyz.xhui.awardsystem.service.ApartmentScoreService;
@@ -32,13 +33,13 @@ public class ApartmentScoreController {
     @ResponseBody
     @ApiOperation("分页查询")
     public Result<List<ApartmentScore>> findAllByPage(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize) {
-        List<ApartmentScore> apartmentScores = null;
+        PageDto<List<ApartmentScore>> pageDto = null;
         try {
-            apartmentScores = apartmentScoreService.findAll(pagenum - 1, pagesize);
+            pageDto = apartmentScoreService.findAll(pagenum - 1, pagesize);
         } catch (UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
-        return ResultFactory.buildSuccessResult(apartmentScores.size(), apartmentScores);
+        return ResultFactory.buildSuccessResult(pageDto.getCount(), pageDto.getObj());
     }
 
     @PostMapping("/add")

@@ -1,5 +1,5 @@
 {
-  "homePage": "/houseparent-home",
+  "homePage": "/tutor-home",
   "data": [
     {
       "id": 1,
@@ -8,7 +8,7 @@
       "child": [
         {
           "name": "学生信息",
-          "href": "/houseparent/getPage?name=stu-list"
+          "href": "/tutor/getPage?name=stu-list"
         },
         {
           "name": "修改密码",
@@ -22,12 +22,12 @@
       "css": "&#xe60a;",
       "child": [
         {
-          "name": "分数列表",
-          "href": "/houseparent/getPage?name=score-list"
+          "name": "扣分情况",
+          "href": "/tutor/getPage?name=score-list"
         },
         {
-          "name": "批量添加",
-          "href": "/houseparent/getPage?name=score-adds"
+          "name": "批量扣分",
+          "href": "/tutor/getPage?name=score-adds"
         }
       ]
     }
