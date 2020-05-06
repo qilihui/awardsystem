@@ -79,4 +79,17 @@ public class ApartmentScoreController {
         }
         return ResultFactory.buildSuccessResult();
     }
+
+    @GetMapping("/stu")
+    @RolesAllowed({"STU"})
+    @ResponseBody
+    public Result<List<ScoreDto>> getStuScore(){
+        List<ScoreDto> scores = null;
+        try {
+            scores = apartmentScoreService.findOneByStuId();
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult(scores);
+    }
 }

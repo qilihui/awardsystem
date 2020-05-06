@@ -1,0 +1,31 @@
+{
+  "homePage": "/stu-home",
+  "data": [
+    {
+      "id": 1,
+      "name": "用户管理",
+      "css": "&#xe770;",
+      "child": [
+        {
+          "name": "修改密码",
+          "href": "/change-password"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "分数查看",
+      "css": "&#xe614;",
+      "child": [
+        {
+          "name": "宿舍分数",
+          "href": "/stu/getPage?name=apartment-score-list"
+        },
+        {
+          "name": "德育分数",
+          "href": "/stu/getPage?name=union-score-list"
+        }
+      ]
+    }
+  ]
+}

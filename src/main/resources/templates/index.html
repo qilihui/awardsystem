@@ -49,7 +49,7 @@
     <div id="side-nav">
         <ul id="nav">
             <li th:each="p : ${permission}">
-                <a href="javascript:;">
+                <a href="javascript:">
                     <i class="layui-icon left-nav-li" th:lay-tips="${p.name}" th:utext="${p.css}"></i>
 <!--                    <i class="iconfont left-nav-li" th:lay-tips="${p.name}" th:utext="${p.css}"></i>-->
                     <cite th:text="${p.name}"></cite>
@@ -95,4 +95,10 @@
 <div class="page-content-bg"></div>
 <style id="theme_style"></style>
 </body>
+<script type="text/javascript">
+    if(top!==self){
+        if(top.location !== self.location)
+            top.location=self.location;
+    }
+</script>
 </html>

@@ -130,4 +130,24 @@ public class UnionScoreServiceImpl implements UnionScoreService {
         log.info(retCount.toString());
         return retCount;
     }
+
+    @Override
+    @Transactional
+    public List<ScoreDto> findOneByStuId() throws EntityFieldException, UnknownException {
+        Optional<SysUserStu> userStuOptional = userStuDao.findSysUserStuByUser_Id(MyUserUtils.getId());
+        SysUserStu userStu = userStuOptional.orElseThrow(() -> {
+            return new EntityFieldException("未知错误 请联系管理员");
+        });
+        List<UnionScore> unionScoreList = unionScoreDao.findOneByStuId(userStu.getId());
+        List<ScoreDto> scoreDtoList = new ArrayList<>();
+        for (UnionScore unionScore : unionScoreList) {
+            Optional<SysUser> unionOptional = userUnionDao.findSysUserByUnoinId(unionScore.getUnionId());
+            unionOptional.orElseThrow(
+                    () -> new UnknownException("未知错误 请联系管理员")
+            );
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), null, null, unionScore.getScore(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime());
+            scoreDtoList.add(scoreDto);
+        }
+        return scoreDtoList;
+    }
 }

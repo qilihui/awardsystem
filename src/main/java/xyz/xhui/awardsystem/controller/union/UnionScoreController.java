@@ -23,6 +23,7 @@ import java.util.List;
 @RequestMapping("/union/score")
 @Slf4j
 @Api(tags = "学生会成绩管理接口")
+@RolesAllowed({"UNION"})
 public class UnionScoreController {
     @Autowired
     private UnionScoreService unionScoreService;
@@ -68,7 +69,6 @@ public class UnionScoreController {
 
     @DeleteMapping("/delete")
     @ApiOperation("批量删除")
-    @RolesAllowed({"UNION"})
     @ResponseBody
     public Result<String> deletes(@RequestParam("ids[]") Integer[] ids) {
         try {
@@ -77,5 +77,18 @@ public class UnionScoreController {
             return ResultFactory.buildFailResult(e.getMessage());
         }
         return ResultFactory.buildSuccessResult();
+    }
+
+    @GetMapping("/stu")
+    @RolesAllowed({"STU"})
+    @ResponseBody
+    public Result<List<ScoreDto>> getStuScore(){
+        List<ScoreDto> scores = null;
+        try {
+            scores = unionScoreService.findOneByStuId();
+        } catch (EntityFieldException | UnknownException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult(scores);
     }
 }

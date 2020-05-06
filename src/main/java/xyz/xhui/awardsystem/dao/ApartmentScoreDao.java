@@ -3,6 +3,8 @@ package xyz.xhui.awardsystem.dao;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import xyz.xhui.awardsystem.model.entity.ApartmentScore;
+import xyz.xhui.awardsystem.model.entity.SysUserStu;
+import xyz.xhui.awardsystem.model.entity.UnionScore;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +12,7 @@ import java.util.Optional;
 @Mapper
 @Repository
 public interface ApartmentScoreDao {
-    @Select("select * from apartment_score where apartment_id=#{apartmentId} limit ${pageNum*pageSize}, #{pageSize}")
+    @Select("select * from apartment_score where apartment_id=#{apartmentId} order by id desc limit ${pageNum*pageSize}, #{pageSize}")
     List<ApartmentScore> findAllByPagenumAndPagesize(Integer apartmentId, Integer pageNum, Integer pageSize);
 
     @Select("select count(*) from apartment_score where apartment_id=#{apartmentId}")
@@ -24,4 +26,7 @@ public interface ApartmentScoreDao {
 
     @Delete("delete from apartment_score where id=#{id}")
     Integer deleteById(Integer id);
+
+    @Select("select * from apartment_score where apartment_id=#{apartmentId} and room=#{room} and bed=#{bed} order by id desc")
+    List<UnionScore> findOneByStuId(SysUserStu stu);
 }

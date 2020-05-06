@@ -10,13 +10,15 @@ import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.dao.ApartmentScoreDao;
 import xyz.xhui.awardsystem.dao.UserHouseparentDao;
+import xyz.xhui.awardsystem.dao.UserStuDao;
 import xyz.xhui.awardsystem.model.dto.ApartmentScoreDto;
 import xyz.xhui.awardsystem.model.dto.PageDto;
-import xyz.xhui.awardsystem.model.entity.ApartmentScore;
-import xyz.xhui.awardsystem.model.entity.SysUserHouseparent;
+import xyz.xhui.awardsystem.model.dto.ScoreDto;
+import xyz.xhui.awardsystem.model.entity.*;
 import xyz.xhui.awardsystem.service.ApartmentScoreService;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,9 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
 
     @Autowired
     private UserHouseparentDao userHouseparentDao;
+
+    @Autowired
+    private UserStuDao userStuDao;
 
     @Override
     public PageDto<List<ApartmentScore>> findAll(Integer pageNum, Integer pageSize) throws UnknownException {
@@ -86,5 +91,21 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
             }
         }
         return j;
+    }
+
+    @Override
+    @Transactional
+    public List<ScoreDto> findOneByStuId() throws EntityFieldException {
+        Optional<SysUserStu> userStuOptional = userStuDao.findSysUserStuByUser_Id(MyUserUtils.getId());
+        SysUserStu userStu = userStuOptional.orElseThrow(() -> {
+            return new EntityFieldException("未知错误 请联系管理员");
+        });
+        List<UnionScore> unionScoreList = apartmentScoreDao.findOneByStuId(userStu);
+        List<ScoreDto> scoreDtoList = new ArrayList<>();
+        for (UnionScore unionScore : unionScoreList) {
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), null, null, unionScore.getScore(), unionScore.getRemark(), null, unionScore.getCreateTime());
+            scoreDtoList.add(scoreDto);
+        }
+        return scoreDtoList;
     }
 }

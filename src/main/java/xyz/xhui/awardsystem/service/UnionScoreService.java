@@ -19,4 +19,6 @@ public interface UnionScoreService {
     Integer saves(ScoreDto[] scoreDtos) throws EntityFieldException;
 
     Integer deletes(Integer[] ids) throws EntityFieldException;
+
+    List<ScoreDto> findOneByStuId() throws EntityFieldException, UnknownException;
 }

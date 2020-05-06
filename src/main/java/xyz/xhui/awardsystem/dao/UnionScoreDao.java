@@ -17,7 +17,7 @@ public interface UnionScoreDao {
     @Select("select * from union_score")
     List<UnionScore> findAll();
 
-    @Select("select * from union_score where dept_id=#{deptId} limit ${pageNum*pageSize}, #{pageSize}")
+    @Select("select * from union_score where dept_id=#{deptId} order by id desc limit ${pageNum*pageSize}, #{pageSize}")
     List<UnionScore> findByPageAndDeptId(Integer deptId, Integer pageNum, Integer pageSize);
 
     @Select("select count(*) from union_score where dept_id=#{deptId}")
@@ -31,4 +31,7 @@ public interface UnionScoreDao {
 
     @Delete("delete from union_score where id=#{id}")
     Integer deleteById(Integer id);
+
+    @Select("select * from union_score where stu_id=#{id} order by id desc")
+    List<UnionScore> findOneByStuId(Integer id);
 }

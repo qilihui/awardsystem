@@ -1,16 +1,12 @@
 package xyz.xhui.awardsystem.model.dto;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class UnionScoreDto implements Serializable {
-    @NotNull(message = "username不能为空")
     private String username;
 
-    @NotNull(message = "score不能为空")
     private Integer score;
 
-    @NotNull(message = "remark不能为空")
     private String remark;
 
     public String getUsername() {
