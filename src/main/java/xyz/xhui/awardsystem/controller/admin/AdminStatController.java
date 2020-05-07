@@ -8,10 +8,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.dao.MysqlInfoDao;
+import xyz.xhui.awardsystem.model.entity.SysUserAdmin;
+import xyz.xhui.awardsystem.model.entity.SysUserUnion;
+import xyz.xhui.awardsystem.service.UserAdminService;
 import xyz.xhui.awardsystem.service.UserService;
 
 import javax.annotation.security.RolesAllowed;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Properties;
 
 @Controller
@@ -21,6 +27,9 @@ import java.util.Properties;
 public class AdminStatController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserAdminService userAdminService;
 
     @Autowired
     private MysqlInfoDao mysqlInfoDao;
@@ -43,5 +52,19 @@ public class AdminStatController {
     public String getPage(@RequestParam("name") String pageName) {
         log.info(pageName);
         return "admin/" + pageName;
+    }
+
+    @GetMapping("/admin/info")
+    public String getInfo(Model model) {
+        Optional<SysUserAdmin> adminOptional = userAdminService.findBySysUserId(MyUserUtils.getId());
+        SysUserAdmin userAdmin = null;
+        try {
+            userAdmin = adminOptional.get();
+            model.addAttribute("sysUser", userAdmin);
+        }catch (NoSuchElementException e){
+            model.addAttribute("exception", e.getMessage());
+            return "exception";
+        }
+        return "admin/admin-info";
     }
 }

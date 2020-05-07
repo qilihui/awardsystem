@@ -11,6 +11,10 @@
           "href": "/houseparent/getPage?name=stu-list"
         },
         {
+          "name": "个人信息",
+          "href": "/houseparent/info"
+        },
+        {
           "name": "修改密码",
           "href": "/change-password"
         }

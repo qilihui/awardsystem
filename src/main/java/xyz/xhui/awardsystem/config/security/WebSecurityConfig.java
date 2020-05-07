@@ -73,5 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .deleteCookies("JSESSIONID");
         //异常处理
         http.exceptionHandling().accessDeniedHandler(restAuthenticationAccessDeniedHandler);
+
+//        http.sessionManagement().maximumSessions(1);
     }
 }

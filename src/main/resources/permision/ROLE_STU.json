@@ -7,6 +7,10 @@
       "css": "&#xe770;",
       "child": [
         {
+          "name": "个人信息",
+          "href": "/stu/info"
+        },
+        {
           "name": "修改密码",
           "href": "/change-password"
         }
