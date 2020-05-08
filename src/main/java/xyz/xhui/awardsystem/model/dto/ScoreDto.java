@@ -8,12 +8,12 @@ public class ScoreDto {
     private String scoreStr;
     private String remark;
     private String submitter;
-    private Integer createTime;
+    private Long createTime;
 
     public ScoreDto() {
     }
 
-    public ScoreDto(Integer id, String username, String realName, Integer score, String remark, String submitter, Integer createTime) {
+    public ScoreDto(Integer id, String username, String realName, Integer score, String remark, String submitter, Long createTime) {
         this.id = id;
         this.username = username;
         this.realName = realName;
@@ -79,11 +79,11 @@ public class ScoreDto {
         this.submitter = submitter;
     }
 
-    public Integer getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>修改用户信息</title>
+    <link rel="stylesheet" th:href="@{/xadmin/css/font.css}"/>
+    <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}"/>
+    <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
+</head>
+
+<body style="margin-top: 20px;">
+<div class="x-body">
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label for="L_name" class="layui-form-label"><span class="x-red">*</span>学期名</label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_name" name="name" required=""
+                       lay-verify="name" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="begin-time" class="layui-form-label"><span class="x-red">*</span>开始时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="begin-time" placeholder="yyyy-MM-dd HH:mm:ss">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label for="end-time" class="layui-form-label"><span class="x-red">*</span>结束时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="end-time" placeholder="yyyy-MM-dd HH:mm:ss">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">添加</button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'layer', 'laydate'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer
+            , laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#begin-time'
+            , type: 'datetime'
+        });
+
+        laydate.render({
+            elem: '#end-time'
+            , type: 'datetime'
+        });
+
+        //自定义验证规则
+        form.verify({
+            room: function (value) {
+                if (value === null || value === '')
+                    return "房间号不能为空"
+            }
+        });
+
+        //监听提交
+        form.on('submit(add)', function (data) {
+            var load = layer.load(2)
+            $.ajax({
+                url: "/apartment/score/add",
+                type: "POST",
+                data: data.field,
+                dataType: 'json',
+                success: function (result) {
+                    layer.close(load)
+                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                        layer.alert(result.msg, {icon: 2});
+                    } else {
+                        layer.alert("添加成功", {icon: 6}, function () {
+                            //关闭当前frame
+                            xadmin.close();
+                            // 可以对父窗口进行刷新
+                            xadmin.father_reload();
+                        });
+                    }
+
+                }
+            });
+            return false;
+        });
+    });
+
+</script>
+</body>
+</html>

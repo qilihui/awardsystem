@@ -17,10 +17,10 @@ public class UnionScore implements Serializable {
 
     private Integer deptId;
 
-    private Integer createTime;
+    private Long createTime;
 
     public UnionScore() {
-        this.createTime = MyTimeUtils.getTime();
+        this.createTime = MyTimeUtils.currentTimeMillis();
     }
 
     public Integer getId() {
@@ -71,11 +71,11 @@ public class UnionScore implements Serializable {
         this.deptId = deptId;
     }
 
-    public Integer getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 

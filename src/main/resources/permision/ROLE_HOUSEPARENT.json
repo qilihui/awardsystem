@@ -9,14 +9,6 @@
         {
           "name": "学生信息",
           "href": "/houseparent/getPage?name=stu-list"
-        },
-        {
-          "name": "个人信息",
-          "href": "/houseparent/info"
-        },
-        {
-          "name": "修改密码",
-          "href": "/change-password"
         }
       ]
     },
@@ -32,6 +24,21 @@
         {
           "name": "批量添加",
           "href": "/houseparent/getPage?name=score-adds"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "个人中心",
+      "css": "&#xe66f;",
+      "child": [
+        {
+          "name": "个人信息",
+          "href": "/houseparent/info"
+        },
+        {
+          "name": "修改密码",
+          "href": "/change-password"
         }
       ]
     }

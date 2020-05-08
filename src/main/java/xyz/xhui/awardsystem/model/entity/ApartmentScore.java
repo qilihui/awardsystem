@@ -17,10 +17,10 @@ public class ApartmentScore implements Serializable {
 
     private String remark;
 
-    private Integer createTime;
+    private Long createTime;
 
     public ApartmentScore() {
-        this.createTime = MyTimeUtils.getTime();
+        this.createTime = MyTimeUtils.currentTimeMillis();
     }
 
     public Integer getId() {
@@ -71,11 +71,11 @@ public class ApartmentScore implements Serializable {
         this.remark = remark;
     }
 
-    public Integer getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 

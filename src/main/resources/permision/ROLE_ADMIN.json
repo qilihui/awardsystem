@@ -13,14 +13,6 @@
         {
           "name": "批量添加学生",
           "href": "/admin/getPage?name=user/user-stu-adds"
-        },
-        {
-          "name": "个人信息",
-          "href": "/admin/info"
-        },
-        {
-          "name": "修改密码",
-          "href": "/change-password"
         }
       ]
     },
@@ -29,6 +21,10 @@
       "name": "系统管理",
       "css": "&#xe614;",
       "child": [
+        {
+          "name": "学期列表",
+          "href": "/admin/getPage?name=sys/term-list"
+        },
         {
           "name": "系部列表",
           "href": "/admin/getPage?name=sys/dept-list"
@@ -40,6 +36,21 @@
         {
           "name": "公寓列表",
           "href": "/admin/getPage?name=sys/apartment-list"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "个人中心",
+      "css": "&#xe66f;",
+      "child": [
+        {
+          "name": "个人信息",
+          "href": "/admin/info"
+        },
+        {
+          "name": "修改密码",
+          "href": "/change-password"
         }
       ]
     }
