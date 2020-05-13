@@ -166,7 +166,7 @@ class AwardsystemApplicationTests {
 
     @Test
     public void test19() {
-        List<ApartmentScore> allByPagenumAndPagesize = apartmentScoreDao.findAllByPagenumAndPagesize(1, 0, 2);
+        List<ApartmentScore> allByPagenumAndPagesize = apartmentScoreDao.findAllByPagenumAndPagesize(1, 0, 2, null);
         System.out.println(allByPagenumAndPagesize);
     }
 }

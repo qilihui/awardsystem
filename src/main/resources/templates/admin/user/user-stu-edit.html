@@ -124,10 +124,10 @@
         var form = layui.form
             , layer = layui.layer
             , laydate = layui.laydate;
-        var load = layer.load(1)
+        var load = layer.load(1);
         getAllDept(function () {
-            layui.form.render('select')
-            layer.close(load)
+            layui.form.render('select');
+            layer.close(load);
         });
 
         //自定义验证规则

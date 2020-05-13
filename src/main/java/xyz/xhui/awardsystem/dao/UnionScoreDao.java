@@ -2,6 +2,7 @@ package xyz.xhui.awardsystem.dao;
 
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+import xyz.xhui.awardsystem.model.entity.SysTerm;
 import xyz.xhui.awardsystem.model.entity.UnionScore;
 
 import java.util.List;
@@ -17,11 +18,11 @@ public interface UnionScoreDao {
     @Select("select * from union_score")
     List<UnionScore> findAll();
 
-    @Select("select * from union_score where dept_id=#{deptId} order by id desc limit ${pageNum*pageSize}, #{pageSize}")
-    List<UnionScore> findByPageAndDeptId(Integer deptId, Integer pageNum, Integer pageSize);
+    @Select("select * from union_score where dept_id=#{deptId} and create_time>=#{term.beginTime} and create_time<=#{term.endTime} order by id desc limit ${pageNum*pageSize}, #{pageSize}")
+    List<UnionScore> findByPageAndDeptId(Integer deptId, Integer pageNum, Integer pageSize, SysTerm term);
 
-    @Select("select count(*) from union_score where dept_id=#{deptId}")
-    Integer findCountByPageAndDeptId(Integer deptId);
+    @Select("select count(*) from union_score where dept_id=#{deptId} and create_time>=#{term.beginTime} and create_time<=#{term.endTime}")
+    Integer findCountByPageAndDeptId(Integer deptId, SysTerm term);
 
     @Insert("insert into union_score(`stu_id`, `score`, `remark`, `create_time`, `union_id`, `dept_id`) values(#{stuId}, #{score}, #{remark}, #{createTime}, #{unionId}, #{deptId})")
     Integer save(UnionScore unionScore);

@@ -12,7 +12,7 @@ public interface UnionScoreService {
 
     List<UnionScore> findAll();
 
-    PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize) throws UnknownException;
+    PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId) throws UnknownException;
 
     Integer save(ScoreDto scoreDto) throws EntityFieldException, UnknownException;
 

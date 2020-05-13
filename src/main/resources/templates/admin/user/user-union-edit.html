@@ -85,9 +85,9 @@
         var form = layui.form
             , layer = layui.layer
             , laydate = layui.laydate;
-        var load = layer.load(1)
+        var load = layer.load(1);
         getAllDept(function () {
-            layer.close(load)
+            layer.close(load);
             layui.form.render('select')
         });
 

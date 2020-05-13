@@ -57,10 +57,11 @@ public class UnionScoreController {
     @GetMapping(name = "")
     @ApiOperation("分页查询")
     @ResponseBody
-    public Result<List<ScoreDto>> findAll(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize) {
+    public Result<List<ScoreDto>> findAll(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId) {
+//        log.info(termId.toString());
         PageDto<List<ScoreDto>> pageDto = null;
         try {
-            pageDto = unionScoreService.findAll(pagenum - 1, pagesize);
+            pageDto = unionScoreService.findAll(pagenum - 1, pagesize, termId);
         } catch (UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
@@ -82,7 +83,7 @@ public class UnionScoreController {
     @GetMapping("/stu")
     @RolesAllowed({"STU"})
     @ResponseBody
-    public Result<List<ScoreDto>> getStuScore(){
+    public Result<List<ScoreDto>> getStuScore() {
         List<ScoreDto> scores = null;
         try {
             scores = unionScoreService.findOneByStuId();

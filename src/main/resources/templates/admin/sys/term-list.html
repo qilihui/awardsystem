@@ -38,19 +38,6 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <div class="layui-card-body hide_form" style="display: none;">
-                    <form class="layui-form layui-col-space5">
-                        <!--                        <label class="layui-form-label">添加系部:</label>-->
-                        <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input" required autocomplete="off" placeholder="公寓名" name="name"
-                                   lay-verify="apartmentname">
-                        </div>
-                        <div class="layui-inline layui-show-xs-block">
-                            <button class="layui-btn" lay-submit="" lay-filter="add">
-                                <i class="layui-icon">添加</i></button>
-                        </div>
-                    </form>
-                </div>
                 <div class="layui-card-body">
                     <table class="layui-table"
                            lay-data="{url:'/term',page:false,toolbar: '#toolbarDemo',id:'test'}"
@@ -85,37 +72,6 @@
     layui.use(['form', 'table'], function () {
         var form = layui.form;
         var table = layui.table;
-        //监听单元格编辑
-        table.on('edit(test)', function (obj) {
-            var value = obj.value //得到修改后的值
-                , data = obj.data //得到所在行所有键值
-                , field = obj.field; //得到字段
-            // layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
-            var load = layer.load(2)
-            $.ajax({
-                url: "/apartment/edit",
-                type: "POST",
-                data: {
-                    id: data.id,
-                    name: value
-                },
-                dataType: 'json',
-                success: function (result) {
-                    layer.close(load)
-                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
-                        layer.alert(result.msg, {icon: 2}, function (index1) {
-                            layer.close(index1);
-                            table.reload('test');
-                        });
-                    } else {
-                        layer.alert("修改成功", {icon: 1}, function (index1) {
-                            layer.close(index1);
-                            table.reload('test');
-                        });
-                    }
-                }
-            });
-        });
 
         //头工具栏事件
         table.on('toolbar(test)', function (obj) {
@@ -133,14 +89,14 @@
                     }
                     console.log(idArray.toString());
                     layer.confirm('真的要删除? 请谨慎操作!', function (index) {
-                        var load = layer.load(2)
+                        var load = layer.load(2);
                         $.ajax({
-                            url: '/apartment',
+                            url: '/term',
                             type: "DELETE",
                             data: {ids: idArray},
                             dataType: 'json',
                             success: function (result) {
-                                layer.close(load)
+                                layer.close(load);
                                 if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
                                     layer.alert(result.msg, {icon: 2});
                                 } else {
@@ -159,35 +115,6 @@
                     xadmin.open('学期添加', '/admin/getPage?name=sys/term-add');
                     break;
             }
-        });
-        form.on('submit(add)', function (data) {
-            console.log(data.field);
-            var load = layer.load(2)
-            $.ajax({
-                url: "/apartment/add",
-                type: "POST",
-                data: {name: data.field['name']},
-                dataType: 'json',
-                success: function (result) {
-                    layer.close(load)
-                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
-                        layer.alert(result.msg, {icon: 2});
-                    } else {
-                        layer.alert("添加成功", {icon: 6}, function () {
-                            location.reload();
-                        });
-                    }
-                }
-            });
-            return false;
-        });
-
-        form.verify({
-            apartmentname: function (value) {
-                if (value == null || value === '') {
-                    return '公寓名不能为空'
-                }
-            },
         });
     });
 </script>

@@ -24,14 +24,14 @@
         <div class="layui-form-item">
             <label for="begin-time" class="layui-form-label"><span class="x-red">*</span>开始时间</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" id="begin-time" placeholder="yyyy-MM-dd HH:mm:ss">
+                <input type="text" class="layui-input" id="begin-time" name="beginTime" lay-verify="begin" placeholder="yyyy-MM-dd HH:mm:ss">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label for="end-time" class="layui-form-label"><span class="x-red">*</span>结束时间</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input" id="end-time" placeholder="yyyy-MM-dd HH:mm:ss">
+                <input type="text" class="layui-input" id="end-time" name="endTime" lay-verify="end" placeholder="yyyy-MM-dd HH:mm:ss">
             </div>
         </div>
 
@@ -60,22 +60,30 @@
 
         //自定义验证规则
         form.verify({
-            room: function (value) {
+            name: function (value) {
                 if (value === null || value === '')
-                    return "房间号不能为空"
+                    return "名字不能为空"
+            },
+            begin: function (value) {
+                if (value === null || value === '')
+                    return "开始时间不能为空"
+            },
+            end: function (value) {
+                if (value === null || value === '')
+                    return "结束时间不能为空"
             }
         });
 
         //监听提交
         form.on('submit(add)', function (data) {
-            var load = layer.load(2)
+            var load = layer.load(2);
             $.ajax({
-                url: "/apartment/score/add",
+                url: "/term/add",
                 type: "POST",
                 data: data.field,
                 dataType: 'json',
                 success: function (result) {
-                    layer.close(load)
+                    layer.close(load);
                     if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
                         layer.alert(result.msg, {icon: 2});
                     } else {

@@ -9,6 +9,7 @@ import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.dao.ApartmentScoreDao;
+import xyz.xhui.awardsystem.dao.TermDao;
 import xyz.xhui.awardsystem.dao.UserHouseparentDao;
 import xyz.xhui.awardsystem.dao.UserStuDao;
 import xyz.xhui.awardsystem.model.dto.ApartmentScoreDto;
@@ -34,14 +35,21 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
     @Autowired
     private UserStuDao userStuDao;
 
+    @Autowired
+    private TermDao termDao;
+
     @Override
-    public PageDto<List<ApartmentScore>> findAll(Integer pageNum, Integer pageSize) throws UnknownException {
+    public PageDto<List<ApartmentScore>> findAll(Integer pageNum, Integer pageSize, Integer termId) throws UnknownException {
+        Optional<SysTerm> termOptional = termDao.findById(termId);
+        SysTerm term = termOptional.orElseThrow(
+                () -> new UnknownException("学期id" + termId + "不存在")
+        );
         Optional<SysUserHouseparent> userHouseparentOptional = userHouseparentDao.findSysUserHouseparentByUser_Id(MyUserUtils.getId());
         userHouseparentOptional.orElseThrow(() -> new UnknownException("未知错误 请联系管理员"));
         PageDto<List<ApartmentScore>> pageDto = new PageDto<>();
         Integer apartmentId = userHouseparentOptional.get().getApartmentId();
-        pageDto.setObj(apartmentScoreDao.findAllByPagenumAndPagesize(apartmentId, pageNum, pageSize));
-        pageDto.setCount(apartmentScoreDao.findCountAllApartmentId(apartmentId));
+        pageDto.setObj(apartmentScoreDao.findAllByPagenumAndPagesize(apartmentId, pageNum, pageSize, term));
+        pageDto.setCount(apartmentScoreDao.findCountAllApartmentId(apartmentId, term));
         return pageDto;
     }
 

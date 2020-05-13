@@ -8,15 +8,13 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
+import xyz.xhui.awardsystem.dao.TermDao;
 import xyz.xhui.awardsystem.dao.UnionScoreDao;
 import xyz.xhui.awardsystem.dao.UserStuDao;
 import xyz.xhui.awardsystem.dao.UserUnionDao;
 import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.ScoreDto;
-import xyz.xhui.awardsystem.model.entity.SysUser;
-import xyz.xhui.awardsystem.model.entity.SysUserStu;
-import xyz.xhui.awardsystem.model.entity.SysUserUnion;
-import xyz.xhui.awardsystem.model.entity.UnionScore;
+import xyz.xhui.awardsystem.model.entity.*;
 import xyz.xhui.awardsystem.service.UnionScoreService;
 
 import javax.annotation.security.RolesAllowed;
@@ -36,6 +34,9 @@ public class UnionScoreServiceImpl implements UnionScoreService {
     @Autowired
     private UserUnionDao userUnionDao;
 
+    @Autowired
+    private TermDao termDao;
+
     @Override
     public List<UnionScore> findAll() {
         return unionScoreDao.findAll();
@@ -44,12 +45,16 @@ public class UnionScoreServiceImpl implements UnionScoreService {
     @Override
     @RolesAllowed("UNION")
     @Transactional
-    public PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize) throws UnknownException {
+    public PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId) throws UnknownException {
         Optional<SysUserUnion> loginUser = userUnionDao.findSysUserUnionByUser_Id(MyUserUtils.getId());
         loginUser.orElseThrow(
                 () -> new UnknownException("未知错误 请联系管理员")
         );
-        List<UnionScore> unionScoreList = unionScoreDao.findByPageAndDeptId(loginUser.get().getDeptId(), pageNum, pageSize);
+        Optional<SysTerm> termOptional = termDao.findById(termId);
+        SysTerm term = termOptional.orElseThrow(
+                () -> new UnknownException("学期id" + termId + "不存在")
+        );
+        List<UnionScore> unionScoreList = unionScoreDao.findByPageAndDeptId(loginUser.get().getDeptId(), pageNum, pageSize, term);
         List<ScoreDto> scoreDtoList = new ArrayList<>();
         for (UnionScore unionScore : unionScoreList) {
             Optional<SysUser> stuOptional = userStuDao.findSysUserByStuId(unionScore.getStuId());
@@ -65,7 +70,7 @@ public class UnionScoreServiceImpl implements UnionScoreService {
         }
         PageDto<List<ScoreDto>> pageDto = new PageDto<>();
         pageDto.setObj(scoreDtoList);
-        pageDto.setCount(unionScoreDao.findCountByPageAndDeptId(loginUser.get().getDeptId()));
+        pageDto.setCount(unionScoreDao.findCountByPageAndDeptId(loginUser.get().getDeptId(), term));
         return pageDto;
     }
 

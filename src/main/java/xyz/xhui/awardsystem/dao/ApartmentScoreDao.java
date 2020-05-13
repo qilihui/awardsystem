@@ -3,6 +3,7 @@ package xyz.xhui.awardsystem.dao;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import xyz.xhui.awardsystem.model.entity.ApartmentScore;
+import xyz.xhui.awardsystem.model.entity.SysTerm;
 import xyz.xhui.awardsystem.model.entity.SysUserStu;
 import xyz.xhui.awardsystem.model.entity.UnionScore;
 
@@ -12,11 +13,11 @@ import java.util.Optional;
 @Mapper
 @Repository
 public interface ApartmentScoreDao {
-    @Select("select * from apartment_score where apartment_id=#{apartmentId} order by id desc limit ${pageNum*pageSize}, #{pageSize}")
-    List<ApartmentScore> findAllByPagenumAndPagesize(Integer apartmentId, Integer pageNum, Integer pageSize);
+    @Select("select * from apartment_score where apartment_id=#{apartmentId} and create_time>=#{term.beginTime} and create_time<=#{term.endTime} order by id desc limit ${pageNum*pageSize}, #{pageSize}")
+    List<ApartmentScore> findAllByPagenumAndPagesize(Integer apartmentId, Integer pageNum, Integer pageSize, SysTerm term);
 
-    @Select("select count(*) from apartment_score where apartment_id=#{apartmentId}")
-    Integer findCountAllApartmentId(Integer apartmentId);
+    @Select("select count(*) from apartment_score where apartment_id=#{apartmentId} and create_time>=#{term.beginTime} and create_time<=#{term.endTime}")
+    Integer findCountAllApartmentId(Integer apartmentId, SysTerm term);
 
     @Insert("insert into apartment_score(`apartment_id`, `room`, `bed`, `score`, `remark`, `create_time`) values(#{apartmentId}, #{room}, #{bed}, #{score}, #{remark}, #{createTime})")
     Integer save(ApartmentScore apartmentScore);

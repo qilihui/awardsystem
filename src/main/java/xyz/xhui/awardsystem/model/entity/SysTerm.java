@@ -8,6 +8,16 @@ public class SysTerm implements Serializable {
     private Long beginTime;
     private Long endTime;
 
+    public SysTerm() {
+    }
+
+    public SysTerm(Integer id, String name, Long beginTime, Long endTime) {
+        this.id = id;
+        this.name = name;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -32,10 +32,10 @@ public class ApartmentScoreController {
     @GetMapping("")
     @ResponseBody
     @ApiOperation("分页查询")
-    public Result<List<ApartmentScore>> findAllByPage(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize) {
+    public Result<List<ApartmentScore>> findAllByPage(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId) {
         PageDto<List<ApartmentScore>> pageDto = null;
         try {
-            pageDto = apartmentScoreService.findAll(pagenum - 1, pagesize);
+            pageDto = apartmentScoreService.findAll(pagenum - 1, pagesize, termId);
         } catch (UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
@@ -83,7 +83,7 @@ public class ApartmentScoreController {
     @GetMapping("/stu")
     @RolesAllowed({"STU"})
     @ResponseBody
-    public Result<List<ScoreDto>> getStuScore(){
+    public Result<List<ScoreDto>> getStuScore() {
         List<ScoreDto> scores = null;
         try {
             scores = apartmentScoreService.findOneByStuId();
