@@ -9,11 +9,15 @@ public class ScoreDto {
     private String remark;
     private String submitter;
     private Long createTime;
+    private Integer week;
+    private Integer apartmentId;
+    private Integer room;
+    private Integer bed;
 
     public ScoreDto() {
     }
 
-    public ScoreDto(Integer id, String username, String realName, Integer score, String remark, String submitter, Long createTime) {
+    public ScoreDto(Integer id, String username, String realName, Integer score, String remark, String submitter, Long createTime, Integer week) {
         this.id = id;
         this.username = username;
         this.realName = realName;
@@ -21,6 +25,27 @@ public class ScoreDto {
         this.remark = remark;
         this.submitter = submitter;
         this.createTime = createTime;
+        this.week = week;
+    }
+
+    public ScoreDto(Integer id, Integer score, String remark, Long createTime, Integer week, Integer room, Integer bed) {
+        this.id = id;
+        this.score = score;
+        this.remark = remark;
+        this.createTime = createTime;
+        this.week = week;
+        this.room = room;
+        this.bed = bed;
+    }
+
+    public ScoreDto(Integer id, String username, String realName, Integer score, String remark, Long createTime, Integer week) {
+        this.id = id;
+        this.username = username;
+        this.realName = realName;
+        this.score = score;
+        this.remark = remark;
+        this.createTime = createTime;
+        this.week = week;
     }
 
     public Integer getId() {
@@ -87,6 +112,38 @@ public class ScoreDto {
         this.createTime = createTime;
     }
 
+    public Integer getWeek() {
+        return week;
+    }
+
+    public void setWeek(Integer week) {
+        this.week = week;
+    }
+
+    public Integer getApartmentId() {
+        return apartmentId;
+    }
+
+    public void setApartmentId(Integer apartmentId) {
+        this.apartmentId = apartmentId;
+    }
+
+    public Integer getRoom() {
+        return room;
+    }
+
+    public void setRoom(Integer room) {
+        this.room = room;
+    }
+
+    public Integer getBed() {
+        return bed;
+    }
+
+    public void setBed(Integer bed) {
+        this.bed = bed;
+    }
+
     @Override
     public String toString() {
         return "ScoreDto{" +
@@ -98,6 +155,10 @@ public class ScoreDto {
                 ", remark='" + remark + '\'' +
                 ", submitter='" + submitter + '\'' +
                 ", createTime=" + createTime +
+                ", week=" + week +
+                ", apartmentId=" + apartmentId +
+                ", room=" + room +
+                ", bed=" + bed +
                 '}';
     }
 }

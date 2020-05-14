@@ -38,22 +38,33 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        <div class="layui-inline layui-show-xs-block">
+                            <select name="termId" lay-verify="required" class="show-term-container"></select>
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="set">设置</button>
+                        </div>
+                    </form>
+                </div>
                 <div class="layui-card-body">
-                    <table class="layui-table"
-                           lay-data="{url:'/union/score/stu',page:false,toolbar: '#toolbarDemo',id:'test'}"
-                           lay-filter="test">
-                        <thead>
-                        <tr>
-                            <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-                            <th lay-data="{field:'score', minWidth: 120}">扣分数</th>
-                            <th lay-data="{field:'remark', minWidth: 120}">备注</th>
-                            <th lay-data="{field:'submitter', minWidth:80}">提交人</th>
-                            <th lay-data="{field:'createTime', minWidth:180, templet:'<div>{{layui.util.toDateString(d.createTime*1000, `yyyy-MM-dd HH:mm:ss`)}}</div>'}">
-                                提交时间
-                            </th>
-                        </tr>
-                        </thead>
-                    </table>
+                    <table class="layui-table" id="test" lay-filter="test"></table>
+                    <!-- <table class="layui-table"
+                            lay-data="{url:'/union/score/stu',page:false,toolbar: '#toolbarDemo',id:'test'}"
+                            lay-filter="test">
+                         <thead>
+                         <tr>
+                             <th lay-data="{field:'id', width:80, sort: true}">ID</th>
+                             <th lay-data="{field:'score', minWidth: 120}">扣分数</th>
+                             <th lay-data="{field:'remark', minWidth: 120}">备注</th>
+                             <th lay-data="{field:'submitter', minWidth:80}">提交人</th>
+                             <th lay-data="{field:'createTime', minWidth:180, templet:'<div>{{layui.util.toDateString(d.createTime*1000, `yyyy-MM-dd HH:mm:ss`)}}</div>'}">
+                                 提交时间
+                             </th>
+                         </tr>
+                         </thead>
+                     </table>-->
                 </div>
             </div>
         </div>
@@ -61,8 +72,77 @@
 </div>
 </body>
 <script>
-    layui.use('table', function () {
+    layui.use(['table', 'form'], function () {
         var table = layui.table;
+        var form = layui.form;
+        var load = layer.load(1);
+        getTerm(function () {
+            layui.form.render('select');
+            getTable();
+            layer.close(load);
+        });
+        form.on('submit(set)', function (data) {
+            console.log(data.field);
+            let termId = data.field['termId'];
+            sessionStorage.setItem('termId', termId);
+            table.reload('test', {
+                url: '/union/score/stu?termId=' + termId
+            });
+            // console.log("重新渲染完成termId " + sessionStorage.getItem('termId'));
+            return false;
+        });
+
+        function getTerm(callback) {
+            $.ajax({
+                url: "/term",
+                type: "GET",
+                dataType: 'json',
+                success: function (result) {
+                    var html = '';
+                    if (result.data && result.data.length > 0) {
+                        sessionStorage.setItem("termId", result.data[0].id);
+                        let termId = result.data[0].id;
+                        // console.log(termId);
+                        for (var i in result.data) {
+                            // console.log(result.data[i].id);
+                            if (result.data[i].id == termId) {
+                                // console.log("==");
+                                html += '<option value="' + result.data[i].id + '" selected="selected">' + result.data[i].name + '</option>';
+                            } else
+                                html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
+                        }
+                        $(".show-term-container").html(html);
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                    // console.log(html)
+                }
+            });
+        }
+
+        function getTable() {
+            table.render({
+                elem: '#test',
+                url: '/union/score/stu?termId=' + sessionStorage.getItem('termId'),
+                toolbar: '#toolbarDemo',
+                cols: [
+                    [
+                        {field: 'id', width: 80, sort: true, title: 'ID'},
+                        {field: 'score', minWidth: 120, title: '扣分数'},
+                        {field: 'remark', minWidth: 120, title: '备注'},
+                        {field: 'submitter', minWidth: 80, title: '提交人'},
+                        {
+                            field: 'createTime',
+                            minWidth: 180,
+                            templet: '<div>{{layui.util.toDateString(d.createTime*1, `yyyy-MM-dd HH:mm:ss`)}}</div>',
+                            title: '提交时间'
+                        },
+                        {field: 'week', minWidth: 90, title: '周数'}
+                    ]
+                ]
+            });
+        }
     });
 </script>
 </html>

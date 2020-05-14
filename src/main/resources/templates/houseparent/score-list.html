@@ -175,10 +175,12 @@
                             minWidth: 180,
                             templet: '<div>{{layui.util.toDateString(d.createTime*1, `yyyy-MM-dd HH:mm:ss`)}}</div>',
                             title: '提交时间'
-                        }
+                        },
+                        {field: 'week', minWidth: 90, title: '周数'}
                     ]
                 ],
                 page: true,
+                limits: [10, 20, 50, 100, 500, 1000]
             });
         }
     });

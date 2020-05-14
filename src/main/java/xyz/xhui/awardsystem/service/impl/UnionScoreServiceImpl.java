@@ -8,12 +8,10 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
-import xyz.xhui.awardsystem.dao.TermDao;
-import xyz.xhui.awardsystem.dao.UnionScoreDao;
-import xyz.xhui.awardsystem.dao.UserStuDao;
-import xyz.xhui.awardsystem.dao.UserUnionDao;
+import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.ScoreDto;
+import xyz.xhui.awardsystem.model.dto.UnionScoreByTutorDto;
 import xyz.xhui.awardsystem.model.entity.*;
 import xyz.xhui.awardsystem.service.UnionScoreService;
 
@@ -30,6 +28,9 @@ public class UnionScoreServiceImpl implements UnionScoreService {
 
     @Autowired
     private UserStuDao userStuDao;
+
+    @Autowired
+    private UserTutorDao userTutorDao;
 
     @Autowired
     private UserUnionDao userUnionDao;
@@ -65,7 +66,8 @@ public class UnionScoreServiceImpl implements UnionScoreService {
             unionOptional.orElseThrow(
                     () -> new UnknownException("未知错误 请联系管理员")
             );
-            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), stuOptional.get().getUsername(), stuOptional.get().getRealName(), unionScore.getScore(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime());
+            Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), stuOptional.get().getUsername(), stuOptional.get().getRealName(), unionScore.getScore(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime(), week);
             scoreDtoList.add(scoreDto);
         }
         PageDto<List<ScoreDto>> pageDto = new PageDto<>();
@@ -138,21 +140,56 @@ public class UnionScoreServiceImpl implements UnionScoreService {
 
     @Override
     @Transactional
-    public List<ScoreDto> findOneByStuId() throws EntityFieldException, UnknownException {
+    @RolesAllowed({"STU"})
+    public List<ScoreDto> findByStuId(Integer termId) throws EntityFieldException, UnknownException {
         Optional<SysUserStu> userStuOptional = userStuDao.findSysUserStuByUser_Id(MyUserUtils.getId());
         SysUserStu userStu = userStuOptional.orElseThrow(() -> {
             return new EntityFieldException("未知错误 请联系管理员");
         });
-        List<UnionScore> unionScoreList = unionScoreDao.findOneByStuId(userStu.getId());
+        Optional<SysTerm> termOptional = termDao.findById(termId);
+        SysTerm term = termOptional.orElseThrow(
+                () -> new UnknownException("学期id" + termId + "不存在")
+        );
+        List<UnionScore> unionScoreList = unionScoreDao.findByStuId(userStu.getId(), term);
         List<ScoreDto> scoreDtoList = new ArrayList<>();
         for (UnionScore unionScore : unionScoreList) {
             Optional<SysUser> unionOptional = userUnionDao.findSysUserByUnoinId(unionScore.getUnionId());
             unionOptional.orElseThrow(
                     () -> new UnknownException("未知错误 请联系管理员")
             );
-            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), null, null, unionScore.getScore(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime());
+            Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), null, null, unionScore.getScore(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime(), week);
             scoreDtoList.add(scoreDto);
         }
         return scoreDtoList;
+    }
+
+    @Override
+    @Transactional
+    @RolesAllowed({"TUTOR"})
+    public PageDto<List<ScoreDto>> findByTutor(Integer pageNum,  Integer pageSize, Integer termId) throws EntityFieldException, UnknownException {
+        Optional<SysUserTutor> tutorOptional = userTutorDao.findSysUserTutorByUser_Id(MyUserUtils.getId());
+        SysUserTutor tutor = tutorOptional.orElseThrow(() -> {
+            return new EntityFieldException("未知错误 请联系管理员");
+        });
+        Optional<SysTerm> termOptional = termDao.findById(termId);
+        SysTerm term = termOptional.orElseThrow(
+                () -> new UnknownException("学期id" + termId + "不存在")
+        );
+        List<UnionScoreByTutorDto> unionScoreList = unionScoreDao.findByTutor(pageNum, pageSize, tutor, term);
+        List<ScoreDto> scoreDtoList = new ArrayList<>();
+        for (UnionScoreByTutorDto unionScore : unionScoreList) {
+            Optional<SysUser> unionOptional = userUnionDao.findSysUserByUnoinId(unionScore.getUnionId());
+            unionOptional.orElseThrow(
+                    () -> new UnknownException("未知错误 请联系管理员")
+            );
+            Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), unionScore.getUsername(), unionScore.getRealName(), unionScore.getScore(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime(), week);
+            scoreDtoList.add(scoreDto);
+        }
+        PageDto<List<ScoreDto>> pageDto = new PageDto<>();
+        pageDto.setObj(scoreDtoList);
+        pageDto.setCount(unionScoreDao.findCountByTutor(tutor, term));
+        return pageDto;
     }
 }

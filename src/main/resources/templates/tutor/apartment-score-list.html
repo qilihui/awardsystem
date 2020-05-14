@@ -41,7 +41,6 @@
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
                         <div class="layui-inline layui-show-xs-block">
-                            <!--<input class="layui-input" autocomplete="off" placeholder="开始日" name="start" id="start">-->
                             <select name="termId" lay-verify="required" class="show-term-container"></select>
                         </div>
                         <div class="layui-inline layui-show-xs-block">
@@ -52,18 +51,14 @@
                 <div class="layui-card-body">
                     <table class="layui-table" id="test" lay-filter="test"></table>
                     <!--<table class="layui-table"
-                           lay-data="{url:'/union/score',page:true,toolbar: '#toolbarDemo',id:'test'}"
+                           lay-data="{url:'/apartment/score/stu',page:false,toolbar: '#toolbarDemo',id:'test'}"
                            lay-filter="test">
                         <thead>
                         <tr>
-                            <th lay-data="{type:'checkbox'}">ID</th>
                             <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-                            <th lay-data="{field:'username', minWidth:100, sort: true}">学号</th>
-                            <th lay-data="{field:'realName', minWidth: 60}">姓名</th>
-                            <th lay-data="{field:'score', minWidth: 120}">扣分数</th>
+                            <th lay-data="{field:'score', minWidth: 120}">分数</th>
                             <th lay-data="{field:'remark', minWidth: 120}">备注</th>
-                            <th lay-data="{field:'submitter', minWidth:80}">提交人</th>
-                            <th lay-data="{field:'createTime', minWidth:180, templet:'<div>{{layui.util.toDateString(d.createTime*1, `yyyy-MM-dd HH:mm:ss`)}}</div>'}">
+                            <th lay-data="{field:'createTime', minWidth:180, templet:'<div>{{layui.util.toDateString(d.createTime*1000, `yyyy-MM-dd HH:mm:ss`)}}</div>'}">
                                 提交时间
                             </th>
                         </tr>
@@ -75,12 +70,6 @@
     </div>
 </div>
 </body>
-<script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
-        <div class="layui-inline" title="批量删除" lay-event="delete"><i class="layui-icon layui-icon-delete"></i></div>
-        <div class="layui-inline" title="添加" lay-event="add"><i class="layui-icon layui-icon-add-1"></i></div>
-    </div>
-</script>
 <script>
     layui.use(['table', 'form'], function () {
         var table = layui.table;
@@ -99,52 +88,10 @@
                 page: {
                     curr: 1 //重新从第 1 页开始
                 },
-                url: '/union/score?termId=' + termId
+                url: '/apartment/score/tutor?termId=' + termId
             });
             // console.log("重新渲染完成termId " + sessionStorage.getItem('termId'));
             return false;
-        });
-        //头工具栏事件
-        table.on('toolbar(test)', function (obj) {
-            var checkStatus = table.checkStatus(obj.config.id);
-            switch (obj.event) {
-                case 'delete':
-                    var data = checkStatus.data;
-                    var idArray = [];
-                    for (var i in data) {
-                        idArray[i] = data[i].id;
-                    }
-                    if (idArray.length === 0) {
-                        layer.alert("未选中", {icon: 5});
-                        break;
-                    }
-                    console.log(idArray.toString());
-                    layer.confirm('真的要删除用户? 请谨慎操作!', function (index) {
-                        var load = layer.load(2)
-                        $.ajax({
-                            url: '/union/score/delete',
-                            type: "DELETE",
-                            data: {ids: idArray},
-                            dataType: 'json',
-                            success: function (result) {
-                                layer.close(load)
-                                if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
-                                    layer.alert(result.msg, {icon: 2});
-                                } else {
-                                    layer.alert("删除成功", {icon: 1}, function (index1) {
-                                        layer.close(index1);
-                                        //xadmin.father_reload();
-                                        table.reload('test');
-                                    });
-                                }
-                            },
-                        });
-                    });
-                    break;
-                case 'add':
-                    xadmin.open('扣分', '/union/getPage?name=score-add');
-                    break;
-            }
         });
 
         function getTerm(callback) {
@@ -179,17 +126,15 @@
         function getTable() {
             table.render({
                 elem: '#test',
-                url: '/union/score?termId=' + sessionStorage.getItem('termId'),
+                url: '/apartment/score/tutor?termId=' + sessionStorage.getItem('termId'),
                 toolbar: '#toolbarDemo',
                 cols: [
                     [
-                        {type: 'checkbox'},
                         {field: 'id', width: 80, sort: true, title: 'ID'},
-                        {field: 'username', minWidth: 100, sort: true, title: '学号'},
-                        {field: 'realName', minWidth: 60, title: '姓名'},
-                        {field: 'score', minWidth: 120, title: '扣分数'},
+                        {field: 'username', minWidth: 120, title: '学号'},
+                        {field: 'realName', minWidth: 120, title: '姓名'},
+                        {field: 'score', minWidth: 120, title: '分数'},
                         {field: 'remark', minWidth: 120, title: '备注'},
-                        {field: 'submitter', minWidth: 80, title: '提交人'},
                         {
                             field: 'createTime',
                             minWidth: 180,

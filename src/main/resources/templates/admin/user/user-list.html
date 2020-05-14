@@ -200,7 +200,7 @@
                     <!--                </div>-->
                     <div class="layui-card-body">
                         <table class="layui-table"
-                               lay-data="{url:'/user',page:true,toolbar: '#toolbarDemo',id:'test'}"
+                               lay-data="{url:'/user',page:true,toolbar: '#toolbarDemo',id:'test', limits:[10,20,50,100,500,1000]}"
                                lay-filter="test">
                             <thead>
                             <tr>
@@ -219,6 +219,7 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">

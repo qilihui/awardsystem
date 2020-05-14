@@ -12,7 +12,6 @@ import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
 import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.ScoreDto;
-import xyz.xhui.awardsystem.model.entity.UnionScore;
 import xyz.xhui.awardsystem.service.UnionScoreService;
 
 import javax.annotation.security.RolesAllowed;
@@ -83,13 +82,28 @@ public class UnionScoreController {
     @GetMapping("/stu")
     @RolesAllowed({"STU"})
     @ResponseBody
-    public Result<List<ScoreDto>> getStuScore() {
+    @ApiOperation("stu分数查询")
+    public Result<List<ScoreDto>> getStuScore(@RequestParam("termId") Integer termId) {
         List<ScoreDto> scores = null;
         try {
-            scores = unionScoreService.findOneByStuId();
+            scores = unionScoreService.findByStuId(termId);
         } catch (EntityFieldException | UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
         return ResultFactory.buildSuccessResult(scores);
+    }
+
+    @GetMapping("/tutor")
+    @RolesAllowed({"TUTOR"})
+    @ResponseBody
+    @ApiOperation("tutor分数查询")
+    public Result<List<ScoreDto>> getStuScoreByTutor(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId) {
+        PageDto<List<ScoreDto>> pageDto = null;
+        try {
+            pageDto = unionScoreService.findByTutor(pagenum - 1, pagesize, termId);
+        } catch (EntityFieldException | UnknownException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult(pageDto.getCount(), pageDto.getObj());
     }
 }

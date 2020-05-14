@@ -32,8 +32,8 @@ public class ApartmentScoreController {
     @GetMapping("")
     @ResponseBody
     @ApiOperation("分页查询")
-    public Result<List<ApartmentScore>> findAllByPage(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId) {
-        PageDto<List<ApartmentScore>> pageDto = null;
+    public Result<List<ScoreDto>> findAllByPage(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId) {
+        PageDto<List<ScoreDto>> pageDto = null;
         try {
             pageDto = apartmentScoreService.findAll(pagenum - 1, pagesize, termId);
         } catch (UnknownException e) {
@@ -83,13 +83,28 @@ public class ApartmentScoreController {
     @GetMapping("/stu")
     @RolesAllowed({"STU"})
     @ResponseBody
-    public Result<List<ScoreDto>> getStuScore() {
+    @ApiOperation("stu查询宿舍分数")
+    public Result<List<ScoreDto>> getStuScore(@RequestParam("termId") Integer termId) {
         List<ScoreDto> scores = null;
         try {
-            scores = apartmentScoreService.findOneByStuId();
-        } catch (EntityFieldException e) {
+            scores = apartmentScoreService.findByStuId(termId);
+        } catch (EntityFieldException | UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
         return ResultFactory.buildSuccessResult(scores);
+    }
+
+    @GetMapping("/tutor")
+    @RolesAllowed({"TUTOR"})
+    @ResponseBody
+    @ApiOperation("tutor查询宿舍分数")
+    public Result<List<ScoreDto>> getStuScoreByTutor(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize, @RequestParam("termId") Integer termId) {
+        PageDto<List<ScoreDto>> pageDto = null;
+        try {
+            pageDto = apartmentScoreService.findByStuIdByTutor(pageNum - 1, pageSize, termId);
+        } catch (EntityFieldException | UnknownException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult(pageDto.getCount(), pageDto.getObj());
     }
 }

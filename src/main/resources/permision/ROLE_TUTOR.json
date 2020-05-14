@@ -18,12 +18,12 @@
       "css": "&#xe60a;",
       "child": [
         {
-          "name": "扣分情况",
-          "href": "/tutor/getPage?name=score-list"
+          "name": "学生宿舍分数",
+          "href": "/tutor/getPage?name=apartment-score-list"
         },
         {
-          "name": "批量扣分",
-          "href": "/tutor/getPage?name=score-adds"
+          "name": "学生德育扣分",
+          "href": "/tutor/getPage?name=union-score-list"
         }
       ]
     },

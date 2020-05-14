@@ -29,7 +29,7 @@ public class TermController {
     @ResponseBody
     @ApiOperation("查询所有")
     @GetMapping("")
-    @RolesAllowed({"ADMIN", "UNION", "HOUSEPARENT"})
+    @RolesAllowed({"ADMIN", "UNION", "HOUSEPARENT","STU","TUTOR"})
     public Result<List<SysTerm>> getAll() {
         return ResultFactory.buildSuccessResult(termService.findAll());
     }
