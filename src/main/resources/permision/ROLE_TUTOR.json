@@ -29,6 +29,17 @@
     },
     {
       "id": 3,
+      "name": "期末统计",
+      "css": "&#xe663;",
+      "child": [
+        {
+          "name": "加分项提交时间设定",
+          "href": "/tutor/getPage?name=extra-time-list.html"
+        }
+      ]
+    },
+    {
+      "id": 4,
       "name": "个人中心",
       "css": "&#xe66f;",
       "child": [

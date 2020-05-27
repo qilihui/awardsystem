@@ -41,6 +41,21 @@
     },
     {
       "id": 3,
+      "name": "期末统计",
+      "css": "&#xe663;",
+      "child": [
+        {
+          "name": "期末分数列表",
+          "href": "/stu/getPage?name="
+        },
+        {
+          "name": "导入期末分数",
+          "href": "/stu/getPage?name="
+        }
+      ]
+    },
+    {
+      "id": 4,
       "name": "个人中心",
       "css": "&#xe66f;",
       "child": [

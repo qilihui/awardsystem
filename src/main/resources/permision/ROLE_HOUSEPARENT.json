@@ -29,6 +29,17 @@
     },
     {
       "id": 3,
+      "name": "公告管理",
+      "css": "&#xe663;",
+      "child": [
+        {
+          "name": "公告列表",
+          "href": "/stu/getPage?name="
+        }
+      ]
+    },
+    {
+      "id": 4,
       "name": "个人中心",
       "css": "&#xe66f;",
       "child": [
