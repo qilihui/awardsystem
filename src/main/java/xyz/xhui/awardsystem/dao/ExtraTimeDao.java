@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import xyz.xhui.awardsystem.model.entity.ExtraTime;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 @Repository
@@ -17,4 +18,10 @@ public interface ExtraTimeDao {
 
     @Delete("delete from extra_time where id=#{id}")
     Integer deleteById(Integer id);
+
+    @Select("select * from extra_time where dept_id=#{deptId} and grade_id=#{gradeId} and term_id=#{termId}")
+    List<ExtraTime> findByStu(Integer deptId, Integer gradeId, Integer termId);
+
+    @Select("select * from extra_time where id=#{id}")
+    Optional<ExtraTime> findById(Integer id);
 }

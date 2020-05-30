@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.model.entity.SysUserStu;
@@ -31,7 +32,7 @@ public class StuStatController {
     private GradeService gradeService;
 
     @Autowired
-    private ApartmentService  apartmentService;
+    private ApartmentService apartmentService;
 
     @GetMapping("/stu-home")
     public String getHome() {
@@ -54,10 +55,17 @@ public class StuStatController {
             model.addAttribute("deptName", deptService.findById(userStu.getDeptId()).get().getName());
             model.addAttribute("gradeName", gradeService.findById(userStu.getGradeId()).get().getName());
             model.addAttribute("apartmentName", apartmentService.findById(userStu.getApartmentId()).get().getName());
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             model.addAttribute("exception", e.getMessage());
             return "exception";
         }
         return "stu/stu-info";
+    }
+
+    @GetMapping("/stu/extra-score-add")
+    public String getPage1(@RequestParam("timeId") Integer timeId, @RequestParam("termId") Integer termId, Model model) {
+        model.addAttribute("timeId", timeId);
+        model.addAttribute("termId", termId);
+        return "stu/extra-score-add";
     }
 }

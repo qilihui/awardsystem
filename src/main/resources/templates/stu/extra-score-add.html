@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>修改用户信息</title>
+    <link rel="stylesheet" th:href="@{/xadmin/css/font.css}"/>
+    <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}"/>
+    <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
+</head>
+
+<body style="margin-top: 20px;">
+<div class="x-body">
+    <form class="layui-form">
+        <input type="hidden" id="fileInput" name="path">
+        <input type="hidden" id="timeInput" name="timeId" th:value="${timeId}">
+        <input type="hidden" id="termInput" name="termId" th:value="${termId}">
+        <div class="layui-form-item">
+            <label for="L_score" class="layui-form-label"><span class="x-red">*</span>分数</label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_score" name="scoreStr" required=""
+                       lay-verify="score" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="test1" class="layui-form-label"><span class="x-red">*</span>图片</label>
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="test1">上传图片</button>
+                <div class="layui-upload-list" style="margin-left: 110px;">
+                    <img class="layui-upload-img" id="demo1" width="300px" height="auto">
+                    <p id="demoText"></p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label for="L_remark" class="layui-form-label"><span class="x-red">*</span>备注</label>
+            <div class="layui-input-block">
+                <textarea id="L_remark" name="remark" required=""
+                          lay-verify="remark" autocomplete="off" class="layui-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" lay-filter="add" lay-submit="">添加</button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'layer', 'laydate', 'upload'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        //自定义验证规则
+        form.verify({
+            score: function (value) {
+                if (value === null || value === '') {
+                    return "分数不能为空";
+                }
+            },
+            remark: function (value) {
+                if (value === null || value === '')
+                    return "备注不能为空"
+            }
+        });
+
+        //监听提交
+        form.on('submit(add)', function (data) {
+            var load = layer.load(2)
+            $.ajax({
+                url: "/extraScore/add",
+                type: "POST",
+                data: data.field,
+                dataType: 'json',
+                success: function (result) {
+                    layer.close(load)
+                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                        layer.alert(result.msg, {icon: 2});
+                    } else {
+                        layer.alert("添加成功", {icon: 6}, function () {
+                            //关闭当前frame
+                            xadmin.close();
+                            // 可以对父窗口进行刷新
+                            xadmin.father_reload();
+                        });
+                    }
+
+                }
+            });
+            return false;
+        });
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: '/extraScore/addFile' //改成您自己的上传接口
+            , size: 1024
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                console.log("文件上传成功");
+                $('#fileInput').val(res.data);
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

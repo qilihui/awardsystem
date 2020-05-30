@@ -31,7 +31,7 @@
       "child": [
         {
           "name": "加分项提交",
-          "href": "/extraScore"
+          "href": "/stu/getPage?name=extra-time-list"
         }
       ]
     },

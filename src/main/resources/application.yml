@@ -25,3 +25,6 @@ logging:
       xhui:
         awardsystem:
           dao: debug
+
+myConf:
+  uploadPath: D:\test\
