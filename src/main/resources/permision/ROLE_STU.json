@@ -2,14 +2,6 @@
   "homePage": "/stu-home",
   "data": [
     {
-      "id": 1,
-      "name": "用户管理",
-      "css": "&#xe770;",
-      "child": [
-
-      ]
-    },
-    {
       "id": 2,
       "name": "分数查看",
       "css": "&#xe60a;",

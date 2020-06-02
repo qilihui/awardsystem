@@ -2,13 +2,6 @@
   "homePage": "/union-home",
   "data": [
     {
-      "id": 1,
-      "name": "用户管理",
-      "css": "&#xe770;",
-      "child": [
-      ]
-    },
-    {
       "id": 2,
       "name": "成绩管理",
       "css": "&#xe60a;",

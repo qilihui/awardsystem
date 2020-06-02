@@ -14,14 +14,15 @@
 <div class="x-body">
     <form class="layui-form">
         <div class="layui-form-item">
-            <label for="L_score" class="layui-form-label"><span class="x-red">*</span>分数</label>
+            <label for="L_score" class="layui-form-label">分数</label>
             <div class="layui-input-inline">
                 <input type="text" id="L_score" name="scoreStr" required=""
-                       lay-verify="score" autocomplete="off" class="layui-input" th:value="${score}" readonly="readonly">
+                       lay-verify="score" autocomplete="off" class="layui-input" th:value="${score}"
+                       readonly="readonly">
             </div>
         </div>
         <div class="layui-form-item">
-            <label for="demo1" class="layui-form-label"><span class="x-red">*</span>图片</label>
+            <label for="demo1" class="layui-form-label">图片</label>
             <div class="layui-upload">
                 <div class="layui-upload-list" style="margin-left: 110px;">
                     <img class="layui-upload-img" id="demo1" width="300px" height="auto" th:src="${path}">
@@ -30,13 +31,33 @@
             </div>
         </div>
         <div class="layui-form-item layui-form-text">
-            <label for="L_remark" class="layui-form-label"><span class="x-red">*</span>备注</label>
+            <label for="L_remark" class="layui-form-label">备注</label>
             <div class="layui-input-block">
                 <textarea id="L_remark" name="remark" required=""
-                          lay-verify="remark" autocomplete="off" class="layui-textarea" th:text="${remark}" readonly="readonly"></textarea>
+                          lay-verify="remark" autocomplete="off" class="layui-textarea" th:text="${remark}"
+                          readonly="readonly"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_time" class="layui-form-label">时间</label>
+            <div class="layui-input-inline">
+                <input type="text" id="L_time" name="createTime" required=""
+                       lay-verify="score" autocomplete="off" class="layui-input" th:value="${createTime}"
+                       readonly="readonly">
             </div>
         </div>
     </form>
 </div>
 </body>
+<script th:inline="javascript">
+    var imgPath = [[${path}]];
+</script>
+<script>
+    layui.use('layer', function () {
+        var $ = layui.jquery;
+        $('#demo1').click(function () {
+            window.open(imgPath);
+        });
+    });
+</script>
 </html>

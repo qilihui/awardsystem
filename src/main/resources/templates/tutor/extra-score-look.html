@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>学生提交</title>
+    <link rel="stylesheet" th:href="@{/xadmin/css/font.css}"/>
+    <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}"/>
+    <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
+</head>
+
+<body style="margin-top: 20px;">
+<div class="x-body">
+    <div class="layui-form-item">
+        <label for="L_score" class="layui-form-label">学号</label>
+        <div class="layui-input-inline">
+            <input type="text" id="L_username" name="scoreStr" required=""
+                   lay-verify="username" autocomplete="off" class="layui-input" th:value="${vo.username}"
+                   readonly="readonly">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="L_score" class="layui-form-label">姓名</label>
+        <div class="layui-input-inline">
+            <input type="text" id="L_realName" name="scoreStr" required=""
+                   lay-verify="realName" autocomplete="off" class="layui-input" th:value="${vo.realName}"
+                   readonly="readonly">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="L_score" class="layui-form-label">分数</label>
+        <div class="layui-input-inline">
+            <input type="text" id="L_score" name="scoreStr" required=""
+                   lay-verify="score" autocomplete="off" class="layui-input" th:value="${vo.score}"
+                   readonly="readonly">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="demo1" class="layui-form-label">图片</label>
+        <div class="layui-upload">
+            <div class="layui-upload-list" style="margin-left: 110px;">
+                <img class="layui-upload-img" id="demo1" width="300px" height="auto" th:src="${vo.path}">
+                <p id="demoText"></p>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label for="L_remark" class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+                <textarea id="L_remark" name="remark" required=""
+                          lay-verify="remark" autocomplete="off" class="layui-textarea" th:text="${vo.remark}"
+                          readonly="readonly"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label for="L_time" class="layui-form-label">时间</label>
+        <div class="layui-input-inline">
+            <input type="text" id="L_time" name="createTime" required=""
+                   lay-verify="score" autocomplete="off" class="layui-input" th:value="${createTime}"
+                   readonly="readonly">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <!--            <div class="layui-input-inline">-->
+        <label class="layui-form-label"></label>
+        <button class="layui-btn" id="pass">通过</button>
+        <button class="layui-btn" id="noPass">不通过</button>
+        <button class="layui-btn layui-btn-danger" id="del">删除</button>
+        <!--            </div>-->
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    var timeId = [[${timeId}]];
+    var id = [[${id}]];
+    var imgPath = [[${vo.path}]];
+</script>
+<script>
+    layui.use('layer', function () {
+        var $ = layui.jquery;
+
+        $('#pass').click(function () {
+            console.log("pass");
+            var load = layer.load(2);
+            $.ajax({
+                url: '/extraScore/tutor/pass',
+                type: "POST",
+                data: {id: id, timeId: timeId, pass: 1},
+                dataType: 'json',
+                success: function (result) {
+                    layer.close(load)
+                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                        layer.alert(result.msg, {icon: 2});
+                    } else {
+                        layer.alert("成功", {icon: 1}, function (index1) {
+                            layer.close(index1);
+                            xadmin.father_reload();
+                            // table.reload('test');
+                        });
+                    }
+                },
+            });
+        });
+
+        $('#noPass').click(function () {
+            console.log("noPass");
+            var load = layer.load(2);
+            $.ajax({
+                url: '/extraScore/tutor/pass',
+                type: "POST",
+                data: {id: id, timeId: timeId, pass: 0},
+                dataType: 'json',
+                success: function (result) {
+                    layer.close(load)
+                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                        layer.alert(result.msg, {icon: 2});
+                    } else {
+                        layer.alert("成功", {icon: 1}, function (index1) {
+                            layer.close(index1);
+                            xadmin.father_reload();
+                            // table.reload('test');
+                        });
+                    }
+                },
+            });
+        });
+
+        $('#del').click(function () {
+            console.log("del");
+            layer.confirm('真的删除么', function (index) {
+                var load = layer.load(2);
+                $.ajax({
+                    url: '/extraScore/tutor/del',
+                    type: "DELETE",
+                    data: {id: id, timeId: timeId},
+                    dataType: 'json',
+                    success: function (result) {
+                        layer.close(load)
+                        if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                            layer.alert(result.msg, {icon: 2});
+                        } else {
+                            layer.alert("删除成功", {icon: 1}, function (index1) {
+                                layer.close(index1);
+                                xadmin.father_reload();
+                                // table.reload('test');
+                            });
+                        }
+                    },
+                });
+            });
+        });
+        $('#demo1').click(function () {
+            window.open(imgPath);
+        });
+    });
+</script>
+</html>

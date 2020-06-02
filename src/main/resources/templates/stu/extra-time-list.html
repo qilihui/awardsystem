@@ -71,7 +71,7 @@
             let termId = data.field['termId'];
             sessionStorage.setItem('termId', termId);
             table.reload('test', {
-                url: '/extraScore/stu/time?termId=' + termId
+                url: '/extraTime/stu/time?termId=' + termId
             });
             // console.log("重新渲染完成termId " + sessionStorage.getItem('termId'));
             return false;
@@ -109,7 +109,7 @@
         function getTable() {
             table.render({
                 elem: '#test',
-                url: '/extraScore/stu/time?termId=' + sessionStorage.getItem('termId'),
+                url: '/extraTime/stu/time?termId=' + sessionStorage.getItem('termId'),
                 toolbar: false,
                 cols: [
                     [
@@ -157,7 +157,7 @@
                                 } else if (d.status === 0) {
                                     return '<div><button ' + clickStr1 + ' style="color: red; font-weight: bold; border: none; background-color: snow">未通过, 点击查看</button></div>';
                                 } else if (d.status === 1) {
-                                    return '<div><button ' + clickStr1 + ' style="color: green; font-weight: bold; border: none; background-color: snow">通过, 点击查看</button></div>';
+                                    return '<div><button ' + clickStr1 + ' style="color: #16b116; font-weight: bold; border: none; background-color: snow">通过, 点击查看</button></div>';
                                 } else {
                                     return "<div><span style='color: black; font-weight: bold;'>未知</span></div>";
                                 }

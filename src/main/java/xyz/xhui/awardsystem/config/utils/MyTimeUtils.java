@@ -21,4 +21,9 @@ public class MyTimeUtils {
         }
         return date.getTime();
     }
+
+    public static String getTimeStr(Long time) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(time);
+    }
 }

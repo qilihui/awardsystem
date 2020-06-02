@@ -1,5 +1,7 @@
 package xyz.xhui.awardsystem.model.entity;
 
+import xyz.xhui.awardsystem.config.utils.MyTimeUtils;
+
 import java.io.Serializable;
 
 public class ExtraScore implements Serializable {
@@ -7,11 +9,17 @@ public class ExtraScore implements Serializable {
     private double score;
     private String remark;
     private String path;
+    private Long createTime;
     private Integer timeId;
     private Integer termId;
     private Integer stuId;
     private Integer deptId;
     private Integer gradeId;
+    private Integer status;
+
+    public ExtraScore() {
+        createTime = MyTimeUtils.currentTimeMillis();
+    }
 
     public Integer getId() {
         return id;
@@ -43,6 +51,14 @@ public class ExtraScore implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
     }
 
     public Integer getTimeId() {
@@ -85,6 +101,14 @@ public class ExtraScore implements Serializable {
         this.gradeId = gradeId;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "ExtraScore{" +
@@ -92,11 +116,13 @@ public class ExtraScore implements Serializable {
                 ", score=" + score +
                 ", remark='" + remark + '\'' +
                 ", path='" + path + '\'' +
+                ", createTime=" + createTime +
                 ", timeId=" + timeId +
                 ", termId=" + termId +
                 ", stuId=" + stuId +
                 ", deptId=" + deptId +
                 ", gradeId=" + gradeId +
+                ", status=" + status +
                 '}';
     }
 }

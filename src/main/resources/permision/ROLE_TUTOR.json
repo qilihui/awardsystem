@@ -33,7 +33,7 @@
       "css": "&#xe663;",
       "child": [
         {
-          "name": "加分项提交时间设定",
+          "name": "加分项管理",
           "href": "/tutor/getPage?name=extra-time-list.html"
         }
       ]
