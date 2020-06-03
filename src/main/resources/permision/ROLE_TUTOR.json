@@ -33,8 +33,12 @@
       "css": "&#xe663;",
       "child": [
         {
+          "name": "期末分数查看",
+          "href": "/tutor/getPage?name=exam-score-list"
+        },
+        {
           "name": "加分项管理",
-          "href": "/tutor/getPage?name=extra-time-list.html"
+          "href": "/tutor/getPage?name=extra-time-list"
         }
       ]
     },

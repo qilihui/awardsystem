@@ -19,12 +19,12 @@ public interface UserStuDao {
     @Select("select * from sys_user_stu")
     List<SysUserStu> findAll();
 
-    @ResultMap("userStuMap")
-    @Select("select * from sys_user_stu where id = #{id} limit 1")
+    @ResultMap("userStuMap2")
+    @Select("select s.*, u.id as id2, u.username, u.role, u.real_name, u.email, u.password from sys_user_stu s,sys_user u where s.id =#{id} and s.user_id=u.id limit 1")
     Optional<SysUserStu> findById(Integer id);
 
-    @ResultMap("userStuMap")
-    @Select("select * from sys_user_stu where user_id = #{id} limit 1")
+    @ResultMap("userStuMap2")
+    @Select("select s.*, u.id as id2, u.username, u.role, u.real_name, u.email, u.password from sys_user_stu s,sys_user u where s.user_id =#{id} and s.user_id=u.id limit 1")
     Optional<SysUserStu> findSysUserStuByUser_Id(Integer id);
 
     @Delete("delete from sys_user_stu where id = #{id}")

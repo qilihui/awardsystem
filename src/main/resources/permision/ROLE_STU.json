@@ -22,6 +22,10 @@
       "css": "&#xe663;",
       "child": [
         {
+          "name": "期末分数查看",
+          "href": "/stu/getPage?name=exam-score-list"
+        },
+        {
           "name": "加分项提交",
           "href": "/stu/getPage?name=extra-time-list"
         }

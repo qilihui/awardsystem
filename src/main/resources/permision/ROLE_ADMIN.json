@@ -46,11 +46,11 @@
       "child": [
         {
           "name": "期末分数列表",
-          "href": "/stu/getPage?name="
+          "href": "/admin/getPage?name=exam/score-list"
         },
         {
           "name": "导入期末分数",
-          "href": "/stu/getPage?name="
+          "href": "/admin/getPage?name=exam/score-adds"
         }
       ]
     },

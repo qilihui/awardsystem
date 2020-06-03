@@ -30,16 +30,13 @@
             <a href="javascript:;" th:text="${realName}"></a>
             <dl class="layui-nav-child">
                 <!-- 二级菜单 -->
-                <dd>
-                    <a onclick="xadmin.open('个人信息','http://www.baidu.com')">个人信息</a></dd>
-                <dd>
-                    <a onclick="xadmin.open('切换帐号','http://www.baidu.com')">切换帐号</a></dd>
-                <dd>
-                    <a href="/logout">退出</a></dd>
+                <dd><a onclick="xadmin.add_tab('修改密码','/change-password')">修改密码</a></dd>
+                <dd><a href="/logout">退出</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item to-index">
-            <a href="/">前台首页</a></li>
+            <a href="/">首页</a>
+        </li>
     </ul>
 </div>
 <!-- 顶部结束 -->
@@ -51,7 +48,7 @@
             <li th:each="p : ${permission}">
                 <a href="javascript:">
                     <i class="layui-icon left-nav-li" th:lay-tips="${p.name}" th:utext="${p.css}"></i>
-<!--                    <i class="iconfont left-nav-li" th:lay-tips="${p.name}" th:utext="${p.css}"></i>-->
+                    <!--                    <i class="iconfont left-nav-li" th:lay-tips="${p.name}" th:utext="${p.css}"></i>-->
                     <cite th:text="${p.name}"></cite>
                     <i class="iconfont nav_right">&#xe697;</i>
                 </a>
@@ -96,9 +93,9 @@
 <style id="theme_style"></style>
 </body>
 <script type="text/javascript">
-    if(top!==self){
-        if(top.location !== self.location)
-            top.location=self.location;
+    if (top !== self) {
+        if (top.location !== self.location)
+            top.location = self.location;
     }
 </script>
 </html>

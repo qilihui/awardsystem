@@ -126,7 +126,7 @@ public class ExtraScoreController {
         model.addAttribute("createTime", MyTimeUtils.getTimeStr(scoreVo.getCreateTime()));
         model.addAttribute("timeId", timeId);
         model.addAttribute("id", id);
-        return "/tutor/extra-score-look";
+        return "tutor/extra-score-look";
     }
 
     @RolesAllowed("TUTOR")

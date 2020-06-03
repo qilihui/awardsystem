@@ -56,6 +56,12 @@
     </div>
 </div>
 </body>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <div class="layui-inline" title="批量删除" lay-event="delete"><i class="layui-icon layui-icon-delete"></i></div>
+        <div class="layui-inline" title="添加" lay-event="add"><i class="layui-icon layui-icon-add-1"></i></div>
+    </div>
+</script>
 <script>
     layui.use(['table', 'form'], function () {
         var table = layui.table;
@@ -67,14 +73,59 @@
             layer.close(load);
         });
         form.on('submit(set)', function (data) {
-            // console.log(data.field);
+            console.log(data.field);
             let termId = data.field['termId'];
             sessionStorage.setItem('termId', termId);
             table.reload('test', {
-                url: '/extraTime/time?termId=' + termId
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                url: '/examScore/all?termId=' + termId
             });
             // console.log("重新渲染完成termId " + sessionStorage.getItem('termId'));
             return false;
+        });
+        //头工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'delete':
+                    var data = checkStatus.data;
+                    var idArray = [];
+                    for (var i in data) {
+                        idArray[i] = data[i].id;
+                    }
+                    if (idArray.length === 0) {
+                        layer.alert("未选中", {icon: 5});
+                        break;
+                    }
+                    console.log(idArray.toString());
+                    layer.confirm('真的要删除?', function (index) {
+                        var load = layer.load(2)
+                        $.ajax({
+                            url: '/examScore/del',
+                            type: "DELETE",
+                            data: {ids: idArray, termId: sessionStorage.getItem("termId")},
+                            dataType: 'json',
+                            success: function (result) {
+                                layer.close(load)
+                                if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                                    layer.alert(result.msg, {icon: 2});
+                                } else {
+                                    layer.alert("删除成功", {icon: 1}, function (index1) {
+                                        layer.close(index1);
+                                        //xadmin.father_reload();
+                                        table.reload('test');
+                                    });
+                                }
+                            },
+                        });
+                    });
+                    break;
+                case 'add':
+                    xadmin.open('添加', '/examScore/add?termId=' + sessionStorage.getItem('termId'));
+                    break;
+            }
         });
 
         function getTerm(callback) {
@@ -87,11 +138,11 @@
                     if (result.data && result.data.length > 0) {
                         sessionStorage.setItem("termId", result.data[0].id);
                         let termId = result.data[0].id;
-                        // console.log(termId);
+                        console.log(termId);
                         for (var i in result.data) {
-                            // console.log(result.data[i].id);
+                            console.log(result.data[i].id);
                             if (result.data[i].id == termId) {
-                                // console.log("==");
+                                console.log("==");
                                 html += '<option value="' + result.data[i].id + '" selected="selected">' + result.data[i].name + '</option>';
                             } else
                                 html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
@@ -109,103 +160,35 @@
         function getTable() {
             table.render({
                 elem: '#test',
-                url: '/extraTime/time?termId=' + sessionStorage.getItem('termId'),
+                url: '/examScore/all?termId=' + sessionStorage.getItem('termId'),
                 toolbar: '#toolbarDemo',
                 cols: [
                     [
+                        {type: 'checkbox'},
                         {field: 'id', width: 80, sort: true, title: 'ID'},
-                        {field: 'name', minWidth: 120, title: '名称'},
+                        {field: 'username', minWidth: 100, sort: true, title: '学号'},
+                        {field: 'realName', minWidth: 60, title: '姓名'},
+                        {field: 'deptName', minWidth: 60, title: '系部'},
+                        {field: 'gradeName', minWidth: 60, title: '年级'},
                         {
-                            field: 'beginTime',
-                            minWidth: 180,
-                            templet: '<div>{{layui.util.toDateString(d.beginTime*1, `yyyy-MM-dd HH:mm:ss`)}}</div>',
-                            title: '开始时间'
-                        },
-                        {
-                            field: 'endTime',
-                            minWidth: 180,
-                            templet: '<div>{{layui.util.toDateString(d.endTime*1, `yyyy-MM-dd HH:mm:ss`)}}</div>',
-                            title: '结束时间'
-                        },
-                        {
-                            minWidth: 90,
-                            title: '状态',
+                            minWidth: 120,
+                            title: '分数',
                             templet: function (d) {
-                                // console.log(d.beginTime + " " + d.endTime);
-                                let nowTime = new Date().getTime();
-                                if (d.beginTime > nowTime) {
-                                    return "<div><span style='color: red; font-weight: bold;'>未开始</span></div>";
-                                } else if (d.endTime < nowTime) {
-                                    return "<div>已结束</div>";
+                                if (d.score * 1 < 60) {
+                                    return '<div><span style="color: red;font-weight: bold;">' + d.score + '</span></div>';
                                 } else {
-                                    return "<div><span style='color: #16b116; font-weight: bold;'>进行中</span></div>";
+                                    return '<div><span style="color: black;font-weight: bold;">' + d.score + '</span></div>';
                                 }
                             }
                         },
-                        {midWidth: 50, title: '查看', toolbar: '#barView'},
-                        {midWidth: 50, title: '删除', toolbar: '#barOptional'}
+                        {field: 'count', minWidth: 120, title: '不及格科目'},
+                        {field: 'remark', minWidth: 120, title: '备注'},
                     ]
                 ],
-                page: false
+                page: true,
+                limits: [10, 20, 50, 100, 500, 1000]
             });
         }
-
-        table.on('tool(test)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'del') {
-                layer.confirm('真的删除么', function (index) {
-                    var load = layer.load(2);
-                    $.ajax({
-                        url: '/extraTime/time',
-                        type: "DELETE",
-                        data: {id: data.id},
-                        dataType: 'json',
-                        success: function (result) {
-                            layer.close(load)
-                            if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
-                                layer.alert(result.msg, {icon: 2});
-                            } else {
-                                layer.alert("删除成功", {icon: 1}, function (index1) {
-                                    layer.close(index1);
-                                    //xadmin.father_reload();
-                                    table.reload('test');
-                                });
-                            }
-                        },
-                    });
-
-                });
-            } else if (obj.event === 'view') {
-                // console.log("view ");
-                sessionStorage.setItem('timeId', obj.data.id);
-                // window.open('/tutor/getPage?name=extra-score-list');
-                // xadmin.open('提交记录', '/tutor/getPage?name=extra-score-list');
-                console.log("add tab")
-                parent.xadmin.add_tab(obj.data.name + '●学生提交', '/tutor/getPage?name=extra-score-list&tmp=' + obj.data.name);
-            }
-        });
-
-        table.on('toolbar(test)', function (obj) {
-            if (obj.event === 'add') {
-                xadmin.open('添加', '/tutor/getPage?name=extra-time-add.html');
-            }
-        });
     });
-</script>
-
-<script type="text/html" id="barOptional">
-    <a class="" lay-event="del" title="删除">
-        <i class="layui-icon">&#xe640;</i>
-    </a>
-</script>
-<script type="text/html" id="barView">
-    <a class="" lay-event="view" title="查看">
-        <button type="button" class="layui-btn">查看</button>
-    </a>
-</script>
-<script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
-        <div class="layui-inline" title="添加" lay-event="add"><i class="layui-icon layui-icon-add-1"></i></div>
-    </div>
 </script>
 </html>

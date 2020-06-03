@@ -45,7 +45,7 @@ public class AdminStatController {
         model.addAttribute("houseparent", userService.getCount(RoleEnum.ROLE_HOUSEPARENT));
         model.addAttribute("union", userService.getCount(RoleEnum.ROLE_UNION));
         model.addAttribute("stu", userService.getCount(RoleEnum.ROLE_STU));
-        return "/home/admin";
+        return "home/admin";
     }
 
     @GetMapping(value = "/admin/getPage")
