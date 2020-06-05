@@ -9,6 +9,19 @@
     <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
     <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
 </head>
+<script>
+    layui.config({
+        base: '[[@{/xadmin/lib/layui/}]]',
+    }).extend({
+        excel: 'excel',
+    });
+</script>
+<style>
+    #user-view {
+        background-color: white;
+        margin-top: 5px;
+    }
+</style>
 
 <body style="margin-top: 20px;">
 <div class="x-body">
@@ -32,6 +45,19 @@
                        autocomplete="off" class="layui-input">
             </div>
             <div class="layui-input-inline" style="line-height: 30px">%</div>
+        </div>
+        <div class="layui-form-item">
+            <label for="moralMaxScore" class="layui-form-label">德育分最高</label>
+            <div class="layui-input-inline">
+                <input type="number" id="moralMaxScore" name="moralMaxScore" required=""
+                       placeholder="0-100"
+                       min="0"
+                       max="100"
+                       lay-verify="required" lay-reqtext="不能为空"
+                       value="20"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline" style="line-height: 30px">分</div>
         </div>
         <div class="layui-form-item">
             <label for="lessNo" class="layui-form-label">挂科无奖学金</label>
@@ -93,11 +119,12 @@
     </form>
 </div>
 <script>
-    layui.use(['form', 'layer', 'laydate'], function () {
+    layui.use(['form', 'layer', 'laydate', 'excel'], function () {
         $ = layui.jquery;
         var form = layui.form
             , layer = layui.layer
-            , laydate = layui.laydate;
+            , laydate = layui.laydate
+            , excel = layui.excel;
 
         var load = layer.load(1);
         getTerm(function () {
@@ -118,12 +145,33 @@
                     if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
                         layer.alert(result.msg, {icon: 2});
                     } else {
-                        layer.alert("添加成功", {icon: 6}, function () {
-                            //关闭当前frame
-                            xadmin.close();
-                            // 可以对父窗口进行刷新
-                            xadmin.father_reload();
-                        });
+                        result.data.unshift(
+                            {
+                                "username": "学号",
+                                "realName": "姓名",
+                                "examScore": "考试成绩",
+                                "count": "不及格数量",
+                                "apartmentScore": "宿舍分数",
+                                "moralScore": "德育分数",
+                                "sumScore": "总分",
+                                "rank": "排名",
+                                "awardRank": "奖学金等级"
+                            }
+                        )
+                        var data = excel.filterExportData(result.data, [
+                            "username",
+                            "realName",
+                            "examScore",
+                            "count",
+                            "apartmentScore",
+                            "moralScore",
+                            "sumScore",
+                            "rank",
+                            "awardRank"
+                        ]);
+                        excel.exportExcel({
+                            sheet1: data
+                        }, '导出接口数据.xlsx', 'xlsx');
                     }
 
                 }

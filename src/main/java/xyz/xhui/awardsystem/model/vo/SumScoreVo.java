@@ -16,6 +16,7 @@ public class SumScoreVo implements Serializable {
 
     private Integer termId;
     private Integer examRate;
+    private Integer moralMaxScore;
     private String lessNo;
     private String awardMethod;
     private Integer one;
@@ -25,9 +26,10 @@ public class SumScoreVo implements Serializable {
     public SumScoreVo() {
     }
 
-    public SumScoreVo(Integer termId, Integer examRate, String lessNo, String awardMethod, Integer one, Integer two, Integer three) {
+    public SumScoreVo(Integer termId, Integer examRate, Integer moralMaxScore, String lessNo, String awardMethod, Integer one, Integer two, Integer three) {
         this.termId = termId;
         this.examRate = examRate;
+        this.moralMaxScore = moralMaxScore;
         this.lessNo = lessNo;
         this.awardMethod = awardMethod;
         this.one = one;
@@ -49,6 +51,14 @@ public class SumScoreVo implements Serializable {
 
     public void setExamRate(Integer examRate) {
         this.examRate = examRate;
+    }
+
+    public Integer getMoralMaxScore() {
+        return moralMaxScore;
+    }
+
+    public void setMoralMaxScore(Integer moralMaxScore) {
+        this.moralMaxScore = moralMaxScore;
     }
 
     public String getLessNo() {
@@ -96,6 +106,7 @@ public class SumScoreVo implements Serializable {
         return "SumScoreVo{" +
                 "termId=" + termId +
                 ", examRate=" + examRate +
+                ", moralMaxScore=" + moralMaxScore +
                 ", lessNo='" + lessNo + '\'' +
                 ", awardMethod='" + awardMethod + '\'' +
                 ", one=" + one +

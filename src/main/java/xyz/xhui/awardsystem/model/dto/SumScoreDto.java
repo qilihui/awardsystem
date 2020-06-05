@@ -3,24 +3,18 @@ package xyz.xhui.awardsystem.model.dto;
 import xyz.xhui.awardsystem.model.entity.ExamScore;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 public class SumScoreDto implements Serializable {
-    private ExamScore examScore;
     private String username;
     private String realName;
+    private Double examScore;
+    private Integer count;
     private Double apartmentScore;
     private Double moralScore;
     private Double sumScore;
     private Integer rank;
     private String awardRank;
-
-    public ExamScore getExamScore() {
-        return examScore;
-    }
-
-    public void setExamScore(ExamScore examScore) {
-        this.examScore = examScore;
-    }
 
     public String getUsername() {
         return username;
@@ -36,6 +30,22 @@ public class SumScoreDto implements Serializable {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    public Double getExamScore() {
+        return examScore;
+    }
+
+    public void setExamScore(Double examScore) {
+        this.examScore = examScore;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public Double getApartmentScore() {
@@ -81,9 +91,10 @@ public class SumScoreDto implements Serializable {
     @Override
     public String toString() {
         return "SumScoreDto{" +
-                "examScore=" + examScore +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", realName='" + realName + '\'' +
+                ", examScore=" + examScore +
+                ", count=" + count +
                 ", apartmentScore=" + apartmentScore +
                 ", moralScore=" + moralScore +
                 ", sumScore=" + sumScore +

@@ -7,7 +7,7 @@
     <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
     <script>
         layui.config({
-            base: '/xadmin/lib/layui/',
+            base: '[[@{/xadmin/lib/layui/}]]',
         }).extend({
             excel: 'excel',
         });

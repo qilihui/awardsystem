@@ -31,4 +31,8 @@ public interface ExtraScoreDao {
 
     @Update("update extra_score set status=#{pass} where id=#{id} and dept_id=#{deptId} and grade_id=#{gradeId} and time_id=#{timeId}")
     Integer passById(Integer id, Integer deptId, Integer gradeId, Integer timeId, Integer pass);
+
+    @Select("select * from extra_score where stu_id=#{stuId} and term_id=#{termId} and status=1")
+    List<ExtraScore> findListByStuAndStatusEqualsPass(Integer stuId, Integer termId);
+
 }
