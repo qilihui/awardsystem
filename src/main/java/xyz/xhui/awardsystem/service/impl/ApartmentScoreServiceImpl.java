@@ -53,7 +53,7 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
         List<ScoreDto> scoreDtoList = new ArrayList<>();
         for (ApartmentScore apartmentScore : apartmentScoreList) {
             Integer week = Math.toIntExact((apartmentScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
-            ScoreDto scoreDto = new ScoreDto(apartmentScore.getId(), apartmentScore.getScore(), apartmentScore.getRemark(), apartmentScore.getCreateTime(), week, apartmentScore.getRoom(), apartmentScore.getBed());
+            ScoreDto scoreDto = new ScoreDto(apartmentScore.getId(), apartmentScore.getScore().toString(), apartmentScore.getRemark(), apartmentScore.getCreateTime(), week, apartmentScore.getRoom(), apartmentScore.getBed());
             scoreDtoList.add(scoreDto);
         }
         pageDto.setObj(scoreDtoList);
@@ -99,7 +99,7 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
                 ApartmentScore apartmentScore = new ApartmentScore();
                 apartmentScore.setRoom(Integer.valueOf(apartmentScoreDtos[i].getRoom()));
                 apartmentScore.setBed(Integer.valueOf(apartmentScoreDtos[i].getBed()));
-                apartmentScore.setScore(Integer.valueOf(apartmentScoreDtos[i].getScore()));
+                apartmentScore.setScore(Double.valueOf(apartmentScoreDtos[i].getScore()));
                 apartmentScore.setRemark(apartmentScoreDtos[i].getRemark());
                 j += this.save(apartmentScore);
             } catch (NumberFormatException | UnknownException e) {
@@ -125,7 +125,7 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
         List<ScoreDto> scoreDtoList = new ArrayList<>();
         for (UnionScore unionScore : unionScoreList) {
             Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
-            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), null, null, unionScore.getScore(), unionScore.getRemark(), null, unionScore.getCreateTime(), week);
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), null, null, unionScore.getScore().toString(), unionScore.getRemark(), null, unionScore.getCreateTime(), week);
             scoreDtoList.add(scoreDto);
         }
         return scoreDtoList;
@@ -151,7 +151,7 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
             SysUserStu stu = userStuOptional.orElseThrow(() -> {
                 return new EntityFieldException("未知错误 请联系管理员");
             });
-            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), stu.getUser().getUsername(), stu.getUser().getRealName(), unionScore.getScore(), unionScore.getRemark(), unionScore.getCreateTime(), week);
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), stu.getUser().getUsername(), stu.getUser().getRealName(), unionScore.getScore().toString(), unionScore.getRemark(), unionScore.getCreateTime(), week);
             scoreDtoList.add(scoreDto);
         }
         PageDto<List<ScoreDto>> pageDto = new PageDto<>();

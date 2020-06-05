@@ -17,20 +17,20 @@ public class ScoreDto {
     public ScoreDto() {
     }
 
-    public ScoreDto(Integer id, String username, String realName, Integer score, String remark, String submitter, Long createTime, Integer week) {
+    public ScoreDto(Integer id, String username, String realName, String scoreStr, String remark, String submitter, Long createTime, Integer week) {
         this.id = id;
         this.username = username;
         this.realName = realName;
-        this.score = score;
+        this.scoreStr = scoreStr;
         this.remark = remark;
         this.submitter = submitter;
         this.createTime = createTime;
         this.week = week;
     }
 
-    public ScoreDto(Integer id, Integer score, String remark, Long createTime, Integer week, Integer room, Integer bed) {
+    public ScoreDto(Integer id, String scoreStr, String remark, Long createTime, Integer week, Integer room, Integer bed) {
         this.id = id;
-        this.score = score;
+        this.scoreStr = scoreStr;
         this.remark = remark;
         this.createTime = createTime;
         this.week = week;
@@ -38,11 +38,11 @@ public class ScoreDto {
         this.bed = bed;
     }
 
-    public ScoreDto(Integer id, String username, String realName, Integer score, String remark, Long createTime, Integer week) {
+    public ScoreDto(Integer id, String username, String realName, String scoreStr, String remark, Long createTime, Integer week) {
         this.id = id;
         this.username = username;
         this.realName = realName;
-        this.score = score;
+        this.scoreStr = scoreStr;
         this.remark = remark;
         this.createTime = createTime;
         this.week = week;

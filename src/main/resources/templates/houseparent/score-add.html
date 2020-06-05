@@ -16,21 +16,30 @@
         <div class="layui-form-item">
             <label for="L_room" class="layui-form-label"><span class="x-red">*</span>房间号</label>
             <div class="layui-input-inline">
-                <input type="text" id="L_room" name="room" required="" oninput="value=value.replace(/[^\d]/g,'')"
+                <input type="number" id="L_room" name="room" required=""
+                       min="101"
+                       max="999"
+                       step="1"
                        lay-verify="room" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="L_bed" class="layui-form-label"><span class="x-red">*</span>床号</label>
             <div class="layui-input-inline">
-                <input type="text" id="L_bed" name="bed" required="" oninput="value=value.replace(/[^\d]/g,'')"
+                <input type="number" id="L_bed" name="bed" required=""
+                       min="1"
+                       max="10"
+                       step="1"
                        lay-verify="bed" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label for="L_score" class="layui-form-label"><span class="x-red">*</span>分数</label>
             <div class="layui-input-inline">
-                <input type="text" id="L_score" name="score" required="" oninput="value=value.replace(/[^\d]/g,'')"
+                <input type="number" id="L_score" name="score" required=""
+                       min="0.1"
+                       max="10"
+                       step="0.1"
                        lay-verify="score" autocomplete="off" class="layui-input">
             </div>
         </div>

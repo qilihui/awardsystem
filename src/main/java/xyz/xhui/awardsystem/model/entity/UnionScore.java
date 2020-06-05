@@ -9,7 +9,7 @@ public class UnionScore implements Serializable {
 
     private Integer stuId;
 
-    private Integer score;
+    private Double score;
 
     private String remark;
 
@@ -39,11 +39,11 @@ public class UnionScore implements Serializable {
         this.stuId = stuId;
     }
 
-    public Integer getScore() {
+    public Double getScore() {
         return score;
     }
 
-    public void setScore(Integer score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 

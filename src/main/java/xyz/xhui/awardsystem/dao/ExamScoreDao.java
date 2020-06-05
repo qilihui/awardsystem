@@ -36,4 +36,7 @@ public interface ExamScoreDao {
 
     @Select("select count(id) from exam_score where term_id=#{termId} and dept_id=#{deptId} and grade_id=#{gradeId}")
     Integer findPageAllCountByTutor(Integer pageNum, Integer pageSize, Integer termId, Integer deptId, Integer gradeId);
+
+    @Select("select * from exam_score where term_id=#{termId} and dept_id=#{deptId} and grade_id=#{gradeId} order by score desc")
+    List<ExamScore> findAllByTutor(Integer termId, Integer deptId, Integer gradeId);
 }

@@ -13,7 +13,7 @@ public class ApartmentScore implements Serializable {
 
     private Integer bed;
 
-    private Integer score;
+    private Double score;
 
     private String remark;
 
@@ -55,11 +55,11 @@ public class ApartmentScore implements Serializable {
         this.bed = bed;
     }
 
-    public Integer getScore() {
+    public Double getScore() {
         return score;
     }
 
-    public void setScore(Integer score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 
