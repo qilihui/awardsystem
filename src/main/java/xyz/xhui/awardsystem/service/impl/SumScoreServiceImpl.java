@@ -46,6 +46,9 @@ public class SumScoreServiceImpl implements SumScoreService {
     @RolesAllowed("TUTOR")
     @Transactional
     public List<SumScoreDto> getByTutor(SumScoreVo sumScoreVo) throws UnknownException {
+        if (sumScoreVo.getLessNo() == null) {
+            sumScoreVo.setLessNo("off");
+        }
         SysUserTutor tutor = userTutorDao.findSysUserTutorByUser_Id(MyUserUtils.getId()).orElseThrow(
                 () -> new UnknownException("未知错误")
         );
@@ -109,7 +112,11 @@ public class SumScoreServiceImpl implements SumScoreService {
         int awardSum = one + two + three;
         for (SumScoreDto s : sumScoreDtos) {
             s.setRank(tmp++);
-            if (awardSum > 0 && ("on".equals(sumScoreVo.getLessNo().trim().toLowerCase()) && s.getCount().equals(0))) {
+            if (awardSum > 0 &&
+                    (("on".equals(sumScoreVo.getLessNo().trim().toLowerCase()) && s.getCount().equals(0)) ||
+                            !"on".equals(sumScoreVo.getLessNo().trim().toLowerCase())
+                    )
+            ) {
                 awardSum--;
                 if (one > 0) {
                     one--;
