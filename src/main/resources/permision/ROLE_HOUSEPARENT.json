@@ -34,7 +34,11 @@
       "child": [
         {
           "name": "公告列表",
-          "href": "/stu/getPage?name="
+          "href": "/houseparent/getPage?name=notice-list"
+        },
+        {
+          "name": "公告添加",
+          "href": "/houseparent/getPage?name=notice-add"
         }
       ]
     },

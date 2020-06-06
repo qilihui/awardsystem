@@ -64,7 +64,7 @@
             var checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
                 case 'add':
-                    xadmin.open('添加', '/union/getPage?name=notice-add');
+                    xadmin.open('添加', '/houseparent/getPage?name=notice-add');
                     break;
             }
         });
@@ -74,7 +74,7 @@
                 layer.confirm('真的删除行么', function (index) {
                     var load = layer.load(2)
                     $.ajax({
-                        url: '/noticeUnion',
+                        url: '/noticeApartment',
                         type: "DELETE",
                         data: {id: obj.data.id},
                         dataType: 'json',
@@ -95,14 +95,14 @@
                 });
             } else if (obj.event === 'edit') {
                 // console.log($(window).width())
-                xadmin.open('修改', '/noticeUnion/edit?id=' + obj.data.id);
+                xadmin.open('修改', '/noticeApartment/edit?id=' + obj.data.id);
             }
         });
 
         function getTable() {
             table.render({
                 elem: '#test',
-                url: '/noticeUnion',
+                url: '/noticeApartment',
                 toolbar: '#toolbarDemo',
                 cols: [
                     [
