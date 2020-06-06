@@ -23,7 +23,11 @@
       "child": [
         {
           "name": "公告列表",
-          "href": "/stu/getPage?name="
+          "href": "/union/getPage?name=notice-list"
+        },
+        {
+          "name": "公告添加",
+          "href": "/union/getPage?name=notice-add"
         }
       ]
     },

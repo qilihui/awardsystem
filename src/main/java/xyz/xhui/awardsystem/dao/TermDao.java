@@ -24,4 +24,7 @@ public interface TermDao {
 
     @Delete("delete from sys_term where id=#{id}")
     Integer deleteById(Integer id);
+
+    @Select("select * from sys_term order by begin_time desc limit 1")
+    Optional<SysTerm> findOne();
 }

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
+import xyz.xhui.awardsystem.config.utils.MyTimeUtils;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.model.dto.PageDto;
@@ -67,7 +68,7 @@ public class UnionScoreServiceImpl implements UnionScoreService {
                     () -> new UnknownException("未知错误 请联系管理员")
             );
             Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
-            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), stuOptional.get().getUsername(), stuOptional.get().getRealName(), unionScore.getScore().toString(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime(), week);
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), stuOptional.get().getUsername(), stuOptional.get().getRealName(), unionScore.getScore().toString(), unionScore.getRemark(), unionOptional.get().getRealName(), unionScore.getCreateTime(), week);
             scoreDtoList.add(scoreDto);
         }
         PageDto<List<ScoreDto>> pageDto = new PageDto<>();
@@ -162,7 +163,29 @@ public class UnionScoreServiceImpl implements UnionScoreService {
                     () -> new UnknownException("未知错误 请联系管理员")
             );
             Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
-            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), null, null, unionScore.getScore().toString(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime(), week);
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), null, null, unionScore.getScore().toString(), unionScore.getRemark(), unionOptional.get().getRealName(), unionScore.getCreateTime(), week);
+            scoreDtoList.add(scoreDto);
+        }
+        return scoreDtoList;
+    }
+
+    @Override
+    @Transactional
+    @RolesAllowed({"STU"})
+    public List<ScoreDto> findByNowWeek() throws UnknownException {
+        SysUserStu stu = userStuDao.findSysUserStuByUser_Id(MyUserUtils.getId()).orElseThrow(
+                () -> new UnknownException("未知错误 请联系管理员")
+        );
+        SysTerm term = termDao.findOne().orElseThrow(
+                () -> new UnknownException("未开始"));
+        int week = Math.toIntExact((MyTimeUtils.currentTimeMillis() - term.getBeginTime()) / 604800000 + 1);
+        long beginTime = term.getBeginTime();
+        term.setBeginTime(beginTime + 604800000L * (week - 1));
+        term.setEndTime(beginTime + 604800000L * week);
+        List<UnionScore> scoreList = unionScoreDao.findByStuId(stu.getId(), term);
+        List<ScoreDto> scoreDtoList = new ArrayList<>();
+        for (UnionScore unionScore : scoreList) {
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), null, null, unionScore.getScore().toString(), unionScore.getRemark(), null, unionScore.getCreateTime(), week);
             scoreDtoList.add(scoreDto);
         }
         return scoreDtoList;
@@ -188,7 +211,7 @@ public class UnionScoreServiceImpl implements UnionScoreService {
                     () -> new UnknownException("未知错误 请联系管理员")
             );
             Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
-            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), unionScore.getUsername(), unionScore.getRealName(), unionScore.getScore().toString(), unionScore.getRemark(), unionOptional.get().getUsername(), unionScore.getCreateTime(), week);
+            ScoreDto scoreDto = new ScoreDto(unionScore.getId(), unionScore.getUsername(), unionScore.getRealName(), unionScore.getScore().toString(), unionScore.getRemark(), unionOptional.get().getRealName(), unionScore.getCreateTime(), week);
             scoreDtoList.add(scoreDto);
         }
         PageDto<List<ScoreDto>> pageDto = new PageDto<>();

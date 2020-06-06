@@ -22,5 +22,7 @@ public interface UnionScoreService {
 
     List<ScoreDto> findByStuId(Integer termId) throws EntityFieldException, UnknownException;
 
+    List<ScoreDto> findByNowWeek() throws UnknownException;
+
     PageDto<List<ScoreDto>> findByTutor(Integer pageNum,  Integer pageSize, Integer termId) throws EntityFieldException, UnknownException;
 }

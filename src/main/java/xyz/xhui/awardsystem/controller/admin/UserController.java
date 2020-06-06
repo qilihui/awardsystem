@@ -33,8 +33,8 @@ public class UserController {
     @GetMapping(value = "")
     @ApiOperation("分页查询所有用户")
     @ResponseBody
-    public Result<List<SysUserDto>> findAll(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize) {
-        PageDto<List<SysUser>> pageDto = userService.findAll(pagenum - 1, pagesize);
+    public Result<List<SysUserDto>> findAll(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize) {
+        PageDto<List<SysUser>> pageDto = userService.findAll(pageNum - 1, pageSize);
         List<SysUserDto> userDtos = new ArrayList<>();
         for (SysUser user : pageDto.getObj()) {
             userDtos.add(new SysUserDto(user));
