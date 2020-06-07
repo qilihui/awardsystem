@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.xhui.awardsystem.dao.UserDao">
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
-        insert into sys_user(`username`, `password`, `real_name`, `role`, `email`) values(#{username}, #{password}, #{realName}, #{role}, #{email})
+        insert into sys_user(`username`, `password`, `real_name`, `role`, `email`)
+        values (#{username}, #{password}, #{realName}, #{role}, #{email})
     </insert>
 
     <update id="updateEmailAndRealName">
@@ -34,5 +35,40 @@
                 role = #{roleEnum}
             </if>
         </where>
+    </select>
+
+    <select id="findDim" resultType="xyz.xhui.awardsystem.model.entity.SysUser">
+        select *
+        from sys_user where
+        <choose>
+            <when test='type == "username"'>
+                `username`
+            </when>
+            <when test='type == "realName"'>
+                `real_name`
+            </when>
+            <otherwise>
+                `id`
+            </otherwise>
+        </choose>
+        like concat('%', #{value}, '%')
+        limit ${pageNum*pageSize}, #{pageSize}
+    </select>
+
+    <select id="findCountDim" resultType="java.lang.Integer">
+        select count(id)
+        from sys_user where
+        <choose>
+            <when test='type == "username"'>
+                `username`
+            </when>
+            <when test='type == "realName"'>
+                `real_name`
+            </when>
+            <otherwise>
+                `id`
+            </otherwise>
+        </choose>
+        like concat('%', #{value}, '%')
     </select>
 </mapper>

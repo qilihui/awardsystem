@@ -1,8 +1,10 @@
 package xyz.xhui.awardsystem.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
@@ -11,14 +13,15 @@ import xyz.xhui.awardsystem.dao.GradeDao;
 import xyz.xhui.awardsystem.dao.UserTutorDao;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
-import xyz.xhui.awardsystem.model.entity.SysUser;
-import xyz.xhui.awardsystem.model.entity.SysUserTutor;
+import xyz.xhui.awardsystem.model.entity.*;
+import xyz.xhui.awardsystem.model.vo.TutorAddVo;
 import xyz.xhui.awardsystem.service.UserService;
 import xyz.xhui.awardsystem.service.UserTutorService;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserTutorServiceImpl implements UserTutorService {
     @Autowired
     private UserTutorDao userTutorDao;
@@ -64,25 +67,6 @@ public class UserTutorServiceImpl implements UserTutorService {
         return userTutorDao.save(sysUserTutor);
     }
 
-//    @Override
-//    public Optional<SysUserTutor> findById(Integer id) {
-//        return userTutorDao.findById(id);
-//    }
-
-//    @Override
-//    @Transactional
-//    public Boolean deleteBySysUserId(Integer id) throws EntityFieldException {
-//        Optional<SysUserTutor> retUserTutor = this.findBySysUserId(id);
-//        retUserTutor.orElseThrow(() -> {
-//            return new EntityFieldException("用户不存在");
-//        });
-//        SysUserTutor userTutor = retUserTutor.get();
-//        userTutorDao.deleteById(userTutor.getId());
-////        userTutorDao.delete(userTutor);
-////        userDao.delete(userTutor.getUser());
-//        return true;
-//    }
-
     @Override
     public Optional<SysUserTutor> findBySysUserId(Integer id) {
         return userTutorDao.findSysUserTutorByUser_Id(id);
@@ -100,5 +84,44 @@ public class UserTutorServiceImpl implements UserTutorService {
         Integer integer = userService.updateEmailAndRealName(userDto);
         Integer integer1 = userTutorDao.updateInfo(userInfoDto);
         return integer + integer1;
+    }
+
+    @Override
+    @Transactional
+    public Integer saves(TutorAddVo[] addVos) throws EntityFieldException {
+        int j = 0;
+        for (int i = 1; i < addVos.length; i++) {
+            try {
+                log.info(addVos[i].toString());
+                SysDept dept = deptDao.findSysDeptByName(addVos[i].getDeptName()).orElseThrow(() -> {
+                            return new EntityFieldException("系部不存在");
+                        }
+                );
+                SysGrade grade = gradeDao.findSysGradeByName(Integer.valueOf(addVos[i].getGradeName().trim())).orElseThrow(() -> {
+                            return new EntityFieldException("年级不存在");
+                        }
+                );
+                SysUser sysUser = new SysUser();
+                sysUser.setUsername(addVos[i].getUsername().trim());
+                sysUser.setRole(RoleEnum.ROLE_TUTOR);
+                sysUser.setEmail(addVos[i].getEmail().trim());
+                sysUser.setRealName(addVos[i].getRealName().trim());
+                if (userService.save(sysUser) <= 0) {
+                    throw new EntityFieldException("未知错误");
+                }
+                SysUserTutor userTutor = new SysUserTutor();
+                userTutor.setUser(sysUser);
+                userTutor.setDeptId(dept.getId());
+                userTutor.setGradeId(grade.getId());
+                j += userTutorDao.save(userTutor);
+            } catch (EntityFieldException e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new EntityFieldException("序号" + i + " " + e.getMessage());
+            } catch (NumberFormatException e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                throw new EntityFieldException("序号" + i + " 格式错误" + e.getMessage());
+            }
+        }
+        return j;
     }
 }

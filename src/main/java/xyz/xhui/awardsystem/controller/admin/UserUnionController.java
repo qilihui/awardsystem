@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
+import xyz.xhui.awardsystem.model.dto.StuDto;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysUserUnion;
+import xyz.xhui.awardsystem.model.vo.UnionAddVo;
 import xyz.xhui.awardsystem.service.UserUnionService;
 
 import javax.annotation.security.RolesAllowed;
@@ -74,33 +76,15 @@ public class UserUnionController {
         return ResultFactory.buildSuccessResult("添加成功");
     }
 
-//    @GetMapping(value = "")
-//    @ApiOperation("查询所有详细信息")
-//    public Result findAll() {
-//        List<SysUserUnion> unions = userUnionService.findAll();
-//        for (SysUserUnion union : unions) {
-//            PasswordUtils.hiddenPassword(union);
-//        }
-//        return ResultFactory.buildSuccessResult(unions, "查询成功");
-//    }
-//
-//    @GetMapping(value = "{id}")
-//    @ApiOperation("根据id查询")
-//    public Result findById(@PathVariable Integer id) {
-//        Optional<SysUserUnion> retUserUnion = userUnionService.findById(id);
-//        retUserUnion.ifPresent(PasswordUtils::hiddenPassword);
-//        return ResultFactory.buildSuccessResult(retUserUnion.orElse(null), "查询成功");
-//    }
-
-//    @DeleteMapping(value = "")
-//    @ApiOperation("根据sysUserId删除")
-//    @ResponseBody
-//    public Result<String> deleteById(@RequestParam Integer id) {
-//        try {
-//            userUnionService.deleteBySysUserId(id);
-//        } catch (EntityFieldException e) {
-//            return ResultFactory.buildFailResult(e.getMessage());
-//        }
-//        return ResultFactory.buildSuccessResult();
-//    }
+    @PostMapping(value = "/adds")
+    @ApiOperation("批量添加")
+    @ResponseBody
+    public Result<String> saves(@RequestBody UnionAddVo[] addVos) {
+        try {
+            userUnionService.saves(addVos);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult("添加成功");
+    }
 }

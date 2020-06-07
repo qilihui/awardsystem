@@ -42,6 +42,18 @@ public class UserController {
         return ResultFactory.buildSuccessResult(pageDto.getCount(), userDtos);
     }
 
+    @GetMapping(value = "/search")
+    @ApiOperation("模糊查询")
+    @ResponseBody
+    public Result<List<SysUserDto>> findDim(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize, @RequestParam("value") String value, @RequestParam("type") String type) {
+        PageDto<List<SysUser>> pageDto = userService.findDim(pageNum - 1, pageSize, value, type);
+        List<SysUserDto> userDtos = new ArrayList<>();
+        for (SysUser user : pageDto.getObj()) {
+            userDtos.add(new SysUserDto(user));
+        }
+        return ResultFactory.buildSuccessResult(pageDto.getCount(), userDtos);
+    }
+
     @PostMapping(value = "/changePassword")
     @ApiOperation("修改密码")
     @ResponseBody

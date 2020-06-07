@@ -13,10 +13,12 @@ import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
+import xyz.xhui.awardsystem.model.dto.StuDto;
 import xyz.xhui.awardsystem.model.dto.SysUserDto;
 import xyz.xhui.awardsystem.model.dto.UserInfoDto;
 import xyz.xhui.awardsystem.model.entity.SysUser;
 import xyz.xhui.awardsystem.model.entity.SysUserTutor;
+import xyz.xhui.awardsystem.model.vo.TutorAddVo;
 import xyz.xhui.awardsystem.service.UserTutorService;
 
 import javax.annotation.security.RolesAllowed;
@@ -65,7 +67,7 @@ public class UserTutorController {
     @PostMapping(value = "/add")
     @ApiOperation("添加用户")
     @ResponseBody
-    public Result save(UserInfoDto userInfoDto, SysUserDto userDto) {
+    public Result<String> save(UserInfoDto userInfoDto, SysUserDto userDto) {
         logger.info(userInfoDto.toString());
         logger.info(userDto.toString());
         try {
@@ -76,33 +78,15 @@ public class UserTutorController {
         return ResultFactory.buildSuccessResult();
     }
 
-//    @GetMapping(value = "")
-//    @ApiOperation("查询所有详细信息")
-//    public Result findTutorAll() {
-//        List<SysUserTutor> tutors = userTutorService.findAll();
-//        for (SysUserTutor tutor : tutors) {
-//            PasswordUtils.hiddenPassword(tutor);
-//        }
-//        return ResultFactory.buildSuccessResult(tutors, "查询成功");
-//    }
-//
-//    @GetMapping(value = "{id}")
-//    @ApiOperation("根据id查询")
-//    public Result findById(@PathVariable Integer id) {
-//        Optional<SysUserTutor> retUserTutor = userTutorService.findById(id);
-//        retUserTutor.ifPresent(PasswordUtils::hiddenPassword);
-//        return ResultFactory.buildSuccessResult(retUserTutor.orElse(null), "查询成功");
-//    }
-
-//    @DeleteMapping(value = "")
-//    @ApiOperation("根据sysUserId删除辅导员")
-//    @ResponseBody
-//    public Result<String> deleteById(@RequestParam Integer id) {
-//        try {
-//            userTutorService.deleteBySysUserId(id);
-//        } catch (EntityFieldException e) {
-//            return ResultFactory.buildFailResult(e.getMessage());
-//        }
-//        return ResultFactory.buildSuccessResult();
-//    }
+    @PostMapping(value = "/adds")
+    @ApiOperation("批量添加")
+    @ResponseBody
+    public Result<String> saves(@RequestBody TutorAddVo[] addVos) {
+        try {
+            userTutorService.saves(addVos);
+        } catch (EntityFieldException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult("添加成功");
+    }
 }

@@ -47,4 +47,8 @@ public interface UserDao {
     Integer countAllByRole(RoleEnum roleEnum);
 
     Integer save(SysUser sysUser);
+
+    List<SysUser> findDim(Integer pageNum, Integer pageSize, String value, String type);
+
+    Integer findCountDim(String value, String type);
 }

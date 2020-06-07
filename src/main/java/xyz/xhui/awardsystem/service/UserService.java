@@ -1,6 +1,7 @@
 package xyz.xhui.awardsystem.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.RequestParam;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.PasswordErrorException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
@@ -12,7 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService extends UserDetailsService {
-    PageDto<List<SysUser>> findAll(Integer pagenum, Integer pagesize);
+    PageDto<List<SysUser>> findAll(Integer pageNum, Integer pageSize);
+
+    PageDto<List<SysUser>> findDim(Integer pageNum, Integer pageSize, String value,  String type);
 
     Optional<SysUser> findById(Integer id);
 

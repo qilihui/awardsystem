@@ -29,10 +29,18 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public PageDto<List<SysUser>> findAll(Integer pagenum, Integer pagesize) {
+    public PageDto<List<SysUser>> findAll(Integer pageNum, Integer pageSize) {
         PageDto<List<SysUser>> pageDto = new PageDto<>();
         pageDto.setCount(this.getCount());
-        pageDto.setObj(userDao.findAllByPagenumAndPagesize(pagenum, pagesize));
+        pageDto.setObj(userDao.findAllByPagenumAndPagesize(pageNum, pageSize));
+        return pageDto;
+    }
+
+    @Override
+    public PageDto<List<SysUser>> findDim(Integer pageNum, Integer pageSize, String value, String type) {
+        PageDto<List<SysUser>> pageDto = new PageDto<>();
+        pageDto.setObj(userDao.findDim(pageNum, pageSize, value, type));
+        pageDto.setCount(userDao.findCountDim(value, type));
         return pageDto;
     }
 

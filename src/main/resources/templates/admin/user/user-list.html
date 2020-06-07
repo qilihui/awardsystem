@@ -39,181 +39,25 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body ">
-                    <!--                    <form class="layui-form layui-col-space5">-->
-                    <!--                        <div class="layui-inline layui-show-xs-block">-->
-                    <!--                            <input class="layui-input" autocomplete="off" placeholder="开始日" name="start" id="start">-->
-                    <!--                        </div>-->
-                    <!--                        <div class="layui-inline layui-show-xs-block">-->
-                    <!--                            <input class="layui-input" autocomplete="off" placeholder="截止日" name="end" id="end"></div>-->
-                    <!--                        <div class="layui-inline layui-show-xs-block">-->
-                    <!--                            <input type="text" name="username" placeholder="请输入用户名" autocomplete="off"-->
-                    <!--                                   class="layui-input"></div>-->
-                    <!--                        <div class="layui-inline layui-show-xs-block">-->
-                    <!--                            <button class="layui-btn" lay-submit="" lay-filter="sreach">-->
-                    <!--                                <i class="layui-icon">&#xe615;</i></button>-->
-                    <!--                        </div>-->
-                    <!--                    </form>-->
-
-                    <!--                    <div class="layui-collapse" lay-filter="test">-->
-                    <!--                        <div class="layui-colla-item">-->
-                    <!--                            <h2 class="layui-colla-title">条件筛选<i class="layui-icon layui-colla-icon"></i></h2>-->
-                    <!--                            <div class="layui-colla-content">-->
-                    <!--                                <form class="layui-form" action="">-->
-                    <!--                                    <div class="layui-form-item">-->
-                    <!--                                        <div class="layui-inline">-->
-                    <!--                                            <label class="layui-form-label">范围</label>-->
-                    <!--                                            <div class="layui-input-inline" style="width: 100px;">-->
-                    <!--                                                <input type="text" name="price_min" placeholder="￥" autocomplete="off" class="layui-input">-->
-                    <!--                                            </div>-->
-                    <!--                                            <div class="layui-form-mid">-</div>-->
-                    <!--                                            <div class="layui-input-inline" style="width: 100px;">-->
-                    <!--                                                <input type="text" name="price_max" placeholder="￥" autocomplete="off" class="layui-input">-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-
-                    <!--                                    <div class="layui-form-item">-->
-                    <!--                                        <div class="layui-inline">-->
-                    <!--                                            <label class="layui-form-label">分组选择框</label>-->
-                    <!--                                            <div class="layui-input-inline">-->
-                    <!--                                                <select name="quiz">-->
-                    <!--                                                    <option value="">请选择问题</option>-->
-                    <!--                                                    <optgroup label="城市记忆">-->
-                    <!--                                                        <option value="你工作的第一个城市">你工作的第一个城市</option>-->
-                    <!--                                                    </optgroup>-->
-                    <!--                                                    <optgroup label="学生时代">-->
-                    <!--                                                        <option value="你的工号">你的工号</option>-->
-                    <!--                                                        <option value="你最喜欢的老师">你最喜欢的老师</option>-->
-                    <!--                                                    </optgroup>-->
-                    <!--                                                </select>-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="layui-inline">-->
-                    <!--                                            <label class="layui-form-label">搜索选择框</label>-->
-                    <!--                                            <div class="layui-input-inline">-->
-                    <!--                                                <select name="modules" lay-verify="required" lay-search="">-->
-                    <!--                                                    <option value="">直接选择或搜索选择</option>-->
-                    <!--                                                    <option value="1">layer</option>-->
-                    <!--                                                    <option value="2">form</option>-->
-                    <!--                                                    <option value="3">layim</option>-->
-                    <!--                                                    <option value="4">element</option>-->
-                    <!--                                                    <option value="5">laytpl</option>-->
-                    <!--                                                    <option value="6">upload</option>-->
-                    <!--                                                    <option value="7">laydate</option>-->
-                    <!--                                                    <option value="8">laypage</option>-->
-                    <!--                                                    <option value="9">flow</option>-->
-                    <!--                                                    <option value="10">util</option>-->
-                    <!--                                                    <option value="11">code</option>-->
-                    <!--                                                    <option value="12">tree</option>-->
-                    <!--                                                    <option value="13">layedit</option>-->
-                    <!--                                                    <option value="14">nav</option>-->
-                    <!--                                                    <option value="15">tab</option>-->
-                    <!--                                                    <option value="16">table</option>-->
-                    <!--                                                    <option value="17">select</option>-->
-                    <!--                                                    <option value="18">checkbox</option>-->
-                    <!--                                                    <option value="19">switch</option>-->
-                    <!--                                                    <option value="20">radio</option>-->
-                    <!--                                                </select>-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-
-                    <!--                                    <div class="layui-form-item">-->
-                    <!--                                        <label class="layui-form-label">联动选择框</label>-->
-                    <!--                                        <div class="layui-input-inline">-->
-                    <!--                                            <select name="quiz1">-->
-                    <!--                                                <option value="">请选择省</option>-->
-                    <!--                                                <option value="浙江" selected="">浙江省</option>-->
-                    <!--                                                <option value="你的工号">江西省</option>-->
-                    <!--                                                <option value="你最喜欢的老师">福建省</option>-->
-                    <!--                                            </select>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="layui-input-inline">-->
-                    <!--                                            <select name="quiz2">-->
-                    <!--                                                <option value="">请选择市</option>-->
-                    <!--                                                <option value="杭州">杭州</option>-->
-                    <!--                                                <option value="宁波" disabled="">宁波</option>-->
-                    <!--                                                <option value="温州">温州</option>-->
-                    <!--                                                <option value="温州">台州</option>-->
-                    <!--                                                <option value="温州">绍兴</option>-->
-                    <!--                                            </select>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="layui-input-inline">-->
-                    <!--                                            <select name="quiz3">-->
-                    <!--                                                <option value="">请选择县/区</option>-->
-                    <!--                                                <option value="西湖区">西湖区</option>-->
-                    <!--                                                <option value="余杭区">余杭区</option>-->
-                    <!--                                                <option value="拱墅区">临安市</option>-->
-                    <!--                                            </select>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="layui-form-mid layui-word-aux">此处只是演示联动排版，并未做联动交互</div>-->
-                    <!--                                    </div>-->
-
-                    <!--                                    <div class="layui-form-item">-->
-                    <!--                                        <label class="layui-form-label">复选框</label>-->
-                    <!--                                        <div class="layui-input-block">-->
-                    <!--                                            <input type="checkbox" name="like[write]" title="写作">-->
-                    <!--                                            <input type="checkbox" name="like[read]" title="阅读" checked="">-->
-                    <!--                                            <input type="checkbox" name="like[game]" title="游戏">-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-
-                    <!--                                    <div class="layui-form-item" pane="">-->
-                    <!--                                        <label class="layui-form-label">原始复选框</label>-->
-                    <!--                                        <div class="layui-input-block">-->
-                    <!--                                            <input type="checkbox" name="like1[write]" lay-skin="primary" title="写作" checked="">-->
-                    <!--                                            <input type="checkbox" name="like1[read]" lay-skin="primary" title="阅读">-->
-                    <!--                                            <input type="checkbox" name="like1[game]" lay-skin="primary" title="游戏" disabled="">-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-
-                    <!--                                    <div class="layui-form-item">-->
-                    <!--                                        <label class="layui-form-label">开关-默认关</label>-->
-                    <!--                                        <div class="layui-input-block">-->
-                    <!--                                            <input type="checkbox" name="close" lay-skin="switch" lay-text="ON|OFF">-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-                    <!--                                    <div class="layui-form-item">-->
-                    <!--                                        <label class="layui-form-label">开关-默认开</label>-->
-                    <!--                                        <div class="layui-input-block">-->
-                    <!--                                            <input type="checkbox" checked="" name="open" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-                    <!--                                    <div class="layui-form-item">-->
-                    <!--                                        <label class="layui-form-label">单选框</label>-->
-                    <!--                                        <div class="layui-input-block">-->
-                    <!--                                            <input type="radio" name="sex" value="男" title="男" checked="">-->
-                    <!--                                            <input type="radio" name="sex" value="女" title="女">-->
-                    <!--                                            <input type="radio" name="sex" value="禁" title="禁用" disabled="">-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-                    <!--                                    <div class="layui-form-item">-->
-                    <!--                                        <div class="layui-input-block">-->
-                    <!--                                            <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>-->
-                    <!--                                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-                    <!--                                </form>-->
-                    <!--                            </div>-->
-                    <!--                        </div>-->
-                    <!--                    </div>-->
-                    <!--                </div>-->
+                    <div class="layui-card-body hide_form" style="display: none;">
+                        <form class="layui-form layui-col-space5">
+                            <div class="layui-inline layui-show-xs-block">
+                                <input class="layui-input" required autocomplete="off" placeholder="输入用户名或姓名"
+                                       name="value"
+                                       lay-verify="required" lay-reqtext="不能为空">
+                            </div>
+                            <div class="layui-inline">
+                                <input type="radio" name="type" value="realName" title="根据姓名查询" checked>
+                                <input type="radio" name="type" value="username" title="根据用户名查询">
+                            </div>
+                            <div class="layui-inline layui-show-xs-block">
+                                <button class="layui-btn" lay-submit="" lay-filter="search">
+                                    <i class="layui-icon">查询</i></button>
+                            </div>
+                        </form>
+                    </div>
                     <div class="layui-card-body">
-                        <table class="layui-table"
-                               lay-data="{url:'/user',page:true,toolbar: '#toolbarDemo',id:'test', limits:[10,20,50,100,500,1000]}"
-                               lay-filter="test">
-                            <thead>
-                            <tr>
-                                <th lay-data="{type:'checkbox'}">ID</th>
-                                <th lay-data="{field:'id', width:80, sort: true}">ID</th>
-                                <th lay-data="{field:'username', minWidth:100, sort: true}">用户名</th>
-                                <th lay-data="{field:'realName', minWidth: 60}">姓名</th>
-                                <th lay-data="{field:'email', minWidth: 120}">邮箱</th>
-                                <th lay-data="{field:'roleName', minWidth:80}">角色</th>
-                                <th lay-data="{toolbar: '#barOptional', minWidth:100}">操作</th>
-                            </tr>
-                            </thead>
-                        </table>
+                        <table class="layui-table" id="test" lay-filter="test"></table>
                     </div>
                 </div>
             </div>
@@ -225,150 +69,181 @@
     <div class="layui-btn-container">
         <div class="layui-inline" title="批量删除" lay-event="delete"><i class="layui-icon layui-icon-delete"></i></div>
         <div class="layui-inline" title="添加" lay-event="add"><i class="layui-icon layui-icon-add-1"></i></div>
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"> 获取选中行数据</button>-->
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>-->
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="isAll"> 验证是否全选</button>-->
+        <div class="layui-inline" title="搜索" lay-event="search"><i class="layui-icon layui-icon-search"></i></div>
     </div>
 </script>
 <script>
-    layui.use('table',
-        function () {
-            var table = layui.table;
+    layui.use('table', function () {
+        var table = layui.table;
 
-            // //监听单元格编辑
-            // table.on('edit(test)',
-            //     function (obj) {
-            //         var value = obj.value //得到修改后的值
-            //             ,
-            //             data = obj.data //得到所在行所有键值
-            //             ,
-            //             field = obj.field; //得到字段
-            //         layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
-            //     });
-
-            //头工具栏事件
-            table.on('toolbar(test)',
-                function (obj) {
-                    var checkStatus = table.checkStatus(obj.config.id);
-                    switch (obj.event) {
-                        case 'delete':
-                            var data = checkStatus.data;
-                            var idArray = [];
-                            for (var i in data) {
-                                idArray[i] = data[i].id;
-                            }
-                            if (idArray.length === 0) {
-                                layer.alert("未选中", {icon: 5});
-                                break;
-                            }
-                            console.log(idArray.toString());
-                            layer.confirm('真的要删除用户? 请谨慎操作!', function (index) {
-                                var load = layer.load(2)
-                                $.ajax({
-                                    url: '/user/users',
-                                    type: "DELETE",
-                                    data: {ids: idArray},
-                                    dataType: 'json',
-                                    success: function (result) {
-                                        layer.close(load)
-                                        if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
-                                            layer.alert(result.msg, {icon: 2});
-                                        } else {
-                                            layer.alert("删除成功", {icon: 1}, function (index1) {
-                                                layer.close(index1);
-                                                //xadmin.father_reload();
-                                                table.reload('test');
-                                            });
-                                        }
-                                    },
-                                });
-                            });
-                            // layer.alert(JSON.stringify(data));
-                            break;
-                        case 'add':
-                            xadmin.open('用户添加', '/admin/getPage?name=user/user-add');
-                            break;
-                        // case 'getCheckData':
-                        //     var data = checkStatus.data;
-                        //     layer.alert(JSON.stringify(data));
-                        //     break;
-                        // case 'getCheckLength':
-                        //     var data = checkStatus.data;
-                        //     layer.msg('选中了：' + data.length + ' 个');
-                        //     break;
-                        // case 'isAll':
-                        //     layer.msg(checkStatus.isAll ? '全选' : '未全选');
-                        //     break;
-                    }
-                });
+        table.render({
+            elem: '#test',
+            url: '/user',
+            toolbar: '#toolbarDemo',
+            cols: [
+                [
+                    {type: 'checkbox', title: 'ID'},
+                    {type: 'numbers', width: 80, sort: true, title: '序号'},
+                    {field: 'username', minWidth: 100, sort: true, title: '用户名'},
+                    {field: 'realName', minWidth: 60, title: '姓名'},
+                    {field: 'email', minWidth: 120, title: '邮箱'},
+                    {field: 'roleName', minWidth: 80, title: '角色'},
+                    {toolbar: '#barOptional', minWidth: 100, title: '操作'}
+                ]
+            ],
+            page: true,
+            limits: [10, 20, 50, 100, 500, 1000]
         });
+
+        //头工具栏事件
+        table.on('toolbar(test)',
+            function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'delete':
+                        var data = checkStatus.data;
+                        var idArray = [];
+                        for (var i in data) {
+                            idArray[i] = data[i].id;
+                        }
+                        if (idArray.length === 0) {
+                            layer.alert("未选中", {icon: 5});
+                            break;
+                        }
+                        console.log(idArray.toString());
+                        layer.confirm('真的要删除用户? 请谨慎操作!', function (index) {
+                            var load = layer.load(2)
+                            $.ajax({
+                                url: '/user/users',
+                                type: "DELETE",
+                                data: {ids: idArray},
+                                dataType: 'json',
+                                success: function (result) {
+                                    layer.close(load)
+                                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                                        layer.alert(result.msg, {icon: 2});
+                                    } else {
+                                        layer.alert("删除成功", {icon: 1}, function (index1) {
+                                            layer.close(index1);
+                                            //xadmin.father_reload();
+                                            table.reload('test');
+                                        });
+                                    }
+                                },
+                            });
+                        });
+                        // layer.alert(JSON.stringify(data));
+                        break;
+                    case 'add':
+                        xadmin.open('用户添加', '/admin/getPage?name=user/user-add');
+                        break;
+                    case 'search':
+                        let hide_add = $('.hide_form');
+                        if (hide_add.css('display') === "none") {
+                            hide_add.show();
+                        } else {
+                            hide_add.hide();
+                        }
+                        break;
+                }
+            });
+    });
 
 
     //监听工具条
-    layui.use('table',
-        function () {
-            var table = layui.table;
-            table.on('tool(test)', function (obj) {
-                var data = obj.data;
-                var roleStr = data.role.replace("ROLE_", "").toLocaleLowerCase();
-                if (obj.event === 'del') {
-                    layer.confirm('真的删除行么', function (index) {
-                        var load = layer.load(2)
-                        $.ajax({
-                            url: '/user/' + roleStr,
-                            type: "DELETE",
-                            data: {id: data.id},
-                            dataType: 'json',
-                            success: function (result) {
-                                layer.close(load)
-                                if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
-                                    layer.alert(result.msg, {icon: 2});
-                                } else {
-                                    layer.alert("删除成功", {icon: 1}, function (index1) {
-                                        layer.close(index1);
-                                        //xadmin.father_reload();
-                                        table.reload('test');
-                                    });
-                                }
-                            },
-                        });
-
-                    });
-                } else if (obj.event === 'edit') {
-                    // console.log($(window).width())
-                    xadmin.open('用户详情', '/user/' + roleStr + '/edit/?id=' + data.id);
-                } else if (obj.event === 'resetPassword') {
-                    layer.confirm('确定恢复密码？', function (index) {
-                        var load = layer.load(2)
-                        $.ajax({
-                            url: "/user/resetPassword",
-                            type: "POST",
-                            data: {userId: data.id},
-                            dataType: 'json',
-                            success: function (result) {
-                                layer.close(load)
-                                console.log("success")
-                                layer.alert("恢复成功", {icon: 1}, function (index1) {
-                                    layer.close(index1);
-                                    //xadmin.father_reload();
-                                    table.reload('test');
-                                });
-                            },
-                            error: function (result) {
-                                console.log("fail")
-                                console.log(result)
-                                layer.alert(result.msg, {icon: 2}, function (index1) {
+    layui.use(['table', 'form'], function () {
+        var table = layui.table
+            , form = layui.form;
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            var roleStr = data.role.replace("ROLE_", "").toLocaleLowerCase();
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    var load = layer.load(2)
+                    $.ajax({
+                        url: '/user/' + roleStr,
+                        type: "DELETE",
+                        data: {id: data.id},
+                        dataType: 'json',
+                        success: function (result) {
+                            layer.close(load)
+                            if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                                layer.alert(result.msg, {icon: 2});
+                            } else {
+                                layer.alert("删除成功", {icon: 1}, function (index1) {
                                     layer.close(index1);
                                     //xadmin.father_reload();
                                     table.reload('test');
                                 });
                             }
-                        });
+                        },
                     });
-                }
-            })
-        });
 
+                });
+            } else if (obj.event === 'edit') {
+                // console.log($(window).width())
+                xadmin.open('用户详情', '/user/' + roleStr + '/edit/?id=' + data.id);
+            } else if (obj.event === 'resetPassword') {
+                layer.confirm('确定恢复密码？', function (index) {
+                    var load = layer.load(2)
+                    $.ajax({
+                        url: "/user/resetPassword",
+                        type: "POST",
+                        data: {userId: data.id},
+                        dataType: 'json',
+                        success: function (result) {
+                            layer.close(load)
+                            console.log("success")
+                            layer.alert("恢复成功", {icon: 1}, function (index1) {
+                                layer.close(index1);
+                                //xadmin.father_reload();
+                                table.reload('test');
+                            });
+                        },
+                        error: function (result) {
+                            console.log("fail")
+                            console.log(result)
+                            layer.alert(result.msg, {icon: 2}, function (index1) {
+                                layer.close(index1);
+                                //xadmin.father_reload();
+                                table.reload('test');
+                            });
+                        }
+                    });
+                });
+            }
+        })
+
+        form.on('submit(search)', function (data) {
+            console.log(data.field);
+            sessionStorage.setItem('search_value', data.field['value']);
+            sessionStorage.setItem('search_type', data.field['type']);
+            var load = layer.load(2)
+            $.ajax({
+                url: "/user/search?page=1&limit=10",
+                type: "GET",
+                data: {
+                    value: data.field['value'],
+                    type: data.field['type']
+                },
+                dataType: 'json',
+                success: function (result) {
+                    layer.close(load)
+                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                        layer.alert(result.msg, {icon: 2});
+                    } else {
+                        table.reload('test', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            },
+                            url: '/user/search?value=' + sessionStorage.getItem('search_value') + '&type=' + sessionStorage.getItem('search_type')
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+    });
 </script>
 
 <script type="text/html" id="barOptional">
