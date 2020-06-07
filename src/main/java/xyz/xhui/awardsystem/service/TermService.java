@@ -1,6 +1,7 @@
 package xyz.xhui.awardsystem.service;
 
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
+import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.model.entity.SysTerm;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface TermService {
     Integer sava(SysTerm sysTerm);
 
     Integer deletes(Integer[] ids) throws EntityFieldException;
+
+    public Integer findNowWeek() throws UnknownException;
 }

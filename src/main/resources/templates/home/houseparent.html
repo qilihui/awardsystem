@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/xadmin/css/font.css}">
+    <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}">
+    <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
-宿管主页
+<blockquote class="layui-elem-quote" th:text="'当前时间: '+${nowTime}+' &nbsp;第'+${nowWeek}+'周'"></blockquote>
 </body>
 </html>

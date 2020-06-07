@@ -19,6 +19,7 @@
             <div class="layui-input-inline">
                 <input type="text" id="L_username" name="title" required=""
                        lay-verify="required" lay-reqtext="不能为空" th:value="${notice.title}"
+                       maxlength="50"
                        autocomplete="off" class="layui-input">
             </div>
             <div class="layui-form-mid layui-word-aux">
@@ -30,6 +31,7 @@
             <div class="layui-input-block">
                 <textarea id="L_remark" name="content" required=""
                           lay-verify="required" lay-reqtext="不能为空" th:text="${notice.content}"
+                          maxlength="255"
                           autocomplete="off" class="layui-textarea"></textarea>
             </div>
         </div>

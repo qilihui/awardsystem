@@ -25,9 +25,11 @@
     <button type="button" class="layui-btn layui-btn-normal" id="LAY-excel-upload">选择文件</button>
     <a th:href="@{/excel/stu-example.xlsx}" class="layui-btn">下载样表</a>
 </div>
-
 <div id="user-view"></div>
-
+<!--<div class="layui-progress layui-progress-big" lay-showPercent="true">
+    <div class="layui-progress-bar layui-bg-blue" lay-percent="80%"></div>
+</div>-->
+</body>
 <script type="text/html" id="LAY-excel-export-ans">
     {{# layui.each(d.data, function(file_index, item){ }}
     <blockquote class="layui-elem-quote">
@@ -162,5 +164,4 @@
         })
     });
 </script>
-</body>
 </html>

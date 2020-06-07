@@ -45,7 +45,7 @@ public class StuStatController {
     private UnionScoreService unionScoreService;
 
     @Autowired
-    private NoticeStuService noticeStuService;
+    private TermService termService;
 
     @GetMapping("/stu-home")
     @Transactional
@@ -54,12 +54,11 @@ public class StuStatController {
         List<ScoreDto> unionScoreDtoList = null;
         Integer week = null;
         try {
-            week = apartmentScoreService.findNowWeek();
+            week = termService.findNowWeek();
             apartmentScoreDtoList = apartmentScoreService.findByNowWeek();
             unionScoreDtoList = unionScoreService.findByNowWeek();
         } catch (UnknownException e) {
             model.addAttribute("exception", e.getMessage());
-            return "exception";
         }
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         model.addAttribute("nowTime", df.format(System.currentTimeMillis()));

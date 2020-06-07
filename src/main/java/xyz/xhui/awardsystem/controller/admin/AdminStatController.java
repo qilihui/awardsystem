@@ -7,15 +7,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.dao.MysqlInfoDao;
+import xyz.xhui.awardsystem.model.dto.ScoreDto;
 import xyz.xhui.awardsystem.model.entity.SysUserAdmin;
 import xyz.xhui.awardsystem.model.entity.SysUserUnion;
+import xyz.xhui.awardsystem.service.TermService;
 import xyz.xhui.awardsystem.service.UserAdminService;
 import xyz.xhui.awardsystem.service.UserService;
 
 import javax.annotation.security.RolesAllowed;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Properties;
@@ -34,8 +39,20 @@ public class AdminStatController {
     @Autowired
     private MysqlInfoDao mysqlInfoDao;
 
+    @Autowired
+    private TermService termService;
+
     @GetMapping("/admin-home")
     public String getStat(Model model) {
+        Integer week = null;
+        try {
+            week = termService.findNowWeek();
+        } catch (UnknownException e) {
+            model.addAttribute("exception", e.getMessage());
+        }
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        model.addAttribute("nowTime", df.format(System.currentTimeMillis()));
+        model.addAttribute("nowWeek", week);
         Properties properties = System.getProperties();
         model.addAttribute("properties", properties);
         model.addAttribute("mysql", mysqlInfoDao.getVersion());

@@ -36,6 +36,7 @@
             <label for="L_username" class="layui-form-label"><span class="x-red">*</span>用户名</label>
             <div class="layui-input-inline">
                 <input type="text" id="L_username" name="username" required=""
+                       maxlength="25"
                        lay-verify="username" autocomplete="off" class="layui-input">
             </div>
             <div class="layui-form-mid layui-word-aux">
@@ -48,6 +49,7 @@
             </label>
             <div class="layui-input-inline">
                 <input type="text" id="L_nickname" name="realName" required=""
+                       maxlength="25"
                        lay-verify="realName" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -58,6 +60,7 @@
             <div class="layui-input-inline">
                 <input type="text" id="L_email" name="email" required=""
                        lay-verify="email"
+                       maxlength="50"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -91,8 +94,10 @@
                 <span class="x-red">*</span>房间
             </label>
             <div class="layui-input-inline">
-                <input type="text" id="L_room" name="room" required=""
+                <input type="number" id="L_room" name="room" required=""
                        lay-verify="room" oninput="value=value.replace(/[^\d]/g,'')"
+                       min="100"
+                       max="999"
                        autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -103,6 +108,8 @@
             <div class="layui-input-inline">
                 <input type="text" id="L_bed" name="bed" required=""
                        lay-verify="bed" oninput="value=value.replace(/[^\d]/g,'')"
+                       min="1"
+                       max="10"
                        autocomplete="off" class="layui-input">
             </div>
         </div>

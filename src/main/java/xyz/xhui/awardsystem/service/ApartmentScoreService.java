@@ -24,6 +24,4 @@ public interface ApartmentScoreService {
     List<ScoreDto> findByNowWeek() throws UnknownException;
 
     PageDto<List<ScoreDto>> findByStuIdByTutor(Integer pageNum,  Integer pageSize, Integer termId) throws EntityFieldException, UnknownException;
-
-    public Integer findNowWeek() throws UnknownException;
 }

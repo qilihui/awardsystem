@@ -182,12 +182,4 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
         pageDto.setCount(apartmentScoreDao.findCountByTutor(tutor, term));
         return pageDto;
     }
-
-    @Override
-    @Transactional
-    public Integer findNowWeek() throws UnknownException {
-        SysTerm term = termDao.findOne().orElseThrow(
-                () -> new UnknownException("未开始"));
-        return Math.toIntExact((MyTimeUtils.currentTimeMillis() - term.getBeginTime()) / 604800000 + 1);
-    }
 }
