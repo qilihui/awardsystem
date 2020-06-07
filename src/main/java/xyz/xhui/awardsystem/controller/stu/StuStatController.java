@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.utils.MyTimeUtils;
 import xyz.xhui.awardsystem.config.utils.MyUserUtils;
+import xyz.xhui.awardsystem.model.dto.NoticeDto;
 import xyz.xhui.awardsystem.model.dto.ScoreDto;
 import xyz.xhui.awardsystem.model.entity.SysUserStu;
 import xyz.xhui.awardsystem.service.*;
@@ -43,6 +44,9 @@ public class StuStatController {
     @Autowired
     private UnionScoreService unionScoreService;
 
+    @Autowired
+    private NoticeStuService noticeStuService;
+
     @GetMapping("/stu-home")
     @Transactional
     public String getHome(Model model) {
@@ -54,7 +58,8 @@ public class StuStatController {
             apartmentScoreDtoList = apartmentScoreService.findByNowWeek();
             unionScoreDtoList = unionScoreService.findByNowWeek();
         } catch (UnknownException e) {
-            e.printStackTrace();
+            model.addAttribute("exception", e.getMessage());
+            return "exception";
         }
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         model.addAttribute("nowTime", df.format(System.currentTimeMillis()));

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
+    <title>Title</title>
+</head>
+<style>
+    h4 {
+        width: 200px;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    p {
+        margin: 10px;
+    }
+
+    footer {
+        margin: 30px;
+        float: right;
+    }
+</style>
+<body>
+<h4 id="title"></h4>
+<p id="content"></p>
+<footer>
+    <div id="submitter"></div>
+    <div id="createTime"></div>
+</footer>
+</body>
+<script>
+    layui.use(['table', 'form'], function () {
+        $ = layui.jquery;
+        let notice = JSON.parse(sessionStorage.getItem('notice'));
+        console.log(notice);
+        $('#title').text(notice.title);
+        $('#content').text(notice.content);
+        $('#submitter').text(notice.submitter);
+        $('#createTime').text(layui.util.toDateString(notice.createTime * 1, `yyyy-MM-dd HH:mm:ss`));
+    });
+</script>
+</html>
