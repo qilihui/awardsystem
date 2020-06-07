@@ -37,10 +37,10 @@ public class UserUnionServiceImpl implements UserUnionService {
     @Transactional
     public Integer save(UserInfoDto userInfoDto, SysUserDto sysUserDto) throws EntityFieldException {
         SysUser sysUser = new SysUser();
-        sysUser.setUsername(sysUserDto.getUsername());
-        sysUser.setPassword(PasswordUtils.encode(sysUserDto.getUsername()));
-        sysUser.setEmail(sysUserDto.getEmail());
-        sysUser.setRealName(sysUserDto.getRealName());
+        sysUser.setUsername(sysUserDto.getUsername().trim());
+        sysUser.setPassword(sysUserDto.getUsername());
+        sysUser.setEmail(sysUserDto.getEmail().trim());
+        sysUser.setRealName(sysUserDto.getRealName().trim());
         sysUser.setRole(RoleEnum.ROLE_UNION);
 
         SysUserUnion userUnion = new SysUserUnion();

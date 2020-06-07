@@ -159,8 +159,8 @@
                             html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
                     }
                     $(".show-dept-container").html(html);
-                    getAllGrade(callback);
                 }
+                getAllGrade(callback);
             }
         });
     }
@@ -185,7 +185,6 @@
                 if (callback) {
                     callback();
                 }
-                // console.log(html)
             }
         });
     }

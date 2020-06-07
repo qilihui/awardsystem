@@ -11,8 +11,19 @@
           "href": "/stu/getPage?name=apartment-score-list"
         },
         {
-          "name": "德育分数",
+          "name": "学生会扣分",
           "href": "/stu/getPage?name=union-score-list"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "公告查看",
+      "css": "&#xe705;",
+      "child": [
+        {
+          "name": "公告查看",
+          "href": "/stu/getPage?name=notice-list"
         }
       ]
     },

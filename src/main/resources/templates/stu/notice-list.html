@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/xadmin/css/font.css}">
+    <link rel="stylesheet" th:href="@{/xadmin/css/xadmin.css}">
+    <script th:src="@{/xadmin/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/xadmin/js/xadmin.js}"></script>
+</head>
+<body>
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a>
+                    <cite>公告查看</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div style="padding: 20px; background-color: #F2F2F2;">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">公告</div>
+                <div class="layui-card-body">
+                    <table class="layui-table" id="test" lay-filter="test"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['table', 'form'], function () {
+        var table = layui.table
+            , form = layui.form
+            , layer = layui.layer;
+
+        var load = layer.load(1);
+        getTable();
+        layer.close(load);
+
+        function getTable() {
+            table.render({
+                elem: '#test',
+                url: '/noticeStu',
+                toolbar: false,
+                skin: 'nob',
+                even: true,
+                cols: [
+                    [
+                        {
+                            field: 'createTime',
+                            width: 150,
+                            templet: '<div>{{layui.util.toDateString(d.createTime*1, `yyyy-MM-dd HH:mm:ss`)}}</div>',
+                            title: '时间'
+                        },
+                        {field: 'title', minWidth: 200, title: '标题'},
+                        {field: 'type', width: 100, title: '类型', align: 'right'}
+                    ]
+                ],
+                page: true,
+                limits: [10, 20, 50, 100, 500, 1000]
+            });
+        }
+
+        table.on('row(test)', function (obj) {
+            sessionStorage.setItem('notice', JSON.stringify(obj.data))
+            layer.open({
+                title: '公告',
+                type: 2,
+                area: ['600px', '400px'],
+                content: '/stu/getPage?name=notice'
+            });
+        });
+    });
+</script>
+</html>

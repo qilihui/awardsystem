@@ -30,6 +30,7 @@ public class TermServiceImpl implements TermService {
 
     @Override
     public Integer sava(SysTerm sysTerm) {
+        sysTerm.setName(sysTerm.getName().trim());
         return termDao.save(sysTerm);
     }
 

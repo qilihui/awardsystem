@@ -25,9 +25,9 @@
 <div class="x-nav">
             <span class="layui-breadcrumb">
                 <a href="">首页</a>
-                <a href="">演示</a>
+                <a href="">系统管理</a>
                 <a>
-                    <cite>导航元素</cite></a>
+                    <cite>年级列表</cite></a>
             </span>
     <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
        onclick="location.reload()" title="刷新">
@@ -43,6 +43,9 @@
                         <!--                        <label class="layui-form-label">添加系部:</label>-->
                         <div class="layui-inline layui-show-xs-block">
                             <input class="layui-input" required autocomplete="off" placeholder="年级名" name="name"
+                                   type="number"
+                                   min="2000"
+                                   max="2999"
                                    lay-verify="gradename">
                         </div>
                         <div class="layui-inline layui-show-xs-block">

@@ -21,7 +21,7 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public Integer save(String name) throws EntityFieldException {
         SysDept dept = new SysDept();
-        dept.setName(name);
+        dept.setName(name.trim());
         if (deptDao.findSysDeptByName(dept.getName()).isPresent()) {
             throw new EntityFieldException("name已存在");
         }
@@ -69,6 +69,7 @@ public class DeptServiceImpl implements DeptService {
         if (dept.getId() == null) {
             throw new EntityFieldException("缺少id字段");
         }
+        dept.setName(dept.getName());
         if (dept.getName() == null || "".equals(dept.getName())) {
             throw new EntityFieldException("name不能为空");
         }

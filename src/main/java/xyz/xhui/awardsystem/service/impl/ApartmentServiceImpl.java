@@ -20,7 +20,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public Integer save(String name) throws EntityFieldException {
         SysApartment apartment = new SysApartment();
-        apartment.setName(name);
+        apartment.setName(name.trim());
         if (apartmentDao.findSysApartmentByName(apartment.getName()).isPresent()) {
             throw new EntityFieldException("name已存在");
         }
@@ -52,6 +52,7 @@ public class ApartmentServiceImpl implements ApartmentService {
         if (apartment.getId() == null) {
             throw new EntityFieldException("缺少id字段");
         }
+        apartment.setName(apartment.getName().trim());
         if (apartment.getName() == null || "".equals(apartment.getName())) {
             throw new EntityFieldException("name不能为空");
         }

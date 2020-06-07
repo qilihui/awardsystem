@@ -44,10 +44,10 @@ public class UserAdminServiceImpl implements UserAdminService {
     @Transactional
     public Integer save(SysUserDto sysUserDto) throws EntityFieldException {
         SysUser sysUser = new SysUser();
-        sysUser.setUsername(sysUserDto.getUsername());
-        sysUser.setPassword(PasswordUtils.encode(sysUserDto.getUsername()));
-        sysUser.setEmail(sysUserDto.getEmail());
-        sysUser.setRealName(sysUserDto.getRealName());
+        sysUser.setUsername(sysUserDto.getUsername().trim());
+        sysUser.setPassword(sysUserDto.getUsername());
+        sysUser.setEmail(sysUserDto.getEmail().trim());
+        sysUser.setRealName(sysUserDto.getRealName().trim());
         sysUser.setRole(RoleEnum.ROLE_ADMIN);
         if (userService.save(sysUser) <= 0) {
             return 0;

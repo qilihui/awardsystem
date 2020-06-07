@@ -13,6 +13,18 @@
         {
           "name": "批量添加学生",
           "href": "/admin/getPage?name=user/user-stu-adds"
+        },
+        {
+          "name": "批量添加辅导员",
+          "href": "/admin/getPage?name=user/user-tutor-adds"
+        },
+        {
+          "name": "批量添加宿管",
+          "href": "/admin/getPage?name=user/user-houseparent-adds"
+        },
+        {
+          "name": "批量添加学生会",
+          "href": "/admin/getPage?name=user/user-union-adds"
         }
       ]
     },

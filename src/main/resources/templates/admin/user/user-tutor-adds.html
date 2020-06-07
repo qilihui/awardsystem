@@ -23,16 +23,10 @@
 
 <div class="layui-upload">
     <button type="button" class="layui-btn layui-btn-normal" id="LAY-excel-upload">选择文件</button>
-    <a th:href="@{/excel/exam-score-example.xlsx}" class="layui-btn">下载样表</a>
-    <form class="layui-form layui-col-space5">
-        <div class="layui-inline layui-show-xs-block">
-            <select name="termId" id="termId" lay-verify="required" class="show-term-container"></select>
-        </div>
-    </form>
+    <a th:href="@{/excel/tutor-example.xlsx}" class="layui-btn">下载样表</a>
 </div>
 
 <div id="user-view"></div>
-</body>
 
 <script type="text/html" id="LAY-excel-export-ans">
     {{# layui.each(d.data, function(file_index, item){ }}
@@ -78,33 +72,7 @@
         var laytpl = layui.laytpl;
         var element = layui.element;
         var form = layui.form;
-        var load = layer.load(1);
         file_data = null;
-
-        getTerm(function () {
-            layui.form.render('select');
-            layer.close(load);
-        });
-
-        function getTerm(callback) {
-            $.ajax({
-                url: "/term",
-                type: "GET",
-                dataType: 'json',
-                success: function (result) {
-                    var html = '';
-                    if (result.data && result.data.length > 0) {
-                        for (var i in result.data) {
-                            html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
-                        }
-                        $(".show-term-container").html(html);
-                    }
-                    if (callback) {
-                        callback();
-                    }
-                }
-            });
-        }
 
         /**
          * 上传excel的处理函数，传入文件对象数组
@@ -120,13 +88,14 @@
                         // 读取数据的同时梳理数据
                         fields: {
                             'username': 'A'
-                            , 'scoreStr': 'B'
-                            , 'count': 'C'
-                            , 'remark': 'D'
+                            , 'realName': 'B'
+                            , 'email': 'C'
+                            , 'deptName': 'D'
+                            , 'gradeName': 'E'
                         }
                     }, function (data) {
                         file_data = data;
-                        // console.log(data);
+                        console.log(data);
                         document.getElementById('user-view').innerHTML = laytpl($('#LAY-excel-export-ans').html()).render({
                             data: data,
                             files: files
@@ -165,17 +134,12 @@
             if (text === "" || text === null) {
                 return layer.alert("未选中", {icon: 5});
             }
-
-            var array = {};
-            array['data'] = file_data[0][text];
-            array['termId'] = $('#termId').val();
-            // console.log(array);
-            // let file_json = JSON.stringify(file_data[0][text]);
-            let file_json = JSON.stringify(array);
+            console.log(file_data[0][text]);
+            let file_json = JSON.stringify(file_data[0][text]);
             console.log(file_json);
             let load = layer.load(2);
             $.ajax({
-                url: "/examScore/adds",
+                url: "/user/tutor/adds",
                 type: "POST",
                 data: file_json,
                 contentType: "application/json",
@@ -195,4 +159,5 @@
         })
     });
 </script>
+</body>
 </html>
