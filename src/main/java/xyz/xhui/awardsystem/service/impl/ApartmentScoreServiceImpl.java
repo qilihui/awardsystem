@@ -40,20 +40,24 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
     private TermDao termDao;
 
     @Override
-    public PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId) throws UnknownException {
-        Optional<SysTerm> termOptional = termDao.findById(termId);
-        SysTerm term = termOptional.orElseThrow(
+    public PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId, Integer week) throws UnknownException {
+        SysTerm term = termDao.findById(termId).orElseThrow(
                 () -> new UnknownException("学期id" + termId + "不存在")
         );
         Optional<SysUserHouseparent> userHouseparentOptional = userHouseparentDao.findSysUserHouseparentByUser_Id(MyUserUtils.getId());
         userHouseparentOptional.orElseThrow(() -> new UnknownException("未知错误 请联系管理员"));
         PageDto<List<ScoreDto>> pageDto = new PageDto<>();
         Integer apartmentId = userHouseparentOptional.get().getApartmentId();
+
+        long beginTime = term.getBeginTime();
+        term.setBeginTime(beginTime + 604800000L * (week - 1));
+        term.setEndTime(beginTime + 604800000L * week);
+
         List<ApartmentScore> apartmentScoreList = apartmentScoreDao.findAllByPagenumAndPagesize(apartmentId, pageNum, pageSize, term);
 
         List<ScoreDto> scoreDtoList = new ArrayList<>();
         for (ApartmentScore apartmentScore : apartmentScoreList) {
-            Integer week = Math.toIntExact((apartmentScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
+//            Integer week = Math.toIntExact((apartmentScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
             ScoreDto scoreDto = new ScoreDto(apartmentScore.getId(), apartmentScore.getScore().toString(), apartmentScore.getRemark(), apartmentScore.getCreateTime(), week, apartmentScore.getRoom(), apartmentScore.getBed());
             scoreDtoList.add(scoreDto);
         }
@@ -66,6 +70,9 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
     @RolesAllowed("HOUSEPARENT")
     @Transactional
     public Integer save(ApartmentScore apartmentScore) throws UnknownException {
+        if (apartmentScore.getScore() > 2) {
+            throw new UnknownException("分数最高为2分");
+        }
         Optional<SysUserHouseparent> userHouseparentOptional = userHouseparentDao.findSysUserHouseparentByUser_Id(MyUserUtils.getId());
         userHouseparentOptional.orElseThrow(() -> new UnknownException("未知错误 请联系管理员"));
         apartmentScore.setApartmentId(userHouseparentOptional.get().getApartmentId());
@@ -96,15 +103,23 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
     public Integer saves(ApartmentScoreDto[] apartmentScoreDtos) throws EntityFieldException {
         int j = 0;
         for (int i = 1; i < apartmentScoreDtos.length; i++) {
-            try {
-                ApartmentScore apartmentScore = new ApartmentScore();
-                apartmentScore.setRoom(Integer.valueOf(apartmentScoreDtos[i].getRoom()));
-                apartmentScore.setBed(Integer.valueOf(apartmentScoreDtos[i].getBed()));
-                apartmentScore.setScore(Double.valueOf(apartmentScoreDtos[i].getScore()));
-                apartmentScore.setRemark(apartmentScoreDtos[i].getRemark());
-                j += this.save(apartmentScore);
-            } catch (NumberFormatException | UnknownException e) {
-                throw new EntityFieldException("序号" + i + " " + e.getMessage());
+            for (int k = 0; k < 6; k++) {
+                System.out.println(i + " " + k);
+                try {
+                    String score = apartmentScoreDtos[i].getS(k + 1);
+                    if (score == null || "".equals(score)) {
+                        continue;
+                    }
+                    ApartmentScore apartmentScore = new ApartmentScore();
+                    apartmentScore.setRoom(Integer.valueOf(apartmentScoreDtos[i].getRoom()));
+                    apartmentScore.setBed(k + 1);
+                    apartmentScore.setScore(Double.valueOf(score));
+                    apartmentScore.setRemark(apartmentScoreDtos[i].getRemark());
+                    j += this.save(apartmentScore);
+                } catch (NumberFormatException | UnknownException e) {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    throw new EntityFieldException("序号" + i + " " + e.getMessage());
+                }
             }
         }
         return j;
@@ -157,7 +172,7 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
     @Override
     @Transactional
     @RolesAllowed({"TUTOR"})
-    public PageDto<List<ScoreDto>> findByStuIdByTutor(Integer pageNum, Integer pageSize, Integer termId) throws EntityFieldException, UnknownException {
+    public PageDto<List<ScoreDto>> findByStuIdByTutor(Integer pageNum, Integer pageSize, Integer termId, Integer week) throws EntityFieldException, UnknownException {
         Optional<SysUserTutor> tutorOptional = userTutorDao.findSysUserTutorByUser_Id(MyUserUtils.getId());
         SysUserTutor tutor = tutorOptional.orElseThrow(() -> {
             return new EntityFieldException("未知错误 请联系管理员");
@@ -166,10 +181,14 @@ public class ApartmentScoreServiceImpl implements ApartmentScoreService {
         SysTerm term = termOptional.orElseThrow(
                 () -> new UnknownException("学期id" + termId + "不存在")
         );
+
+        long beginTime = term.getBeginTime();
+        term.setBeginTime(beginTime + 604800000L * (week - 1));
+        term.setEndTime(beginTime + 604800000L * week);
+
         List<UnionScore> unionScoreList = apartmentScoreDao.findByTutor(pageNum, pageSize, tutor, term);
         List<ScoreDto> scoreDtoList = new ArrayList<>();
         for (UnionScore unionScore : unionScoreList) {
-            Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
             Optional<SysUserStu> userStuOptional = userStuDao.findSysUserStuByUser_Id(unionScore.getStuId());
             SysUserStu stu = userStuOptional.orElseThrow(() -> {
                 return new EntityFieldException("未知错误 请联系管理员");

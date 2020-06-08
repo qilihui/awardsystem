@@ -24,6 +24,7 @@
 <div class="layui-upload">
     <button type="button" class="layui-btn layui-btn-normal" id="LAY-excel-upload">选择文件</button>
     <a th:href="@{/excel/apartment-score-example.xlsx}" class="layui-btn">下载样表</a>
+    <button type="button" class="layui-btn layui-btn-normal" id="exportExcelByStu">根据学生导出模板</button>
 </div>
 
 <div id="user-view"></div>
@@ -88,9 +89,13 @@
                         // 读取数据的同时梳理数据
                         fields: {
                             'room': 'A'
-                            , 'bed': 'B'
-                            , 'score': 'C'
-                            , 'remark': 'D'
+                            , 's1': 'B'
+                            , 's2': 'C'
+                            , 's3': 'D'
+                            , 's4': 'E'
+                            , 's5': 'F'
+                            , 's6': 'G'
+                            , 'remark': 'H'
                         }
                     }, function (data) {
                         file_data = data;
@@ -156,7 +161,44 @@
                     }
                 }
             });
-        })
+        });
+
+        $('#exportExcelByStu').click(function () {
+            $.ajax({
+                url: '/user/stu/getApartmentToExcel',
+                dataType: 'json',
+                success: function (res) {
+                    // 假如返回的 res.data 是需要导出的列表数据
+                    // console.log(res.data);// [{name: 'wang', age: 18, sex: '男'}, {name: 'layui', age: 3, sex: '女'}]
+                    // 1. 数组头部新增表头
+                    res.data.unshift({
+                        room: '房间号',
+                        s1: '1床',
+                        s2: '2床',
+                        s3: '3床',
+                        s4: '4床',
+                        s5: '5床',
+                        s6: '6床',
+                        remark: '备注'
+                    });
+                    // 2. 如果需要调整顺序，请执行梳理函数
+                    var data = excel.filterExportData(res.data, [
+                        'room',
+                        's1',
+                        's2',
+                        's3',
+                        's4',
+                        's5',
+                        's6',
+                        'remark'
+                    ]);
+                    // 3. 执行导出函数，系统会弹出弹框
+                    excel.exportExcel({
+                        sheet1: data
+                    }, '宿舍分模板.xlsx', 'xlsx');
+                }
+            });
+        });
     });
 </script>
 </body>

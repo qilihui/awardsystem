@@ -41,8 +41,10 @@
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
                         <div class="layui-inline layui-show-xs-block">
-                            <!--<input class="layui-input" autocomplete="off" placeholder="开始日" name="start" id="start">-->
                             <select name="termId" lay-verify="required" class="show-term-container"></select>
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <select name="week" lay-verify="required" class="show-week-container"></select>
                         </div>
                         <div class="layui-inline layui-show-xs-block">
                             <button class="layui-btn" lay-submit="" lay-filter="set">设置</button>
@@ -73,15 +75,18 @@
             getTable();
             layer.close(load);
         });
+
         form.on('submit(set)', function (data) {
-            console.log(data.field);
             let termId = data.field['termId'];
+            let week = data.field['week'];
             sessionStorage.setItem('termId', termId);
+            sessionStorage.setItem('week', week);
             table.reload('test', {
                 page: {
                     curr: 1 //重新从第 1 页开始
                 },
-                url: '/union/score?termId=' + termId
+                url: '/union/score?termId=' + termId + '&week=' + week,
+                limits: [10, 20, 50, 100, 500, 1000]
             });
             // console.log("重新渲染完成termId " + sessionStorage.getItem('termId'));
             return false;
@@ -150,10 +155,34 @@
                         }
                         $(".show-term-container").html(html);
                     }
+                    getWeek(callback);
+                    // console.log(html)
+                }
+            });
+        }
+
+        function getWeek(callback) {
+            $.ajax({
+                url: "/term/week",
+                type: "GET",
+                dataType: 'json',
+                success: function (result) {
+                    var html = '';
+                    if (result.data) {
+                        let week = result.data;
+                        sessionStorage.setItem("week", week);
+                        for (var i = 20; i > 0; i--) {
+                            if (i == week) {
+                                html += '<option value="' + i + '" selected="selected">第' + i + '周</option>';
+                            } else {
+                                html += '<option value="' + i + '">第' + i + '周</option>';
+                            }
+                        }
+                        $(".show-week-container").html(html);
+                    }
                     if (callback) {
                         callback();
                     }
-                    // console.log(html)
                 }
             });
         }
@@ -161,7 +190,7 @@
         function getTable() {
             table.render({
                 elem: '#test',
-                url: '/union/score?termId=' + sessionStorage.getItem('termId'),
+                url: '/union/score?termId=' + sessionStorage.getItem('termId') + '&week=' + sessionStorage.getItem('week'),
                 toolbar: '#toolbarDemo',
                 cols: [
                     [

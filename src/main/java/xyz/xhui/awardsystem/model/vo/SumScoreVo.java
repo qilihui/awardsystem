@@ -7,6 +7,8 @@ public class SumScoreVo implements Serializable {
     /**
      * termId : 6
      * examRate : 80
+     * moralMaxScore : 10
+     * apartmentMaxScore : 10
      * lessNo : on
      * awardMethod : rate
      * one : 2
@@ -17,6 +19,7 @@ public class SumScoreVo implements Serializable {
     private Integer termId;
     private Integer examRate;
     private Integer moralMaxScore;
+    private Integer apartmentMaxScore;
     private String lessNo;
     private String awardMethod;
     private Integer one;
@@ -26,10 +29,11 @@ public class SumScoreVo implements Serializable {
     public SumScoreVo() {
     }
 
-    public SumScoreVo(Integer termId, Integer examRate, Integer moralMaxScore, String lessNo, String awardMethod, Integer one, Integer two, Integer three) {
+    public SumScoreVo(Integer termId, Integer examRate, Integer moralMaxScore, Integer apartmentMaxScore, String lessNo, String awardMethod, Integer one, Integer two, Integer three) {
         this.termId = termId;
         this.examRate = examRate;
         this.moralMaxScore = moralMaxScore;
+        this.apartmentMaxScore = apartmentMaxScore;
         this.lessNo = lessNo;
         this.awardMethod = awardMethod;
         this.one = one;
@@ -59,6 +63,14 @@ public class SumScoreVo implements Serializable {
 
     public void setMoralMaxScore(Integer moralMaxScore) {
         this.moralMaxScore = moralMaxScore;
+    }
+
+    public Integer getApartmentMaxScore() {
+        return apartmentMaxScore;
+    }
+
+    public void setApartmentMaxScore(Integer apartmentMaxScore) {
+        this.apartmentMaxScore = apartmentMaxScore;
     }
 
     public String getLessNo() {
@@ -107,6 +119,7 @@ public class SumScoreVo implements Serializable {
                 "termId=" + termId +
                 ", examRate=" + examRate +
                 ", moralMaxScore=" + moralMaxScore +
+                ", apartmentMaxScore=" + apartmentMaxScore +
                 ", lessNo='" + lessNo + '\'' +
                 ", awardMethod='" + awardMethod + '\'' +
                 ", one=" + one +

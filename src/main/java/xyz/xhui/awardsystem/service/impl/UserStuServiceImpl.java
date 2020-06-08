@@ -12,18 +12,13 @@ import xyz.xhui.awardsystem.config.utils.MyUserUtils;
 import xyz.xhui.awardsystem.config.utils.PasswordUtils;
 import xyz.xhui.awardsystem.dao.*;
 import xyz.xhui.awardsystem.dao.UserStuDao;
-import xyz.xhui.awardsystem.model.dto.PageDto;
-import xyz.xhui.awardsystem.model.dto.StuDto;
-import xyz.xhui.awardsystem.model.dto.SysUserDto;
-import xyz.xhui.awardsystem.model.dto.UserInfoDto;
+import xyz.xhui.awardsystem.model.dto.*;
 import xyz.xhui.awardsystem.model.entity.*;
 import xyz.xhui.awardsystem.service.UserService;
 import xyz.xhui.awardsystem.service.UserStuService;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -164,6 +159,7 @@ public class UserStuServiceImpl implements UserStuService {
     }
 
     @Override
+    @RolesAllowed("UNION")
     public SysUserStu findSysUserStuByUsername(String username) throws EntityFieldException {
         Optional<SysUserStu> sysUserOptional = userStuDao.findStuByUsername(username);
         SysUserStu userStu = sysUserOptional.orElseThrow(() -> new EntityFieldException("该用户名学生不存在"));
@@ -172,6 +168,12 @@ public class UserStuServiceImpl implements UserStuService {
             throw new EntityFieldException("不是本系学生");
         }
         return sysUserOptional.get();
+    }
+
+    @Override
+    @RolesAllowed("ADMIN")
+    public SysUserStu findSysUserStuByUsernameToAdmin(String username) throws EntityFieldException {
+        return userStuDao.findStuByUsername(username).orElseThrow(() -> new EntityFieldException("该用户名学生不存在"));
     }
 
     @Override
@@ -193,6 +195,28 @@ public class UserStuServiceImpl implements UserStuService {
         pageDto.setCount(count);
         pageDto.setObj(stuDtos);
         return pageDto;
+    }
+
+    @Override
+    public List<ApartmentScoreDto> findByHouseparentToExcel() throws UnknownException {
+        Optional<SysUserHouseparent> userHouseparentOptional = userHouseparentDao.findSysUserHouseparentByUser_Id(MyUserUtils.getId());
+        Integer apartmentId = userHouseparentOptional.orElseThrow(() -> new UnknownException("未知错误 请联系管理员")).getApartmentId();
+        List<SysUserStu> userStuList = userStuDao.findByApartmentIdToExcel(apartmentId);
+        List<ApartmentScoreDto> scoreDtoList = new ArrayList<>();
+        Map<Integer, ApartmentScoreDto> map = new HashMap<>();
+        for (SysUserStu s : userStuList) {
+            ApartmentScoreDto tmp = map.get(s.getRoom());
+            if (tmp != null) {
+                tmp.setS(s.getBed(), "2");
+            } else {
+                tmp = new ApartmentScoreDto();
+                tmp.setRoom(s.getRoom().toString());
+                tmp.setS(s.getBed(), "2");
+                map.put(s.getRoom(), tmp);
+                scoreDtoList.add(tmp);
+            }
+        }
+        return scoreDtoList;
     }
 
     @Override

@@ -29,13 +29,13 @@ public class ExamScoreController {
     @Autowired
     private ExamScoreService examScoreService;
 
-    @GetMapping("/add")
-    @ApiOperation("添加")
-    public String add(Integer termId, Model model) {
-//        log.info(termId.toString());
-        model.addAttribute("termId", termId);
-        return "admin/exam/score-add";
-    }
+//    @GetMapping("/add")
+//    @ApiOperation("添加")
+//    public String add(Integer termId, Model model) {
+////        log.info(termId.toString());
+//        model.addAttribute("termId", termId);
+//        return "admin/exam/score-add";
+//    }
 
     @PostMapping("/adds")
     @ResponseBody
@@ -53,10 +53,10 @@ public class ExamScoreController {
     @GetMapping("/all")
     @ResponseBody
     @ApiOperation("分页查询")
-    public Result<List<ExamScoreDto>> findAll(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize, @RequestParam("termId") Integer termId) {
+    public Result<List<ExamScoreDto>> findAll(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize, @RequestParam("termId") Integer termId, @RequestParam("deptId") Integer deptId) {
         PageDto<List<ExamScoreDto>> all = null;
         try {
-            all = examScoreService.findAll(pageNum - 1, pageSize, termId);
+            all = examScoreService.findAll(pageNum - 1, pageSize, termId, deptId);
         } catch (UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }

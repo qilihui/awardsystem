@@ -3,8 +3,6 @@ package xyz.xhui.awardsystem.controller.admin;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,15 +11,13 @@ import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
-import xyz.xhui.awardsystem.model.dto.PageDto;
-import xyz.xhui.awardsystem.model.dto.StuDto;
-import xyz.xhui.awardsystem.model.dto.SysUserDto;
-import xyz.xhui.awardsystem.model.dto.UserInfoDto;
+import xyz.xhui.awardsystem.config.sysenum.RoleEnum;
+import xyz.xhui.awardsystem.config.utils.MyUserUtils;
+import xyz.xhui.awardsystem.model.dto.*;
 import xyz.xhui.awardsystem.model.entity.SysUserStu;
 import xyz.xhui.awardsystem.service.UserStuService;
 
 import javax.annotation.security.RolesAllowed;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,13 +87,17 @@ public class UserStuController {
 
     @GetMapping("/findByUsername")
     @ApiOperation("根据用户名查找")
-    @RolesAllowed("UNION")
+    @RolesAllowed({"UNION", "ADMIN"})
     @ResponseBody
     public Result<String> findByUsername(@RequestParam("username") String username) {
         log.info(username);
         SysUserStu userStu = null;
         try {
-            userStu = userStuService.findSysUserStuByUsername(username);
+            if (MyUserUtils.getRoleEnum().equals(RoleEnum.ROLE_ADMIN)) {
+                userStu = userStuService.findSysUserStuByUsernameToAdmin(username);
+            } else {
+                userStu = userStuService.findSysUserStuByUsername(username);
+            }
         } catch (EntityFieldException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
@@ -118,8 +118,22 @@ public class UserStuController {
         return ResultFactory.buildSuccessResult(pageDto.getCount(), pageDto.getObj());
     }
 
+    @GetMapping("/getApartmentToExcel")
+    @ApiOperation("按照公寓查找学生导出表格")
+    @RolesAllowed("HOUSEPARENT")
+    @ResponseBody
+    public Result<List<ApartmentScoreDto>> getApartmentToExcel() {
+        List<ApartmentScoreDto> apartmentScoreDtoList = null;
+        try {
+            apartmentScoreDtoList = userStuService.findByHouseparentToExcel();
+        } catch (UnknownException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult(apartmentScoreDtoList.size(), apartmentScoreDtoList);
+    }
+
     @GetMapping("getByTutor")
-    @ApiOperation("按照公寓查找学生")
+    @ApiOperation("按照辅导员查找学生")
     @RolesAllowed("TUTOR")
     @ResponseBody
     public Result<List<StuDto>> getByTutor(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize) {

@@ -12,7 +12,7 @@ public interface UnionScoreService {
 
     List<UnionScore> findAll();
 
-    PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId) throws UnknownException;
+    PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId, Integer week) throws UnknownException;
 
     Integer save(ScoreDto scoreDto) throws EntityFieldException, UnknownException;
 
@@ -24,5 +24,5 @@ public interface UnionScoreService {
 
     List<ScoreDto> findByNowWeek() throws UnknownException;
 
-    PageDto<List<ScoreDto>> findByTutor(Integer pageNum,  Integer pageSize, Integer termId) throws EntityFieldException, UnknownException;
+    PageDto<List<ScoreDto>> findByTutor(Integer pageNum, Integer pageSize, Integer termId, Integer week) throws EntityFieldException, UnknownException;
 }

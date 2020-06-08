@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
+import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.config.result.Result;
 import xyz.xhui.awardsystem.config.result.ResultFactory;
 import xyz.xhui.awardsystem.config.utils.MyTimeUtils;
@@ -29,7 +30,7 @@ public class TermController {
     @ResponseBody
     @ApiOperation("查询所有")
     @GetMapping("")
-    @RolesAllowed({"ADMIN", "UNION", "HOUSEPARENT","STU","TUTOR"})
+    @RolesAllowed({"ADMIN", "UNION", "HOUSEPARENT", "STU", "TUTOR"})
     public Result<List<SysTerm>> getAll() {
         return ResultFactory.buildSuccessResult(termService.findAll());
     }
@@ -59,5 +60,19 @@ public class TermController {
         }
         log.info(Arrays.toString(ids));
         return ResultFactory.buildSuccessResult();
+    }
+
+    @GetMapping("/week")
+    @ApiOperation("获取当前周")
+    @ResponseBody
+    @RolesAllowed({"ADMIN", "UNION", "HOUSEPARENT", "STU", "TUTOR"})
+    public Result<Integer> getWeek(){
+        Integer nowWeek = 0;
+        try {
+            nowWeek = termService.findNowWeek();
+        } catch ( UnknownException e) {
+            return ResultFactory.buildFailResult(e.getMessage());
+        }
+        return ResultFactory.buildSuccessResult(nowWeek);
     }
 }

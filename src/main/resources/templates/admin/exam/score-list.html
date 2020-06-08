@@ -44,6 +44,9 @@
                             <select name="termId" lay-verify="required" class="show-term-container"></select>
                         </div>
                         <div class="layui-inline layui-show-xs-block">
+                            <select name="deptId" lay-verify="required" class="show-dept-container"></select>
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
                             <button class="layui-btn" lay-submit="" lay-filter="set">设置</button>
                         </div>
                     </form>
@@ -75,12 +78,14 @@
         form.on('submit(set)', function (data) {
             console.log(data.field);
             let termId = data.field['termId'];
+            let deptId = data.field['deptId'];
             sessionStorage.setItem('termId', termId);
+            sessionStorage.setItem("deptId", deptId);
             table.reload('test', {
                 page: {
                     curr: 1 //重新从第 1 页开始
                 },
-                url: '/examScore/all?termId=' + termId
+                url: '/examScore/all?termId=' + termId + '&deptId=' + deptId
             });
             // console.log("重新渲染完成termId " + sessionStorage.getItem('termId'));
             return false;
@@ -123,7 +128,7 @@
                     });
                     break;
                 case 'add':
-                    xadmin.open('添加', '/examScore/add?termId=' + sessionStorage.getItem('termId'));
+                    xadmin.open('添加', '/admin/getPage?name=exam/score-add');
                     break;
             }
         });
@@ -149,6 +154,32 @@
                         }
                         $(".show-term-container").html(html);
                     }
+                    getDept(callback);
+                }
+            });
+        }
+
+        function getDept(callback) {
+            $.ajax({
+                url: "/dept",
+                type: "GET",
+                dataType: 'json',
+                success: function (result) {
+                    var html = '';
+                    if (result.data && result.data.length > 0) {
+                        sessionStorage.setItem("deptId", result.data[0].id);
+                        let deptId = result.data[0].id;
+                        console.log(deptId);
+                        for (var i in result.data) {
+                            // console.log(result.data[i].id);
+                            if (result.data[i].id == deptId) {
+                                console.log("==");
+                                html += '<option value="' + result.data[i].id + '" selected="selected">' + result.data[i].name + '</option>';
+                            } else
+                                html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
+                        }
+                        $(".show-dept-container").html(html);
+                    }
                     if (callback) {
                         callback();
                     }
@@ -159,7 +190,7 @@
         function getTable() {
             table.render({
                 elem: '#test',
-                url: '/examScore/all?termId=' + sessionStorage.getItem('termId'),
+                url: '/examScore/all?termId=' + sessionStorage.getItem('termId') + '&deptId=' + sessionStorage.getItem('deptId'),
                 toolbar: '#toolbarDemo',
                 cols: [
                     [

@@ -14,10 +14,21 @@
 <div class="x-body">
     <form class="layui-form">
         <div class="layui-form-item">
+            <label for="termId" class="layui-form-label"><span class="x-red">*</span>学期</label>
+            <div class="layui-input-inline">
+                <select name="termId" id="termId" class="show-term-container">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <label for="L_username" class="layui-form-label"><span class="x-red">*</span>学号</label>
             <div class="layui-input-inline">
                 <input type="text" id="L_username" name="username" required=""
                        lay-verify="username" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red" id="user-hint"></span>
             </div>
         </div>
         <div class="layui-form-item">
@@ -49,15 +60,21 @@
         </div>
     </form>
 </div>
-<script th:inline="javascript">
+<!--<script th:inline="javascript">
     var termId = [[${termId}]];
-</script>
+</script>-->
 <script>
     layui.use(['form', 'layer', 'laydate', 'upload'], function () {
         $ = layui.jquery;
         var form = layui.form
             , layer = layui.layer
             , laydate = layui.laydate;
+
+        var load = layer.load(1);
+        getTerm(function () {
+            layui.form.render('select');
+            layer.close(load);
+        });
 
         //自定义验证规则
         form.verify({
@@ -89,7 +106,7 @@
             array['data'] = [];
             array['data'][0] = data.field;
             array['data'][1] = data.field;
-            array['termId'] = termId;
+            array['termId'] = data.field['termId'];
             console.log(JSON.stringify(array));
             $.ajax({
                 url: "/examScore/adds",
@@ -113,6 +130,57 @@
                 }
             });
             return false;
+        });
+
+        function getTerm(callback) {
+            $.ajax({
+                url: "/term",
+                type: "GET",
+                dataType: 'json',
+                success: function (result) {
+                    var html = '';
+                    if (result.data && result.data.length > 0) {
+                        sessionStorage.setItem("termId", result.data[0].id);
+                        let termId = result.data[0].id;
+                        console.log(termId);
+                        for (var i in result.data) {
+                            console.log(result.data[i].id);
+                            if (result.data[i].id == termId) {
+                                console.log("==");
+                                html += '<option value="' + result.data[i].id + '" selected="selected">' + result.data[i].name + '</option>';
+                            } else
+                                html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>';
+                        }
+                        $(".show-term-container").html(html);
+                    }
+                    if (callback) {
+                        callback();
+                    }
+                    // console.log(html)
+                }
+            });
+        }
+        $('#L_username').change(function () {
+            var username = document.getElementById('L_username').value;
+            console.log(username)
+            $.ajax({
+                url: "/user/stu/findByUsername",
+                type: "GET",
+                data: {username: username},
+                dataType: 'json',
+                success: function (result) {
+                    // layer.close(load)
+                    if (result.code === 500 || result.code === 5000100 || result.code === 5000101 || result.code === 5000102) {
+                        document.getElementById('user-hint').innerHTML = "错误信息: " + result.msg;
+                    } else {
+                        document.getElementById('user-hint').innerHTML = result.data;
+                    }
+                },
+                error: function (result) {
+                    console.log("fail")
+                    console.log(result)
+                }
+            });
         });
     });
 

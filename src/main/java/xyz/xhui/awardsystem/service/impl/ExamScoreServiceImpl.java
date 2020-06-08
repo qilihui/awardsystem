@@ -64,16 +64,16 @@ public class ExamScoreServiceImpl implements ExamScoreService {
 
     @Override
     @Transactional
-    public PageDto<List<ExamScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId) throws UnknownException {
+    public PageDto<List<ExamScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId, Integer deptId) throws UnknownException {
         PageDto<List<ExamScoreDto>> pageDto = new PageDto<>();
-        pageDto.setCount(examScoreDao.findPageAllCount(pageNum, pageSize, termId));
-        List<ExamScore> scoreList = examScoreDao.findPageAll(pageNum, pageSize, termId);
+        SysDept dept = deptDao.findById(deptId).orElseThrow(
+                () -> new UnknownException("未知错误")
+        );
+        pageDto.setCount(examScoreDao.findPageAllCount(pageNum, pageSize, termId, deptId));
+        List<ExamScore> scoreList = examScoreDao.findPageAll(pageNum, pageSize, termId, deptId);
         List<ExamScoreDto> dtos = new ArrayList<>();
         for (ExamScore e : scoreList) {
             SysUserStu stu = userStuDao.findById(e.getStuId()).orElseThrow(
-                    () -> new UnknownException("未知错误")
-            );
-            SysDept dept = deptDao.findById(stu.getDeptId()).orElseThrow(
                     () -> new UnknownException("未知错误")
             );
             SysGrade grade = gradeDao.findById(stu.getGradeId()).orElseThrow(

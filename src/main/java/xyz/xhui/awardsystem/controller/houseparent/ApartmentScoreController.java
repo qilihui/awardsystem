@@ -15,6 +15,7 @@ import xyz.xhui.awardsystem.model.dto.PageDto;
 import xyz.xhui.awardsystem.model.dto.ScoreDto;
 import xyz.xhui.awardsystem.model.entity.ApartmentScore;
 import xyz.xhui.awardsystem.service.ApartmentScoreService;
+import xyz.xhui.awardsystem.service.TermService;
 
 import javax.annotation.security.RolesAllowed;
 import java.util.Arrays;
@@ -29,13 +30,16 @@ public class ApartmentScoreController {
     @Autowired
     private ApartmentScoreService apartmentScoreService;
 
+    @Autowired
+    private TermService termService;
+
     @GetMapping("")
     @ResponseBody
     @ApiOperation("分页查询")
-    public Result<List<ScoreDto>> findAllByPage(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId) {
+    public Result<List<ScoreDto>> findAllByPage(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId, @RequestParam("week") Integer week) {
         PageDto<List<ScoreDto>> pageDto = null;
         try {
-            pageDto = apartmentScoreService.findAll(pagenum - 1, pagesize, termId);
+            pageDto = apartmentScoreService.findAll(pagenum - 1, pagesize, termId, week);
         } catch (UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
@@ -98,10 +102,10 @@ public class ApartmentScoreController {
     @RolesAllowed({"TUTOR"})
     @ResponseBody
     @ApiOperation("tutor查询宿舍分数")
-    public Result<List<ScoreDto>> getStuScoreByTutor(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize, @RequestParam("termId") Integer termId) {
+    public Result<List<ScoreDto>> getStuScoreByTutor(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize, @RequestParam("termId") Integer termId, @RequestParam("week") Integer week) {
         PageDto<List<ScoreDto>> pageDto = null;
         try {
-            pageDto = apartmentScoreService.findByStuIdByTutor(pageNum - 1, pageSize, termId);
+            pageDto = apartmentScoreService.findByStuIdByTutor(pageNum - 1, pageSize, termId, week);
         } catch (EntityFieldException | UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }

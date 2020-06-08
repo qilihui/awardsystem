@@ -25,11 +25,11 @@ public interface ExamScoreDao {
     @Delete("delete from exam_score where id=#{id}")
     Integer deleteById(Integer id);
 
-    @Select("select * from exam_score where term_id=#{termId} limit ${pageNum*pageSize}, #{pageSize}")
-    List<ExamScore> findPageAll(Integer pageNum, Integer pageSize, Integer termId);
+    @Select("select * from exam_score where term_id=#{termId} and dept_id=#{deptId} limit ${pageNum*pageSize}, #{pageSize}")
+    List<ExamScore> findPageAll(Integer pageNum, Integer pageSize, Integer termId, Integer deptId);
 
-    @Select("select count(id) from exam_score where term_id=#{termId}")
-    Integer findPageAllCount(Integer pageNum, Integer pageSize, Integer termId);
+    @Select("select count(id) from exam_score where term_id=#{termId} and dept_id=#{deptId}")
+    Integer findPageAllCount(Integer pageNum, Integer pageSize, Integer termId, Integer deptId);
 
     @Select("select * from exam_score where term_id=#{termId} and dept_id=#{deptId} and grade_id=#{gradeId} order by score desc limit ${pageNum*pageSize}, #{pageSize}")
     List<ExamScore> findPageAllByTutor(Integer pageNum, Integer pageSize, Integer termId, Integer deptId, Integer gradeId);

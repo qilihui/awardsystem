@@ -53,4 +53,7 @@ public interface UserStuDao {
 
     @Select("select count(*) from sys_user u, sys_user_stu s where u.id=s.user_id and s.dept_id=#{deptId} and grade_id=#{gradeId}")
     Integer findCountByDeptIdAndGradeId(Integer deptId, Integer gradeId);
+
+    @Select("select * from sys_user_stu where apartment_id=#{apartmentId} ORDER BY room ASC, bed ASC")
+    List<SysUserStu> findByApartmentIdToExcel(Integer apartmentId);
 }

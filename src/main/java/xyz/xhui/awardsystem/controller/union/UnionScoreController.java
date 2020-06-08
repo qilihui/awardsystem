@@ -56,11 +56,11 @@ public class UnionScoreController {
     @GetMapping(name = "")
     @ApiOperation("分页查询")
     @ResponseBody
-    public Result<List<ScoreDto>> findAll(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId) {
+    public Result<List<ScoreDto>> findAll(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId, @RequestParam("week") Integer week) {
 //        log.info(termId.toString());
         PageDto<List<ScoreDto>> pageDto = null;
         try {
-            pageDto = unionScoreService.findAll(pagenum - 1, pagesize, termId);
+            pageDto = unionScoreService.findAll(pagenum - 1, pagesize, termId, week);
         } catch (UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }
@@ -97,10 +97,10 @@ public class UnionScoreController {
     @RolesAllowed({"TUTOR"})
     @ResponseBody
     @ApiOperation("tutor分数查询")
-    public Result<List<ScoreDto>> getStuScoreByTutor(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId) {
+    public Result<List<ScoreDto>> getStuScoreByTutor(@RequestParam("page") Integer pagenum, @RequestParam("limit") Integer pagesize, @RequestParam("termId") Integer termId, @RequestParam("week") Integer week) {
         PageDto<List<ScoreDto>> pageDto = null;
         try {
-            pageDto = unionScoreService.findByTutor(pagenum - 1, pagesize, termId);
+            pageDto = unionScoreService.findByTutor(pagenum - 1, pagesize, termId, week);
         } catch (EntityFieldException | UnknownException e) {
             return ResultFactory.buildFailResult(e.getMessage());
         }

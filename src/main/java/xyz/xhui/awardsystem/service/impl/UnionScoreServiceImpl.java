@@ -47,7 +47,7 @@ public class UnionScoreServiceImpl implements UnionScoreService {
     @Override
     @RolesAllowed("UNION")
     @Transactional
-    public PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId) throws UnknownException {
+    public PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId, Integer week) throws UnknownException {
         Optional<SysUserUnion> loginUser = userUnionDao.findSysUserUnionByUser_Id(MyUserUtils.getId());
         loginUser.orElseThrow(
                 () -> new UnknownException("未知错误 请联系管理员")
@@ -56,6 +56,11 @@ public class UnionScoreServiceImpl implements UnionScoreService {
         SysTerm term = termOptional.orElseThrow(
                 () -> new UnknownException("学期id" + termId + "不存在")
         );
+
+        long beginTime = term.getBeginTime();
+        term.setBeginTime(beginTime + 604800000L * (week - 1));
+        term.setEndTime(beginTime + 604800000L * week);
+
         List<UnionScore> unionScoreList = unionScoreDao.findByPageAndDeptId(loginUser.get().getDeptId(), pageNum, pageSize, term);
         List<ScoreDto> scoreDtoList = new ArrayList<>();
         for (UnionScore unionScore : unionScoreList) {
@@ -67,7 +72,6 @@ public class UnionScoreServiceImpl implements UnionScoreService {
             unionOptional.orElseThrow(
                     () -> new UnknownException("未知错误 请联系管理员")
             );
-            Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
             ScoreDto scoreDto = new ScoreDto(unionScore.getId(), stuOptional.get().getUsername(), stuOptional.get().getRealName(), unionScore.getScore().toString(), unionScore.getRemark(), unionOptional.get().getRealName(), unionScore.getCreateTime(), week);
             scoreDtoList.add(scoreDto);
         }
@@ -194,7 +198,7 @@ public class UnionScoreServiceImpl implements UnionScoreService {
     @Override
     @Transactional
     @RolesAllowed({"TUTOR"})
-    public PageDto<List<ScoreDto>> findByTutor(Integer pageNum, Integer pageSize, Integer termId) throws EntityFieldException, UnknownException {
+    public PageDto<List<ScoreDto>> findByTutor(Integer pageNum, Integer pageSize, Integer termId, Integer week) throws EntityFieldException, UnknownException {
         Optional<SysUserTutor> tutorOptional = userTutorDao.findSysUserTutorByUser_Id(MyUserUtils.getId());
         SysUserTutor tutor = tutorOptional.orElseThrow(() -> {
             return new EntityFieldException("未知错误 请联系管理员");
@@ -203,6 +207,11 @@ public class UnionScoreServiceImpl implements UnionScoreService {
         SysTerm term = termOptional.orElseThrow(
                 () -> new UnknownException("学期id" + termId + "不存在")
         );
+
+        long beginTime = term.getBeginTime();
+        term.setBeginTime(beginTime + 604800000L * (week - 1));
+        term.setEndTime(beginTime + 604800000L * week);
+
         List<UnionScoreByTutorDto> unionScoreList = unionScoreDao.findByTutor(pageNum, pageSize, tutor, term);
         List<ScoreDto> scoreDtoList = new ArrayList<>();
         for (UnionScoreByTutorDto unionScore : unionScoreList) {
@@ -210,7 +219,6 @@ public class UnionScoreServiceImpl implements UnionScoreService {
             unionOptional.orElseThrow(
                     () -> new UnknownException("未知错误 请联系管理员")
             );
-            Integer week = Math.toIntExact((unionScore.getCreateTime() - term.getBeginTime()) / 604800000 + 1);
             ScoreDto scoreDto = new ScoreDto(unionScore.getId(), unionScore.getUsername(), unionScore.getRealName(), unionScore.getScore().toString(), unionScore.getRemark(), unionOptional.get().getRealName(), unionScore.getCreateTime(), week);
             scoreDtoList.add(scoreDto);
         }

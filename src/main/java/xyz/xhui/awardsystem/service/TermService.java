@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface TermService {
     List<SysTerm> findAll();
+
     Optional<SysTerm> findById(Integer id);
+
     Integer sava(SysTerm sysTerm);
 
     Integer deletes(Integer[] ids) throws EntityFieldException;

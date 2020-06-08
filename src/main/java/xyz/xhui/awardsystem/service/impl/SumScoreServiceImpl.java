@@ -74,7 +74,18 @@ public class SumScoreServiceImpl implements SumScoreService {
             for (UnionScore u : apartmentScoreList) {
                 apartmentSum = apartmentSum.add(BigDecimal.valueOf(u.getScore()));
             }
-            sumScoreDto.setApartmentScore(apartmentSum.doubleValue());
+            //宿舍分每次最高是2
+            int apartmentScoreMax = apartmentScoreList.size() * 2;
+            BigDecimal apartmentScoreRate = null;
+            if (apartmentScoreMax != 0) {
+                //自己的宿舍分总和/最高综合=比率
+                apartmentScoreRate = apartmentSum.divide(BigDecimal.valueOf(apartmentScoreMax), 2, RoundingMode.HALF_UP);
+            } else {
+                apartmentScoreRate = BigDecimal.valueOf(1);
+            }
+            //宿舍最终分
+            BigDecimal apartmentScoreLast = BigDecimal.valueOf(sumScoreVo.getApartmentMaxScore()).multiply(apartmentScoreRate);
+            sumScoreDto.setApartmentScore(apartmentScoreLast.doubleValue());
 
             //学生会扣分
             BigDecimal unionSum = BigDecimal.valueOf(0);
@@ -88,14 +99,22 @@ public class SumScoreServiceImpl implements SumScoreService {
             for (ExtraScore s : extraScoreList) {
                 extraSum = extraSum.add(BigDecimal.valueOf(s.getScore()));
             }
+            //两项相加 不能大于德育分最高分
             BigDecimal moralScoreDecimal = extraSum.subtract(unionSum);
             if (moralScoreDecimal.doubleValue() > sumScoreVo.getMoralMaxScore()) {
                 moralScoreDecimal = BigDecimal.valueOf(sumScoreVo.getMoralMaxScore());
             }
             sumScoreDto.setMoralScore(moralScoreDecimal.doubleValue());
-            BigDecimal examRate = BigDecimal.valueOf(e.getScore()).multiply(BigDecimal.valueOf(0.8));
-            BigDecimal sumDecimal = examRate.add(apartmentSum).add(moralScoreDecimal);
+
+            //考试成绩所占比
+            BigDecimal examRate = BigDecimal.valueOf(sumScoreVo.getExamRate()).divide(BigDecimal.valueOf(100), 6, RoundingMode.HALF_UP);
+            //考试成绩*比例
+            BigDecimal examScore = examRate.multiply(BigDecimal.valueOf(e.getScore()));
+            //考试*比值+宿舍分+德育分
+            BigDecimal sumDecimal = examScore.add(apartmentScoreLast).add(moralScoreDecimal);
             sumScoreDto.setSumScore(sumDecimal.doubleValue());
+
+            //最终 综合成绩
             sumScoreDtos.add(sumScoreDto);
         }
         sumScoreDtos.sort((o1, o2) -> o2.getSumScore().compareTo(o1.getSumScore()));

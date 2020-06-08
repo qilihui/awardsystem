@@ -1,6 +1,5 @@
 package xyz.xhui.awardsystem.service;
 
-import org.springframework.transaction.annotation.Transactional;
 import xyz.xhui.awardsystem.config.exception.EntityFieldException;
 import xyz.xhui.awardsystem.config.exception.UnknownException;
 import xyz.xhui.awardsystem.model.dto.ApartmentScoreDto;
@@ -11,7 +10,7 @@ import xyz.xhui.awardsystem.model.entity.ApartmentScore;
 import java.util.List;
 
 public interface ApartmentScoreService {
-    PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId) throws UnknownException;
+    PageDto<List<ScoreDto>> findAll(Integer pageNum, Integer pageSize, Integer termId, Integer week) throws UnknownException;
 
     Integer save(ApartmentScore apartmentScore) throws UnknownException;
 
@@ -23,5 +22,5 @@ public interface ApartmentScoreService {
 
     List<ScoreDto> findByNowWeek() throws UnknownException;
 
-    PageDto<List<ScoreDto>> findByStuIdByTutor(Integer pageNum,  Integer pageSize, Integer termId) throws EntityFieldException, UnknownException;
+    PageDto<List<ScoreDto>> findByStuIdByTutor(Integer pageNum, Integer pageSize, Integer termId, Integer week) throws EntityFieldException, UnknownException;
 }

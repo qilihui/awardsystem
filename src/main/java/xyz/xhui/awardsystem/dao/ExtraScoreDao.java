@@ -11,7 +11,7 @@ import java.util.Optional;
 @Mapper
 @Repository
 public interface ExtraScoreDao {
-    @Select("select * from extra_score where dept_id=#{deptId} and grade_id=#{gradeId} and term_id=#{termId} and time_id=#{timeId}")
+    @Select("select * from extra_score where dept_id=#{deptId} and grade_id=#{gradeId} and term_id=#{termId} and time_id=#{timeId} order by create_time desc")
     List<ExtraScore> findByTutor(Integer deptId, Integer gradeId, Integer termId, Integer timeId);
 
     @Insert("insert into extra_score(`score`,`remark`,`path`,`create_time`,`time_id`,`term_id`,`stu_id`,`dept_id`,`grade_id`) values(#{score},#{remark},#{path},#{createTime},#{timeId},#{termId},#{stuId},#{deptId},#{gradeId})")
