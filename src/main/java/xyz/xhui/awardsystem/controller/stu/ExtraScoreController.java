@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -63,18 +64,33 @@ public class ExtraScoreController {
     @ApiOperation("学生提交图片")
     public Result<String> addFile(@RequestParam("file") MultipartFile file, HttpServletRequest req) {
 //        String realPath = req.getServletContext().getRealPath("/uploads/");
-        File f = new File(realPath);
+        //获取当前时间 年月日
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        String nowDate = df.format(System.currentTimeMillis());
+        String absolutePath = realPath + nowDate + "/";
+        String relativePath = nowDate + "/";
+        File f = new File(absolutePath);
         if (!f.exists()) {
             boolean mkdirs = f.mkdirs();
         }
-        String fileName = UUID.randomUUID().toString().replace("-", "") + "_" + file.getOriginalFilename();
+        //源文件名
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) {
+            return ResultFactory.buildFailResult("文件名错误");
+        }
+        //文件名后缀
+        String imgSuffix = originalFilename.substring(originalFilename.lastIndexOf("."));
+        if ("".equals(imgSuffix)) {
+            return ResultFactory.buildFailResult("文件名错误");
+        }
+        String fileName = UUID.randomUUID().toString().replace("-", "") + imgSuffix;
         try {
-            file.transferTo(new File(realPath, fileName));
+            file.transferTo(new File(absolutePath, fileName));
         } catch (IOException e) {
             return ResultFactory.buildFailResult();
         }
-        log.info(realPath + fileName);
-        return ResultFactory.buildSuccessResult(fileName);
+        log.info(absolutePath + fileName);
+        return ResultFactory.buildSuccessResult(relativePath + fileName);
     }
 
     @RolesAllowed("STU")
@@ -145,13 +161,13 @@ public class ExtraScoreController {
     }
 
     @RolesAllowed({"TUTOR", "STU"})
-    @GetMapping("/uploads/{name}")
+    @GetMapping("/uploads/{date}/{name}")
     @ApiOperation("辅导员和学生查看提交的图片")
-    public void ShowImg(@PathVariable("name") String pictureName, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void ShowImg(@PathVariable("date") String date, @PathVariable("name") String pictureName, HttpServletRequest request, HttpServletResponse response) throws IOException {
         FileInputStream fileIs = null;
         OutputStream outStream = null;
         try {
-            fileIs = new FileInputStream(realPath + pictureName);
+            fileIs = new FileInputStream(realPath + date + "/" + pictureName);
             //得到文件大小
             int i = fileIs.available();
             //准备一个字节数组存放二进制图片
