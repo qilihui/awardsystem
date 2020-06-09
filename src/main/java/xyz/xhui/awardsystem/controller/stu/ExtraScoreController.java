@@ -155,9 +155,9 @@ public class ExtraScoreController {
             //得到文件大小
             int i = fileIs.available();
             //准备一个字节数组存放二进制图片
-            byte data[] = new byte[i];
+            byte[] data = new byte[i];
             //读字节数组的数据
-            fileIs.read(data);
+            int read = fileIs.read(data);
             //设置返回的文件类型
             String substring = pictureName.substring(pictureName.lastIndexOf(".") + 1);
             response.setContentType("image/" + substring);
@@ -167,12 +167,16 @@ public class ExtraScoreController {
             outStream.write(data);
             outStream.flush();
         } catch (Exception e) {
-            return;
+            e.printStackTrace();
         } finally {
             //关闭输出流
-            outStream.close();
+            if (outStream != null) {
+                outStream.close();
+            }
             //关闭输入流
-            fileIs.close();
+            if (fileIs != null) {
+                fileIs.close();
+            }
         }
     }
 

@@ -26,5 +26,6 @@ logging:
         awardsystem:
           dao: debug
 
+#路径最后加斜杠 / 或 \
 myConf:
   uploadPath: D:\test\
